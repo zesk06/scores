@@ -116,7 +116,8 @@
 {
     "date" : "15/12/15",
     "game" : "les chevaliers de la table ronde",
-    "type" : "binaire",
+    "type" : "coop",
+    "winner" : "game",
     "players" : [
       { "name" : "lolo"     , "score":"1"} ,
       { "name" : "clemence" , "score":"1"} ,
@@ -125,6 +126,41 @@
       { "name" : "severine" , "score":"1"} ,
       { "name" : "yohann"   , "score":"0"}
 
+    ]
+  },
+{
+    "date" : "08/01/16",
+    "game" : "colt express",
+    "type" : "max",
+    "players" : [
+      { "name" : "clemence" , "score":"250"} ,
+      { "name" : "lolo"     , "score":"1000"} ,
+      { "name" : "cedric"   , "score":"1500"} ,
+      { "name" : "anne"     , "score":"1000"} ,
+      { "name" : "zesk"     , "score":"800"}
+    ]
+  },
+{
+    "date" : "08/01/16",
+    "game" : "colt express",
+    "type" : "max",
+    "players" : [
+      { "name" : "clemence" , "score":"2650"} ,
+      { "name" : "lolo"     , "score":"1000"} ,
+      { "name" : "cedric"   , "score":"1000"} ,
+      { "name" : "anne"     , "score":"1250"} ,
+      { "name" : "zesk"     , "score":"2400"}
+    ]
+  },
+{
+    "date" : "08/01/16",
+    "game" : "splendor",
+    "type" : "max",
+    "players" : [
+      { "name" : "clemence" , "score":"10"} ,
+      { "name" : "lolo"     , "score":"17"} ,
+      { "name" : "cedric"   , "score":"12"} ,
+      { "name" : "anne"     , "score":"9"} ,
     ]
   }
   ]
