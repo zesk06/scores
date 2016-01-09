@@ -2,7 +2,6 @@
   {
     "date" : "01/09/15",
     "game" : "7wonders",
-    "type" : "max",
     "players" : [
       { "name" : "lolo"     , "score":"28"} ,
       { "name" : "clemence" , "score":"46"} ,
@@ -15,7 +14,6 @@
 {
     "date" : "01/09/15",
     "game" : "7wonders",
-    "type" : "max",
     "players" : [
       { "name" : "lolo"     , "score":"39"} ,
       { "name" : "clemence" , "score":"39"} ,
@@ -28,7 +26,6 @@
 {
     "date" : "01/09/15",
     "game" : "7wonders",
-    "type" : "max",
     "players" : [
       { "name" : "lolo"     , "score":"51"} ,
       { "name" : "clemence" , "score":"42"} ,
@@ -41,7 +38,6 @@
   {
     "date" : "01/09/15",
     "game" : "megawatts",
-    "type" : "max",
     "players" : [
       { "name" : "lolo"     , "score":"16"} ,
       { "name" : "zesk"     , "score":"15"} ,
@@ -52,7 +48,6 @@
   {
     "date" : "07/10/15",
     "game" : "le jeu des dragons",
-    "type" : "max",
     "players" : [
       { "name" : "lolo"     , "score":"114"} ,
       { "name" : "clemence" , "score":"107"} ,
@@ -65,7 +60,6 @@
   {
     "date" : "07/10/15",
     "game" : "le jeu des dragons",
-    "type" : "max",
     "players" : [
       { "name" : "lolo"     , "score":"36"} ,
       { "name" : "clemence" , "score":"77"} ,
@@ -78,7 +72,6 @@
   {
     "date" : "28/10/15",
     "game" : "alhambra",
-    "type" : "max",
     "players" : [
       { "name" : "lolo"     , "score":"77"} ,
       { "name" : "clemence" , "score":"50"} ,
@@ -90,7 +83,6 @@
   {
     "date" : "28/10/15",
     "game" : "splendor",
-    "type" : "max",
     "players" : [
       { "name" : "clemence" , "score":"15"} ,
       { "name" : "diane"    , "score":"2"}  ,
@@ -101,37 +93,32 @@
   {
     "date" : "25/11/15",
     "game" : "les chevaliers de la table ronde",
-    "type" : "binaire",
     "players" : [
-      { "name" : "lolo"     , "score":"1"} ,
-      { "name" : "clemence" , "score":"0"} ,
-      { "name" : "diane"    , "score":"0"} ,
-      { "name" : "zesk"     , "score":"0"} ,
-      { "name" : "vincent"  , "score":"0"} ,
-      { "name" : "anne"     , "score":"0"} ,
-      { "name" : "maxime"   , "score":"0"}
+      { "name" : "lolo"     , "score":"1", "team" : "felon"} ,
+      { "name" : "clemence" , "score":"0", "team" : "bien" } ,
+      { "name" : "diane"    , "score":"0", "team" : "bien" } ,
+      { "name" : "zesk"     , "score":"0", "team" : "bien" } ,
+      { "name" : "vincent"  , "score":"0", "team" : "bien" } ,
+      { "name" : "anne"     , "score":"0", "team" : "bien" } ,
+      { "name" : "maxime"   , "score":"0", "team" : "bien" }
 
     ]
   },
 {
     "date" : "15/12/15",
     "game" : "les chevaliers de la table ronde",
-    "type" : "coop",
-    "winner" : "game",
     "players" : [
-      { "name" : "lolo"     , "score":"1"} ,
-      { "name" : "clemence" , "score":"1"} ,
-      { "name" : "zesk"     , "score":"1"} ,
-      { "name" : "vincent"  , "score":"1"} ,
-      { "name" : "severine" , "score":"1"} ,
-      { "name" : "yohann"   , "score":"0"}
-
+      { "name" : "lolo"     , "score":"1", "team" : "bien" } ,
+      { "name" : "clemence" , "score":"1", "team" : "bien" } ,
+      { "name" : "zesk"     , "score":"1", "team" : "bien" } ,
+      { "name" : "vincent"  , "score":"1", "team" : "bien" } ,
+      { "name" : "severine" , "score":"1", "team" : "bien" } ,
+      { "name" : "yohann"   , "score":"0", "team" : "felon"}
     ]
   },
 {
     "date" : "08/01/16",
     "game" : "colt express",
-    "type" : "max",
     "players" : [
       { "name" : "clemence" , "score":"250"} ,
       { "name" : "lolo"     , "score":"1000"} ,
@@ -143,7 +130,6 @@
 {
     "date" : "08/01/16",
     "game" : "colt express",
-    "type" : "max",
     "players" : [
       { "name" : "clemence" , "score":"2650"} ,
       { "name" : "lolo"     , "score":"1000"} ,
@@ -155,12 +141,11 @@
 {
     "date" : "08/01/16",
     "game" : "splendor",
-    "type" : "max",
     "players" : [
       { "name" : "clemence" , "score":"10"} ,
       { "name" : "lolo"     , "score":"17"} ,
       { "name" : "cedric"   , "score":"12"} ,
-      { "name" : "anne"     , "score":"9"} ,
+      { "name" : "anne"     , "score":"9"}
     ]
   }
   ]
