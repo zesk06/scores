@@ -23,7 +23,7 @@ class Scores(object):
         with open(filename) as json_file:
             json_data = json.load(json_file)
             for json_play in json_data:
-                self.plays.append(Play(json_play))
+                self.plays.append(Play(json_data=json_play))
 
     def dump(self, filename='scores_bis.py'):
         "dumps the scores into given filename"
@@ -65,7 +65,7 @@ class Play(object):
         self.type = 'max'
         self.winners = None
         for player_json in json_data['players']:
-            self.players.append(Player(player_json))
+            self.players.append(Player(json_data=player_json))
         if 'winners' in json_data:
             self.winners = json_data['winners']
 
@@ -83,7 +83,7 @@ class Play(object):
         raise TypeError(repr(self) + " cannot be serialized")
 
     def get_player_order(self):
-        "return the list of player ordered per score"
+        "return a list of tuple [(score, [players])] ordered per score"
         player_per_score = {}
         for (player, score) in [(player.name, player.score)
                                 for player in self.players]:
@@ -96,10 +96,13 @@ class Play(object):
                       key=lambda x: x[0], reverse=True)
 
     def get_winners(self):
-        "return the winners of a play"
-        if self.winners is not None:
+        "return the list of player names that wins the play"
+        if self.winners is not None and isinstance(self.winners, list):
             return self.winners
-        return self.get_player_order()[0]
+        elif self.winners is not None:
+            raise TypeError('Expected type for winners is list but found %s' %
+                            type(self.winners))
+        return self.get_player_order()[0][1]
 
 
 class Player(object):
@@ -110,6 +113,11 @@ class Player(object):
         self.score = score
         if json_data is not None:
             self.__load_json(json_data)
+
+    def __str__(self):
+        "return string representation of the Play"
+        return "%s(%s)" % (self.name,
+                           self.score)
 
     def to_json(self):
         "serialize to json"
@@ -143,8 +151,8 @@ class OverallWinnerStat(object):
 
     def new_play(self, play):
         "handle a new play in this stat"
-        for winner in play.get_winners():
-            print winner
+        winners = play.get_winners()
+        for winner in winners:
             if winner not in self.victory_per_player:
                 self.victory_per_player[winner] = 0
             self.victory_per_player[winner] = (1 +
@@ -157,10 +165,11 @@ class OverallWinnerStat(object):
 
     def __str__(self):
         "to string !"
-        result = ''
+        result = self.description()
         for item in sorted(self.victory_per_player.items(),
-                           key=lambda x: x[1]):
-            result = result + '%s(%s)' % item
+                           key=lambda x: x[1], reverse=True):
+            result = result + '\n%s(%s)' % item
+        return result
 
 if __name__ == '__main__':
     MSCORES = Scores(filename='scores.json')
