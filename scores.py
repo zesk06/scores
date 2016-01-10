@@ -4,6 +4,8 @@
 "Handles scores"
 
 import json
+from jinja2 import Environment
+from jinja2.loaders import FileSystemLoader
 
 
 class Scores(object):
@@ -167,7 +169,7 @@ class OverallWinnerStat(object):
     """Gets the overall number of victory """
     def __init__(self):
         super(OverallWinnerStat, self).__init__()
-        self.per_player = {}
+        self.player_stats = {}
 
     def parse(self, scores):
         "parse given scores"
@@ -177,9 +179,9 @@ class OverallWinnerStat(object):
     def new_play(self, play):
         "handle a new play in this stat"
         for player in play.players:
-            if player.name not in self.per_player:
-                self.per_player[player.name] = PlayerStat(player.name)
-            self.per_player[player.name].new_play(play)
+            if player.name not in self.player_stats:
+                self.player_stats[player.name] = PlayerStat(player.name)
+            self.player_stats[player.name].new_play(play)
 
     @staticmethod
     def description():
@@ -189,13 +191,12 @@ class OverallWinnerStat(object):
     def __str__(self):
         "to string !"
         result = self.description() + '\n'
-        result = result + '%10s;%20s;%20s;%10s' % (
-                                                   'name',
+        result = result + '%10s;%20s;%20s;%10s' % ('name',
                                                    'victoires',
                                                    'participations',
                                                    'pourcentage V')
 
-        for item in sorted(self.per_player.values(),
+        for item in sorted(self.player_stats.values(),
                            key=lambda x: x.win, reverse=True):
             result = result + '\n%10s;%20s;%20s;%10s' % (item.name,
                                                          item.win,
@@ -203,8 +204,21 @@ class OverallWinnerStat(object):
                                                          item.get_percentage())
         return result
 
+    def get_sorted_players(self):
+        "return the players, sorted by win"
+        return sorted(self.player_stats.values(),
+                      key=lambda x: x.win,
+                      reverse=True)
+
+    def to_html(self, filename='target/stats.html'):
+        " generate scores stats as html page"
+        menv = Environment(loader=FileSystemLoader('templates/'))
+        template = menv.get_template('stats.html')
+        with open(filename, 'w') as output:
+            output.write(template.render(title='GAME STATS', stats=self))
+
 if __name__ == '__main__':
     MSCORES = Scores(filename='scores.json')
     STATS = OverallWinnerStat()
     STATS.parse(MSCORES)
-    print STATS
+    STATS.to_html()

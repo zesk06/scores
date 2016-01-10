@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <title>{{ title }}</title>
+  <meta name="description" content="{{ description }}" />
+</head>
+
+<body>
+
+<div id="content">
+<table>
+<tr><th>joueur</th><th>v</th><th>p</th><th>%</th></tr>
+{% for player in  stats.get_sorted_players() %}
+  <tr>
+    <td>{{ player.name }}</td>
+    <td>{{ player.win }}</td>
+    <td>{{ player.plays_number }}</td>
+    <td>{{ player.get_percentage() }}</td>
+  </tr>
+{% endfor %}
+
+</table>
+</div>
+
+</body>
+</html>
