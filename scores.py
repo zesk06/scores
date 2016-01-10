@@ -138,11 +138,36 @@ class Player(object):
         pass
 
 
+class PlayerStat(object):
+    """A player stat"""
+    def __init__(self, name):
+        super(PlayerStat, self).__init__()
+        self.name = name
+        self.win = 0
+        self.plays_number = 0
+
+    def new_play(self, play):
+        "handle a new play in stats"
+        if self.name in play.get_winners():
+            self.win = self.win + 1
+        self.plays_number = self.plays_number + 1
+
+    def __str__(self):
+        "return a string representation"
+        return '%10s\t%20s\t%20s' % (self.name,
+                                     self.win,
+                                     self.plays_number)
+
+    def get_percentage(self):
+        "dummy"
+        return int(100 * (float(self.win) / float(self.plays_number)))
+
+
 class OverallWinnerStat(object):
     """Gets the overall number of victory """
     def __init__(self):
         super(OverallWinnerStat, self).__init__()
-        self.victory_per_player = {}
+        self.per_player = {}
 
     def parse(self, scores):
         "parse given scores"
@@ -151,12 +176,10 @@ class OverallWinnerStat(object):
 
     def new_play(self, play):
         "handle a new play in this stat"
-        winners = play.get_winners()
-        for winner in winners:
-            if winner not in self.victory_per_player:
-                self.victory_per_player[winner] = 0
-            self.victory_per_player[winner] = (1 +
-                                               self.victory_per_player[winner])
+        for player in play.players:
+            if player.name not in self.per_player:
+                self.per_player[player.name] = PlayerStat(player.name)
+            self.per_player[player.name].new_play(play)
 
     @staticmethod
     def description():
@@ -165,10 +188,19 @@ class OverallWinnerStat(object):
 
     def __str__(self):
         "to string !"
-        result = self.description()
-        for item in sorted(self.victory_per_player.items(),
-                           key=lambda x: x[1], reverse=True):
-            result = result + '\n%s(%s)' % item
+        result = self.description() + '\n'
+        result = result + '%10s;%20s;%20s;%10s' % (
+                                                   'name',
+                                                   'victoires',
+                                                   'participations',
+                                                   'pourcentage V')
+
+        for item in sorted(self.per_player.values(),
+                           key=lambda x: x.win, reverse=True):
+            result = result + '\n%10s;%20s;%20s;%10s' % (item.name,
+                                                         item.win,
+                                                         item.plays_number,
+                                                         item.get_percentage())
         return result
 
 if __name__ == '__main__':
