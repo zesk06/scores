@@ -149,6 +149,7 @@ class PlayerStat(object):
         self.name = name
         self.win = 0
         self.beaten_by = []
+        self.games = []
         self.plays_number = 0
 
     def new_play(self, play):
@@ -159,6 +160,7 @@ class PlayerStat(object):
             self.beaten_by.extend(play.get_winners())
 
         self.plays_number = self.plays_number + 1
+        self.games.append(play.game)
 
     def __str__(self):
         "return a string representation"
@@ -173,6 +175,10 @@ class PlayerStat(object):
     def get_worst_ennemy(self):
         "return the player who beat most time (player, defeatnb)"
         return Counter(self.beaten_by).most_common(n=1)[0]
+
+    def get_most_played_game(self):
+        "return the player who beat most time (player, defeatnb)"
+        return Counter(self.games).most_common(n=1)[0]
 
 
 class OverallWinnerStat(object):

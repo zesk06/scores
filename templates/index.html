@@ -23,14 +23,20 @@
           <div class="col-md-12">
             <h1>Classement par nombre de victoires</h1>
             <table class="table">
-                <tr><th>joueur</th><th>v</th><th>p</th><th>%</th><th>pire ennemi</th></tr>
+                <tr>
+                    <th><span class="glyphicon glyphicon-user" title="joueur"/> joueur</th>
+                    <th><span class="glyphicon glyphicon-king" title="Nombre de victoires"/> v</th>
+                    <th><span class="glyphicon glyphicon-th" title="Nombre de parties"/> p</th>
+                    <th>%</th>
+                    <th><span class="glyphicon glyphicon-screenshot" title="Pire ennemi"></span> Pire ennemi</th>
+                </tr>
                 {% for player in  stats.get_sorted_players() %}
                 <tr>
-                    <td>{{ player.name }}</td>
+                    <td><a href="#{{ player.name }}">{{ player.name }}</a></td>
                     <td>{{ player.win }}</td>
                     <td>{{ player.plays_number }}</td>
                     <td>{{ player.get_percentage() }}</td>
-                    <td>{{ player.get_worst_ennemy()[0] }} ({{ player.get_worst_ennemy()[1] }})</td>
+                    <td><a href="#{{ player.get_worst_ennemy()[0] }}">{{ player.get_worst_ennemy()[0] }}</a> (defaite par {{ player.get_worst_ennemy()[1] }} fois)</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -50,6 +56,18 @@
                 {% endfor %}
             </table>
           </div>
+        </div>
+        <div class="row" >
+            <h1>Les joueurs</h1>
+            {% for playername, player_stat in stats.player_stats | dictsort %}
+              <div class="col-md-3">
+                <h2 id="{{ player_stat.name }}" >{{ playername }}</h1>
+                <ul>
+                <li>{{ player_stat.win }} /  {{ player_stat.plays_number }} = {{ player_stat.get_percentage() }} % de victoires</li>
+                <li>Jeu le plus joue: {{ player_stat.get_most_played_game()[0] }} ({{ player_stat.get_most_played_game()[1] }})</li>
+                </ul>
+              </div>
+            {% endfor %}
         </div>
     </div>
 
