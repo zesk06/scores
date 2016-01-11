@@ -19,23 +19,41 @@
   </head>
   <body>
       <div class="container-fluid">
-        <h1>Classement par nombre de victoires</h1>
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-12">
+            <h1>Classement par nombre de victoires</h1>
             <table class="table">
-                <tr><th>joueur</th><th>v</th><th>p</th><th>%</th></tr>
+                <tr><th>joueur</th><th>v</th><th>p</th><th>%</th><th>pire ennemi</th></tr>
                 {% for player in  stats.get_sorted_players() %}
                 <tr>
                     <td>{{ player.name }}</td>
                     <td>{{ player.win }}</td>
                     <td>{{ player.plays_number }}</td>
                     <td>{{ player.get_percentage() }}</td>
+                    <td>{{ player.get_worst_ennemy()[0] }} ({{ player.get_worst_ennemy()[1] }})</td>
                 </tr>
                 {% endfor %}
             </table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <h1>Les parties</h1>
+            <table class="table">
+                <tr><th>date</th><th>jeu</th><th>1ers</th><th>2nd</th><th>3emes</th><th>4emes</th><th>5emes</th><th>6emes</th></tr>
+                {% for play in stats.plays %}
+                <tr>
+                    <td>{{ play.date }}</td>
+                    <td>{{ play.game }}</td>
+                    {% for (score, players) in play.get_player_order() %}<td><span class="badge">{{ score }}</span> {{ ', '.join(players) }}</td>{% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+          </div>
         </div>
     </div>
-</div>
+
+
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->

@@ -6,6 +6,7 @@
 import json
 from jinja2 import Environment
 from jinja2.loaders import FileSystemLoader
+from collections import Counter
 
 
 class Scores(object):
@@ -146,12 +147,16 @@ class PlayerStat(object):
         super(PlayerStat, self).__init__()
         self.name = name
         self.win = 0
+        self.beaten_by = []
         self.plays_number = 0
 
     def new_play(self, play):
         "handle a new play in stats"
         if self.name in play.get_winners():
             self.win = self.win + 1
+        else:
+            self.beaten_by.extend(play.get_winners())
+
         self.plays_number = self.plays_number + 1
 
     def __str__(self):
@@ -161,8 +166,12 @@ class PlayerStat(object):
                                      self.plays_number)
 
     def get_percentage(self):
-        "dummy"
+        "return the percentage of victory"
         return int(100 * (float(self.win) / float(self.plays_number)))
+
+    def get_worst_ennemy(self):
+        "return the player who beat most time (player, defeatnb)"
+        return Counter(self.beaten_by).most_common(n=1)[0]
 
 
 class OverallWinnerStat(object):
@@ -170,6 +179,7 @@ class OverallWinnerStat(object):
     def __init__(self):
         super(OverallWinnerStat, self).__init__()
         self.player_stats = {}
+        self.plays = []
 
     def parse(self, scores):
         "parse given scores"
@@ -178,6 +188,7 @@ class OverallWinnerStat(object):
 
     def new_play(self, play):
         "handle a new play in this stat"
+        self.plays.append(play)
         for player in play.players:
             if player.name not in self.player_stats:
                 self.player_stats[player.name] = PlayerStat(player.name)
@@ -215,7 +226,8 @@ class OverallWinnerStat(object):
         menv = Environment(loader=FileSystemLoader('templates/'))
         template = menv.get_template('stats.html')
         with open(filename, 'w') as output:
-            output.write(template.render(title='GAME STATS', stats=self))
+            output.write(template.render(title='GAME STATS',
+                                         stats=self))
 
 if __name__ == '__main__':
     MSCORES = Scores(filename='scores.json')
