@@ -61,11 +61,17 @@
             <h1>Les joueurs</h1>
             {% for playername, player_stat in stats.player_stats | dictsort %}
               <div class="col-md-3">
-                <h2 id="{{ player_stat.name }}" >{{ playername }}</h1>
-                <ul>
-                <li>{{ player_stat.win }} /  {{ player_stat.plays_number }} = {{ player_stat.get_percentage() }} % de victoires</li>
-                <li>Jeu le plus joue: {{ player_stat.get_most_played_game()[0] }} ({{ player_stat.get_most_played_game()[1] }})</li>
-                </ul>
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title" id="{{ player_stat.name }}">{{ player_stat.name }}</h3>
+                  </div>
+                  <div class="panel-body">
+                    <ul>
+                    <li>{{ player_stat.win }} /  {{ player_stat.plays_number }} = {{ player_stat.get_percentage() }} % de victoires</li>
+                    <li>Jeu le plus joue: {{ player_stat.get_most_played_game()[0] }} ({{ player_stat.get_most_played_game()[1] }})</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             {% endfor %}
         </div>
