@@ -104,7 +104,7 @@ class Play(object):
             if score not in player_per_score:
                 player_per_score[score] = []
             player_per_score[score].append(player)
-        if hasattr(self, 'type') and self.type == 'min':
+        if hasattr(self, 'type') and self.wintype == 'min':
             return sorted(player_per_score.items(), key=lambda x: x[0])
         return sorted(player_per_score.items(),
                       key=lambda x: x[0], reverse=True)
