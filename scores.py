@@ -174,7 +174,11 @@ class PlayerStat(object):
 
     def get_worst_ennemy(self):
         "return the player who beat most time (player, defeatnb)"
-        return Counter(self.beaten_by).most_common(n=1)[0]
+        most_commons = Counter(self.beaten_by).most_common(n=1)
+        if len(most_commons) > 0:
+            return Counter(self.beaten_by).most_common(n=1)[0]
+        # when no one has ever beaten the player
+        return ('none', 0)
 
     def get_most_played_game(self):
         "return the player who beat most time (player, defeatnb)"
