@@ -5,7 +5,7 @@
 
 import json
 from jinja2 import Environment
-from jinja2.loaders import FileSystemLoader
+from jinja2.loaders import PackageLoader
 from collections import Counter
 import os
 
@@ -230,7 +230,7 @@ class OverallWinnerStat(object):
 
     def to_html(self, filename='target/site/index.html'):
         " generate scores stats as html page"
-        menv = Environment(loader=FileSystemLoader('templates/'))
+        menv = Environment(loader=PackageLoader('scores', 'templates'))
         template = menv.get_template('index.html')
         if not os.path.exists('target/site'):
             os.makedirs('target/site')
@@ -238,6 +238,12 @@ class OverallWinnerStat(object):
             output_str = template.render(title=u'GAME STATS',
                                          stats=self)
             output.write(output_str.encode('UTF-8'))
+
+    def get_html(self):
+        " return the html"
+        menv = Environment(loader=PackageLoader('scores', 'templates'))
+        template = menv.get_template('index.html')
+        return template.render(title=u'GAME STATS', stats=self)
 
 if __name__ == '__main__':
     MSCORES = Scores(filename='scores.json')
