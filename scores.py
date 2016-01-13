@@ -235,8 +235,9 @@ class OverallWinnerStat(object):
         if not os.path.exists('target/site'):
             os.makedirs('target/site')
         with open(filename, 'w') as output:
-            output.write(template.render(title='GAME STATS',
-                                         stats=self))
+            output_str = template.render(title=u'GAME STATS',
+                                         stats=self)
+            output.write(output_str.encode('UTF-8'))
 
 if __name__ == '__main__':
     MSCORES = Scores(filename='scores.json')
