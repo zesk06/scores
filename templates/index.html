@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>{{ title }}</title>
+    <meta name="description" content="{{ description }}" />
+    <!-- Bootstrap -->
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+  </head>
+  <body>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <h1>Classement par nombre de victoires</h1>
+            <table class="table">
+                <tr>
+                    <th><span class="glyphicon glyphicon-user" title="joueur"/> joueur</th>
+                    <th><span class="glyphicon glyphicon-king" title="Nombre de victoires"/> v</th>
+                    <th><span class="glyphicon glyphicon-th" title="Nombre de parties"/> p</th>
+                    <th>%</th>
+                    <th><span class="glyphicon glyphicon-screenshot" title="Pire ennemi"></span> Pire ennemi</th>
+                </tr>
+                {% for player in  stats.get_sorted_players() %}
+                <tr>
+                    <td><a href="#{{ player.name }}">{{ player.name }}</a></td>
+                    <td>{{ player.win }}</td>
+                    <td>{{ player.plays_number }}</td>
+                    <td>{{ player.get_percentage() }}</td>
+                    <td><a href="#{{ player.get_worst_ennemy()[0] }}">{{ player.get_worst_ennemy()[0] }}</a> (defaite par {{ player.get_worst_ennemy()[1] }} fois)</td>
+                </tr>
+                {% endfor %}
+            </table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <h1>Les parties</h1>
+            <table class="table">
+                <tr><th>date</th><th>jeu</th><th>1ers</th><th>2nd</th><th>3emes</th><th>4emes</th><th>5emes</th><th>6emes</th></tr>
+                {% for play in stats.plays %}
+                <tr>
+                    <td>{{ play.date }}</td>
+                    <td>{{ play.game }}</td>
+                    {% for (score, players) in play.get_player_order() %}<td><span class="badge">{{ score }}</span> {{ ', '.join(players) }}</td>{% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+          </div>
+        </div>
+        <div class="row" >
+            <h1>Les joueurs</h1>
+            {% for playername, player_stat in stats.player_stats | dictsort %}
+              <div class="col-md-3">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title" id="{{ player_stat.name }}">{{ player_stat.name }}</h3>
+                  </div>
+                  <div class="panel-body">
+                    <ul>
+                    <li>{{ player_stat.win }} /  {{ player_stat.plays_number }} = {{ player_stat.get_percentage() }} % de victoires</li>
+                    <li>Jeu le plus joué: {{ player_stat.get_most_played_game()[0] }} ({{ player_stat.get_most_played_game()[1] }})</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
