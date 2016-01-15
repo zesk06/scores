@@ -42,6 +42,13 @@ def test_scores_dump():
         assert play1.game == play2.game
 
 
+def test_scores_dump_yaml():
+    "test the Scores serialization"
+    mscores = scores.Scores(filename='scores.json')
+    assert mscores is not None
+    mscores.dump_yaml(filename='target/new_scores.yaml')
+
+
 def test_play_load():
     "test"
     json_data = """{

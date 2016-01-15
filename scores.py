@@ -8,6 +8,7 @@ from jinja2 import Environment
 from jinja2.loaders import PackageLoader
 from collections import Counter
 import os
+import yaml
 
 
 class Scores(object):
@@ -25,14 +26,21 @@ class Scores(object):
     def load(self, filename='scores.json'):
         "Load the given filename under json format"
         with open(filename) as json_file:
-            json_data = json.load(json_file)
+            # loading json using yaml ensure byte str instead of unicode string
+            json_data = yaml.safe_load(json_file)
+            print json_data
             for json_play in json_data:
                 self.plays.append(Play(json_data=json_play))
 
-    def dump(self, filename='scores_bis.py'):
+    def dump(self, filename='scores_bis.json'):
         "dumps the scores into given filename"
         with open(filename, 'w') as json_file:
             json.dump(self.to_json(), json_file, indent=4, sort_keys=True)
+
+    def dump_yaml(self, filename='scores_bis.yml'):
+        "dumps the scores into given filename"
+        with open(filename, 'w') as yaml_file:
+            yaml.dump_all(self.to_json(), yaml_file)
 
     def to_json(self):
         "transform object to json"
@@ -76,8 +84,7 @@ class Play(object):
     def to_json(self):
         "serialize to json"
         if isinstance(self, Play):
-            json_data = {"__class__": "Play",
-                         "date": self.date,
+            json_data = {"date": self.date,
                          "game": self.game}
             if hasattr(self, 'winners') and self.winners is not None:
                 json_data['winners'] = self.winners
@@ -111,10 +118,11 @@ class Play(object):
 
 class Player(object):
     """docstring for Player"""
-    def __init__(self, name='noname', score=0, json_data=None):
+    def __init__(self, name='noname', score=0, team=None, json_data=None):
         super(Player, self).__init__()
         self.name = name
         self.score = score
+        self.team = team
         if json_data is not None:
             self.__load_json(json_data)
 
@@ -126,9 +134,10 @@ class Player(object):
     def to_json(self):
         "serialize to json"
         if isinstance(self, Player):
-            json_data = {"__class__": "Player",
-                         "name": self.name,
+            json_data = {"name": self.name,
                          "score": self.score}
+            if self.team:
+                json_data['team'] = self.team
             return json_data
         raise TypeError(repr(self) + " cannot be serialized")
 
@@ -136,6 +145,8 @@ class Player(object):
         "loads json"
         self.name = json_data['name']
         self.score = json_data['score']
+        if 'team' in json_data:
+            self.team = json_data['team']
 
     def dummy(self):
         "dummy"
