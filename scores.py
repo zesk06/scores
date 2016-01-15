@@ -26,7 +26,7 @@ class Scores(object):
     def load(self, filename='scores.json'):
         "Load the given filename under json format"
         with open(filename) as json_file:
-            #json_data = json.load(json_file)
+            # loading json using yaml ensure byte str instead of unicode string
             json_data = yaml.safe_load(json_file)
             print json_data
             for json_play in json_data:
@@ -118,10 +118,11 @@ class Play(object):
 
 class Player(object):
     """docstring for Player"""
-    def __init__(self, name='noname', score=0, json_data=None):
+    def __init__(self, name='noname', score=0, team=None, json_data=None):
         super(Player, self).__init__()
         self.name = name
         self.score = score
+        self.team = team
         if json_data is not None:
             self.__load_json(json_data)
 
@@ -135,6 +136,8 @@ class Player(object):
         if isinstance(self, Player):
             json_data = {"name": self.name,
                          "score": self.score}
+            if self.team:
+                json_data['team'] = self.team
             return json_data
         raise TypeError(repr(self) + " cannot be serialized")
 
@@ -142,6 +145,8 @@ class Player(object):
         "loads json"
         self.name = json_data['name']
         self.score = json_data['score']
+        if 'team' in json_data:
+            self.team = json_data['team']
 
     def dummy(self):
         "dummy"
