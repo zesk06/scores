@@ -74,12 +74,13 @@ class Play(object):
         self.date = json_data['date']
         self.game = json_data['game']
         self.players = []
-        self.type = 'max'
         self.winners = None
         for player_json in json_data['players']:
             self.players.append(Player(json_data=player_json))
         if 'winners' in json_data:
             self.winners = json_data['winners']
+        if 'type' in json_data:
+            self.type = json_data['type']
 
     def to_json(self):
         "serialize to json"
@@ -88,6 +89,8 @@ class Play(object):
                          "game": self.game}
             if hasattr(self, 'winners') and self.winners is not None:
                 json_data['winners'] = self.winners
+            if hasattr(self, 'type') and self.type is not None:
+                json_data['type'] = self.type
             json_data['players'] = [player.to_json()
                                     for player in self.players]
             return json_data

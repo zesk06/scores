@@ -175,6 +175,7 @@
   {
     "date" : "15/01/16",
     "game" : "parade",
+    "type" : "min",
     "players" : [
       { "name" : "allugan"   , "score":24},
       { "name" : "clemence"  , "score":10} ,
@@ -187,6 +188,7 @@
   {
     "date" : "15/01/16",
     "game" : "parade",
+    "type" : "min",
     "players" : [
       { "name" : "allugan"   , "score":9},
       { "name" : "clemence"  , "score":8} ,
