@@ -1,13 +1,14 @@
 
 # A very simple Bottle Hello World app for you to get started with...
-from bottle import default_app, request, route, post, get
+import bottle
+from bottle import default_app, request, route, post, get, run
 from jinja2 import Environment
 from jinja2.loaders import PackageLoader
 import scores
 import os
 
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-MSCORES = scores.Scores(filename=os.path.join(THIS_DIR, 'scores.json'))
+MSCORES = scores.Scores(filename=os.path.join(THIS_DIR, 'scores.yml'))
 
 @route('/')
 def index():
@@ -39,15 +40,18 @@ def add():
     if request.forms.get('minmax') is not None and len(request.forms.get('minmax')) > 0:
         new_play.type = request.forms.get('minmax')
     MSCORES.plays.append(new_play)
-    MSCORES.dump(os.path.join(THIS_DIR, 'scores.json'))
+    MSCORES.dump(os.path.join(THIS_DIR, 'scores.yml'))
     return '<p>[<a href="/">OK</a>]: added play %s (minmax was %s)</p>' % (new_play, request.forms.get('minmax'))
 
 
 @get('/rm/<play_id:int>')
 def remove(play_id):
     old_play = MSCORES.plays.pop(play_id)
-    MSCORES.dump(os.path.join(THIS_DIR, 'scores.json'))
+    MSCORES.dump(os.path.join(THIS_DIR, 'scores.yml'))
     return '<p>[<a href="/">OK</a>]: play %s has been removed</p>' % old_play
 
 application = default_app()
 
+if __name__ == '__main__':
+    bottle.debug(True)
+    run(reloader=True)
