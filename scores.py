@@ -3,7 +3,6 @@
 
 "Handles scores"
 
-import json
 from jinja2 import Environment
 from jinja2.loaders import PackageLoader
 from collections import Counter
@@ -23,24 +22,19 @@ class Scores(object):
         "returns string representation"
         return "%s" % '\n'.join([str(play) for play in self.plays])
 
-    def load(self, filename='scores.json'):
-        "Load the given filename under json format"
-        with open(filename) as json_file:
-            # loading json using yaml ensure byte str instead of unicode string
-            json_data = yaml.safe_load(json_file)
-            print json_data
-            for json_play in json_data:
-                self.plays.append(Play(json_data=json_play))
+    def load(self, filename='scores.yml'):
+        "Load the given filename under YAML format"
+        with open(filename) as yml_file:
+            # loading yaml.safe_load ensure byte str instead of unicode string
+            yml_data = yaml.safe_load(yml_file)
+            print yml_data
+            for json_play in yml_data:
+                self.plays.append(Play(yml_data=json_play))
 
-    def dump(self, filename='scores_bis.json'):
-        "dumps the scores into given filename"
-        with open(filename, 'w') as json_file:
-            json.dump(self.to_json(), json_file, indent=4, sort_keys=True)
-
-    def dump_yaml(self, filename='scores_bis.yml'):
+    def dump(self, filename='scores.yml'):
         "dumps the scores into given filename"
         with open(filename, 'w') as yaml_file:
-            yaml.dump_all(self.to_json(), yaml_file)
+            yaml.dump(self.to_json(), yaml_file)
 
     def to_json(self):
         "transform object to json"
@@ -49,14 +43,14 @@ class Scores(object):
 
 class Play(object):
     """docstring for ClassName"""
-    def __init__(self, json_data=None):
+    def __init__(self, yml_data=None):
         super(Play, self).__init__()
         self.date = '01/01/1977'
         self.game = 'nogame'
         self.players = []
         self.winners = []
-        if json_data is not None:
-            self.__load_json(json_data)
+        if yml_data is not None:
+            self.__load_json(yml_data)
 
     def __str__(self):
         "return string representation of the Play"
@@ -69,31 +63,31 @@ class Play(object):
                               ', '.join(['%s(%s)' % (player.name, player.score)
                                          for player in sorted_players]))
 
-    def __load_json(self, json_data):
+    def __load_json(self, yml_data):
         "loads json datas"
-        self.date = json_data['date']
-        self.game = json_data['game']
+        self.date = yml_data['date']
+        self.game = yml_data['game']
         self.players = []
         self.winners = None
-        for player_json in json_data['players']:
-            self.players.append(Player(json_data=player_json))
-        if 'winners' in json_data:
-            self.winners = json_data['winners']
-        if 'type' in json_data:
-            self.type = json_data['type']
+        for player_json in yml_data['players']:
+            self.players.append(Player(yml_data=player_json))
+        if 'winners' in yml_data:
+            self.winners = yml_data['winners']
+        if 'type' in yml_data:
+            self.type = yml_data['type']
 
     def to_json(self):
         "serialize to json"
         if isinstance(self, Play):
-            json_data = {"date": self.date,
+            yml_data = {"date": self.date,
                          "game": self.game}
             if hasattr(self, 'winners') and self.winners is not None:
-                json_data['winners'] = self.winners
+                yml_data['winners'] = self.winners
             if hasattr(self, 'type') and self.type is not None:
-                json_data['type'] = self.type
-            json_data['players'] = [player.to_json()
+                yml_data['type'] = self.type
+            yml_data['players'] = [player.to_json()
                                     for player in self.players]
-            return json_data
+            return yml_data
         raise TypeError(repr(self) + " cannot be serialized")
 
     def get_player_order(self):
@@ -121,13 +115,13 @@ class Play(object):
 
 class Player(object):
     """docstring for Player"""
-    def __init__(self, name='noname', score=0, team=None, json_data=None):
+    def __init__(self, name='noname', score=0, team=None, yml_data=None):
         super(Player, self).__init__()
         self.name = name
         self.score = score
         self.team = team
-        if json_data is not None:
-            self.__load_json(json_data)
+        if yml_data is not None:
+            self.__load_json(yml_data)
 
     def __str__(self):
         "return string representation of the Play"
@@ -137,19 +131,19 @@ class Player(object):
     def to_json(self):
         "serialize to json"
         if isinstance(self, Player):
-            json_data = {"name": self.name,
+            yml_data = {"name": self.name,
                          "score": self.score}
             if self.team:
-                json_data['team'] = self.team
-            return json_data
+                yml_data['team'] = self.team
+            return yml_data
         raise TypeError(repr(self) + " cannot be serialized")
 
-    def __load_json(self, json_data):
+    def __load_json(self, yml_data):
         "loads json"
-        self.name = json_data['name']
-        self.score = json_data['score']
-        if 'team' in json_data:
-            self.team = json_data['team']
+        self.name = yml_data['name']
+        self.score = yml_data['score']
+        if 'team' in yml_data:
+            self.team = yml_data['team']
 
     def dummy(self):
         "dummy"
@@ -264,7 +258,7 @@ class OverallWinnerStat(object):
         return template.render(title=u'GAME STATS', stats=self)
 
 if __name__ == '__main__':
-    MSCORES = Scores(filename='scores.json')
+    MSCORES = Scores(filename='scores.yml')
     STATS = OverallWinnerStat()
     STATS.parse(MSCORES)
     STATS.to_html()
