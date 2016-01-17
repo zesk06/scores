@@ -46,9 +46,10 @@
           <div class="col-md-12">
             <h1>Les parties</h1>
             <table class="table">
-                <tr><th>date</th><th>jeu</th><th>1ers</th><th>2nd</th><th>3emes</th><th>4emes</th><th>5emes</th><th>6emes</th></tr>
+                <tr><th>#</th><th>date</th><th>jeu</th><th>1ers</th><th>2nd</th><th>3emes</th><th>4emes</th><th>5emes</th><th>6emes</th></tr>
                 {% for play in stats.plays %}
                 <tr>
+                    <td><a href="/rm/{{ loop.index - 1 }}"><span class="glyphicon glyphicon-remove-sign"/></a></td>
                     <td>{{ play.date }}</td>
                     <td>{{ play.game }}</td>
                     {% for (score, players) in play.get_player_order() %}<td><span class="badge">{{ score }}</span> {{ ', '.join(players) }}</td>{% endfor %}
