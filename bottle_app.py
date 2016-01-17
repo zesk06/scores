@@ -28,13 +28,20 @@ def add():
     new_play.date = request.forms.get('date')
     new_play.game = request.forms.get('game')
     players = request.forms.get('players')
-    for player in players.split(' '):
-        (player_name,player_score) = player.split(':')
+    for player in players.split('\n'):
+        elements = player.split(':')
+        if len(elements) == 2:
+            (player_name, player_score) = elements
+        else:
+            return 'bad format for player line "%s", shall contains 2 ":" separated tokens'
         new_player = scores.Player(name=player_name, score=player_score)
         new_play.players.append(new_player)
+    if request.forms.get('minmax') is not None and len(request.forms.get('minmax')) > 0:
+        new_play.type = request.forms.get('minmax')
     MSCORES.plays.append(new_play)
     MSCORES.dump(os.path.join(THIS_DIR, 'scores.json'))
-    return '<p>[<a href="/">OK</a>]: %s</p>' % new_play
+    return '<p>[<a href="/">OK</a>]: added play %s (minmax was %s)</p>' % (new_play, request.forms.get('minmax'))
+
 
 @get('/rm/<play_id:int>')
 def remove(play_id):
