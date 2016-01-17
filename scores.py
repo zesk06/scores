@@ -166,10 +166,12 @@ class GameStat(object):
         self.plays_number = 0
         self.highest_score_play = None
         self.lowest_score_play = None
+        self.scores = []
 
     def new_play(self, play):
         "handle a new play in stats"
         self.plays_number = self.plays_number + 1
+        self.scores.extend([player.score for player in play.players])
         if self.highest_score_play is None:
             self.highest_score_play = play
         if self.lowest_score_play is None:
@@ -197,6 +199,10 @@ class GameStat(object):
     def get_lowest_score(self):
         "return the play that had the lowest score"
         return self.lowest_score_play
+
+    def get_average_score(self):
+        "return the average score"
+        return sum(self.scores) / len(self.scores)
 
 
 class PlayerStat(object):

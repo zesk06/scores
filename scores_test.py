@@ -125,6 +125,9 @@ def test_game_stat():
     assert game_stats.get_highest_score() == new_play3
     assert game_stats.get_lowest_score() == new_play2
 
+    # test average score !
+    assert game_stats.get_average_score() == 36/6
+
 
 if __name__ == '__main__':
     pytest.main()

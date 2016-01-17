@@ -89,8 +89,9 @@
                     <li>{{ game_stat.plays_number }} parties !</li>
                     {% set highest = game_stat.get_highest_score() %}
                     {% if highest != None %}
-                    <li>Meilleur: <span class="label label-success">{{ highest.get_highest_score() }}</span> par {{ highest.get_winners() | join(', ')}} le {{ highest.date }}</li>
+                    <li>Best: <span class="label label-success">{{ highest.get_highest_score() }}</span> par {{ highest.get_winners() | join(', ')}} le {{ highest.date }}</li>
                     {% endif %}
+                    <li>Moye: <span class="label label-default">{{ game_stat.get_average_score() }}</span></li>
                     {% set lowest = game_stat.get_lowest_score() %}
                     {% if lowest != None %}
                     <li>Pire: <span class="label label-danger">{{ lowest.get_lowest_score() }}</span> par {{ lowest.get_player_order()[-1][1] | join(', ')}} le {{ highest.date }}</li>
