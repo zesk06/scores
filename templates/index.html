@@ -52,7 +52,7 @@
                     <td><a href="/rm/{{ loop.index - 1 }}"><span class="glyphicon glyphicon-remove-sign"/></a></td>
                     <td>{{ play.date }}</td>
                     <td>{{ play.game }}</td>
-                    {% for (score, players) in play.get_player_order() %}<td><span class="badge">{{ score }}</span> {{ ', '.join(players) }}</td>{% endfor %}
+                    {% for (score, players) in play.get_player_order() %}<td><span class="label label-default">{{ score }}</span> {{ ', '.join(players) }}</td>{% endfor %}
                 </tr>
                 {% endfor %}
             </table>
@@ -70,6 +70,31 @@
                     <ul>
                     <li>{{ player_stat.win }} /  {{ player_stat.plays_number }} = {{ player_stat.get_percentage() }} % de victoires</li>
                     <li>Jeu le plus joué: {{ player_stat.get_most_played_game()[0] }} ({{ player_stat.get_most_played_game()[1] }})</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+        </div>
+        <div class="row" >
+            <h1>Les jeux</h1>
+            {% for game, game_stat in stats.game_stats | dictsort %}
+              <div class="col-md-3">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title" id="{{ game_stat.game }}">{{ game_stat.game }}</h3>
+                  </div>
+                  <div class="panel-body">
+                    <ul>
+                    <li>{{ game_stat.plays_number }} parties !</li>
+                    {% set highest = game_stat.get_highest_score() %}
+                    {% if highest != None %}
+                    <li>Meilleur: <span class="label label-success">{{ highest.get_highest_score() }}</span> par {{ highest.get_winners() | join(', ')}} le {{ highest.date }}</li>
+                    {% endif %}
+                    {% set lowest = game_stat.get_lowest_score() %}
+                    {% if lowest != None %}
+                    <li>Pire: <span class="label label-danger">{{ lowest.get_lowest_score() }}</span> par {{ lowest.get_player_order()[-1][1] | join(', ')}} le {{ highest.date }}</li>
+                    {% endif %}
                     </ul>
                   </div>
                 </div>

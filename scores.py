@@ -80,13 +80,13 @@ class Play(object):
         "serialize to json"
         if isinstance(self, Play):
             yml_data = {"date": self.date,
-                         "game": self.game}
+                        "game": self.game}
             if hasattr(self, 'winners') and self.winners is not None:
                 yml_data['winners'] = self.winners
             if hasattr(self, 'type') and self.type is not None:
                 yml_data['type'] = self.type
             yml_data['players'] = [player.to_json()
-                                    for player in self.players]
+                                   for player in self.players]
             return yml_data
         raise TypeError(repr(self) + " cannot be serialized")
 
@@ -112,6 +112,14 @@ class Play(object):
                             type(self.winners))
         return self.get_player_order()[0][1]
 
+    def get_highest_score(self):
+        "return the high score of the play"
+        return self.get_player_order()[0][0]
+
+    def get_lowest_score(self):
+        "return the lowest score of the play"
+        return self.get_player_order()[-1][0]
+
 
 class Player(object):
     """docstring for Player"""
@@ -132,7 +140,7 @@ class Player(object):
         "serialize to json"
         if isinstance(self, Player):
             yml_data = {"name": self.name,
-                         "score": self.score}
+                        "score": self.score}
             if self.team:
                 yml_data['team'] = self.team
             return yml_data
@@ -148,6 +156,36 @@ class Player(object):
     def dummy(self):
         "dummy"
         pass
+
+
+class GameStat(object):
+    """A game stat"""
+    def __init__(self, game):
+        super(GameStat, self).__init__()
+        self.game = game
+        self.plays_number = 0
+        self.highest_score_play = None
+        self.lowest_score_play = None
+
+    def new_play(self, play):
+        "handle a new play in stats"
+        self.plays_number = self.plays_number + 1
+        if (self.highest_score_play is None or
+            (play.get_highest_score() >
+                self.highest_score_play.get_highest_score())):
+            self.highest_score_play = play
+        if (self.lowest_score_play is None or
+            (play.get_lowest_score() <
+                self.lowest_score_play.get_lowest_score())):
+            self.lowest_score_play = play
+
+    def get_highest_score(self):
+        "return the play that had the highest score"
+        return self.highest_score_play
+
+    def get_lowest_score(self):
+        "return the play that had the lowest score"
+        return self.lowest_score_play
 
 
 class PlayerStat(object):
@@ -198,6 +236,7 @@ class OverallWinnerStat(object):
     def __init__(self):
         super(OverallWinnerStat, self).__init__()
         self.player_stats = {}
+        self.game_stats = {}
         self.plays = []
 
     def parse(self, scores):
@@ -212,6 +251,9 @@ class OverallWinnerStat(object):
             if player.name not in self.player_stats:
                 self.player_stats[player.name] = PlayerStat(player.name)
             self.player_stats[player.name].new_play(play)
+        if play.game not in self.game_stats:
+            self.game_stats[play.game] = GameStat(play.game)
+        self.game_stats[play.game].new_play(play)
 
     @staticmethod
     def description():
