@@ -4,7 +4,7 @@
 "test scores.py"
 
 import scores
-from scores import Play, Player
+from scores import Play, Player, GameStat
 import pytest
 import os
 import yaml
@@ -87,6 +87,44 @@ def test_play():
     order = myplay.get_player_order()
     assert len(order) == 2
     assert order == [(100, ['un', 'deux']), (1, ['trois'])]
+
+
+def test_game_stat():
+    "Test the game stat class"
+    game_stats = GameStat('parade')
+    new_play = Play()
+    new_play.game = 'parade'
+    new_play.type = 'min'
+    new_play.date = '10/01/16'
+    new_play.players.append(Player(name='p1', score=10))
+    new_play.players.append(Player(name='p2', score=1))
+
+    game_stats.new_play(new_play)
+    assert game_stats.get_highest_score() == new_play
+    assert game_stats.get_lowest_score() == new_play
+
+    # add new play
+    # lowest
+    new_play2 = Play()
+    new_play2.game = 'parade'
+    new_play2.type = 'min'
+    new_play2.date = '11/01/16'
+    new_play2.players.append(Player(name='p1', score=12))
+    new_play2.players.append(Player(name='p2', score=1))
+    game_stats.new_play(new_play2)
+    # highest
+    new_play3 = Play()
+    new_play3.game = 'parade'
+    new_play3.type = 'min'
+    new_play3.date = '12/01/16'
+    new_play3.players.append(Player(name='p1', score=12))
+    new_play3.players.append(Player(name='p2', score=0))
+    game_stats.new_play(new_play3)
+    print ('highest score dates expected %s but found %s ' %
+           (new_play3.date, game_stats.get_highest_score().date))
+    assert game_stats.get_highest_score() == new_play3
+    assert game_stats.get_lowest_score() == new_play2
+
 
 if __name__ == '__main__':
     pytest.main()

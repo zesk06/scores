@@ -170,14 +170,25 @@ class GameStat(object):
     def new_play(self, play):
         "handle a new play in stats"
         self.plays_number = self.plays_number + 1
-        if (self.highest_score_play is None or
-            (play.get_highest_score() >
-                self.highest_score_play.get_highest_score())):
+        if self.highest_score_play is None:
             self.highest_score_play = play
-        if (self.lowest_score_play is None or
-            (play.get_lowest_score() <
-                self.lowest_score_play.get_lowest_score())):
+        if self.lowest_score_play is None:
             self.lowest_score_play = play
+        if (hasattr(self.highest_score_play, 'type') and
+                self.highest_score_play.type == 'min'):
+            if (play.get_highest_score() <
+                    self.highest_score_play.get_highest_score()):
+                self.highest_score_play = play
+            if (play.get_lowest_score() >
+                    self.lowest_score_play.get_lowest_score()):
+                self.lowest_score_play = play
+        else:
+            if (play.get_highest_score() >
+                    self.highest_score_play.get_highest_score()):
+                self.highest_score_play = play
+            if (play.get_lowest_score() <
+                    self.lowest_score_play.get_lowest_score()):
+                self.lowest_score_play = play
 
     def get_highest_score(self):
         "return the play that had the highest score"
