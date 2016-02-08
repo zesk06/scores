@@ -145,3 +145,25 @@
   - {name: vincent, score: 19}
   - {name: zesk, score: 12}
   type: min
+- date: 05/02/16
+  game: descendance
+  players:
+  - {name: damien, score: 47}
+  - {name: lolo, score: 54}
+  - {name: maud, score: 49}
+  - {name: zesk, score: 52}
+- date: 06/02/16
+  game: agricola_2j
+  players:
+  - {name: lolo, score: 45}
+  - {name: zesk, score: 45}
+- date: 06/02/16
+  game: les chevaliers de la table ronde
+  players:
+  - {name: christine, score: 0, team: bien}
+  - {name: claire, score: 0, team: bien}
+  - {name: edmond, score: 0, team: bien}
+  - {name: lolo, score: 1, team: felon}
+  - {name: vincent_templier, score: 0, team: bien}
+  - {name: zesk, score: 0, team: bien}
+
