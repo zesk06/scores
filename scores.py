@@ -42,9 +42,13 @@ class Scores(object):
 
 
 class Play(object):
-    """docstring for ClassName"""
+    """A Play is a board game instance with players and scores.
+    """
+    id_counter = 0
     def __init__(self, yml_data=None):
         super(Play, self).__init__()
+        self.play_id = Play.id_counter
+        Play.id_counter += 1
         self.date = '01/01/1977'
         self.game = 'nogame'
         self.players = []
@@ -58,10 +62,10 @@ class Play(object):
                                 key=lambda p: p.score,
                                 reverse=True)
 
-        return "%s: %s %s" % (self.date,
-                              self.game,
-                              ', '.join(['%s(%s)' % (player.name, player.score)
-                                         for player in sorted_players]))
+        return "[%03d]%s: %s %s" % (self.play_id, self.date,
+                                    self.game,
+                                    ', '.join(['%s(%s)' % (player.name, player.score)
+                                              for player in sorted_players]))
 
     def __load_json(self, yml_data):
         "loads json datas"
