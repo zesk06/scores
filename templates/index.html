@@ -9,7 +9,10 @@
     <meta name="description" content="{{ description }}" />
     <!-- Bootstrap -->
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <!-- highlight in light green the targeted item -->
+    <style type="text/css">
+		  :target {background-color: #dff0d8;}
+	</style>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -46,12 +49,13 @@
           <div class="col-md-12">
             <h1>Les parties</h1>
             <table class="table">
-                <tr><th>date</th><th>jeu</th><th>1ers</th><th>2nd</th><th>3emes</th><th>4emes</th><th>5emes</th><th>6emes</th></tr>
+                <tr><th>#</th><th>date</th><th>jeu</th><th>1ers</th><th>2nd</th><th>3emes</th><th>4emes</th><th>5emes</th><th>6emes</th></tr>
                 {% for play in stats.plays %}
-                <tr>
+                <tr id="p_{{ play.play_id }}" >
+                    <td><a href="/rm/{{ loop.index - 1 }}"><span class="glyphicon glyphicon-remove-sign"/></a></td>
                     <td>{{ play.date }}</td>
-                    <td>{{ play.game }}</td>
-                    {% for (score, players) in play.get_player_order() %}<td><span class="badge">{{ score }}</span> {{ ', '.join(players) }}</td>{% endfor %}
+                    <td><a href="#{{ play.game }}">{{ play.game }}</a></td>
+                    {% for (score, players) in play.get_player_order() %}<td><span class="label label-default">{{ score }}</span> {{ ', '.join(players) }}</td>{% endfor %}
                 </tr>
                 {% endfor %}
             </table>
@@ -61,14 +65,49 @@
             <h1>Les joueurs</h1>
             {% for playername, player_stat in stats.player_stats | dictsort %}
               <div class="col-md-3">
-                <div class="panel panel-default">
+                <div class="panel panel-default" id="{{ player_stat.name }}">
                   <div class="panel-heading">
-                    <h3 class="panel-title" id="{{ player_stat.name }}">{{ player_stat.name }}</h3>
+                    <h3 class="panel-title">{{ player_stat.name }}</h3>
                   </div>
                   <div class="panel-body">
                     <ul>
                     <li>{{ player_stat.win }} /  {{ player_stat.plays_number }} = {{ player_stat.get_percentage() }} % de victoires</li>
                     <li>Jeu le plus joué: {{ player_stat.get_most_played_game()[0] }} ({{ player_stat.get_most_played_game()[1] }})</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+        </div>
+        <div class="row" >
+            <h1>Les jeux</h1>
+            {% for game, game_stat in stats.game_stats | dictsort %}
+              <div class="col-md-3">
+                <div class="panel panel-default" id="{{ game_stat.game }}">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">{{ game_stat.game }}</h3>
+                  </div>
+                  <div class="panel-body">
+                    <ul>
+                    {% if game_stat.plays_number == 1 %}<li>Une seule partie.</li>{% endif %}
+                    {% if game_stat.plays_number > 1  %}<li>{{ game_stat.plays_number }} parties !</li>{% endif %}
+                    {% set highest = game_stat.get_highest_score() %}
+                    {% if highest != None %}
+                    <li>
+                        <span class="glyphicon glyphicon-hand-up" title="meilleur score"></span> <span class="label label-success">{{ highest.get_highest_score() }}</span>
+                        par {{ highest.get_winners() | join(', ')}} le <a href="#p_{{ highest.play_id }}">{{ highest.date }}</a>
+                    </li>
+                    {% endif %}
+                    <li>
+                        <span class="glyphicon glyphicon-hand-right" title="score moyen"></span> <span class="label label-default">{{ game_stat.get_average_score() }}</span>
+                    </li>
+                    {% set lowest = game_stat.get_lowest_score() %}
+                    {% if lowest != None %}
+                    <li>
+                        <span class="glyphicon glyphicon-hand-down" title="pire score"></span> <span class="label label-danger">{{ lowest.get_lowest_score() }}</span>
+                        par {{ lowest.get_player_order()[-1][1] | join(', ')}} le <a href="#p_{{ highest.play_id }}">{{ lowest.date }}</a>
+                    </li>
+                    {% endif %}
                     </ul>
                   </div>
                 </div>
