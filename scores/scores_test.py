@@ -127,7 +127,3 @@ def test_game_stat():
 
     # test average score !
     assert game_stats.get_average_score() == 36/6
-
-
-if __name__ == '__main__':
-    pytest.main()

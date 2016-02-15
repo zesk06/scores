@@ -319,9 +319,3 @@ class OverallWinnerStat(object):
         menv = Environment(loader=PackageLoader('scores', 'templates'))
         template = menv.get_template('index.html')
         return template.render(title=u'GAME STATS', stats=self)
-
-if __name__ == '__main__':
-    MSCORES = Scores(filename='scores.yml')
-    STATS = OverallWinnerStat()
-    STATS.parse(MSCORES)
-    STATS.to_html()
