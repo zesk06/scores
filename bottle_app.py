@@ -66,7 +66,7 @@ def remove(play_id):
     " remove the play record at index play_id"
     mscores = get_mscores()
     old_play = mscores.plays.pop(play_id)
-    mscores.dump(os.path.join(THIS_DIR, 'scores.yml'))
+    mscores.dump(os.path.join(THIS_DIR, FILENAME))
     return '<p>[<a href="/">OK</a>]: play %s has been removed</p>' % old_play
 
 
