@@ -13,14 +13,15 @@ import os
 
 
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-MSCORES = scores.Scores(filename=os.path.join(THIS_DIR, 'scores.yml'))
+FILENAME = os.path.join(THIS_DIR, 'scores.yml')
 
 
 @route('/')
 def index():
     "return the homepage"
+    mscores = get_mscores()
     stats = scores.OverallWinnerStat()
-    stats.parse(MSCORES)
+    stats.parse(mscores)
     return stats.get_html()
 
 
@@ -35,11 +36,12 @@ def new():
 @post('/add')
 def add():
     " when posting for a new play record"
+    mscores = get_mscores()
     new_play = scores.Play()
     new_play.date = request.forms.get('date')
     new_play.game = request.forms.get('game')
     players = request.forms.get('players')
-    for player in players.split('\n'):
+    for player in [line for line in players.split('\n') if len(line.rstrip()) > 0]:
         elements = player.split(':')
         if len(elements) == 2:
             (player_name, player_score) = elements
@@ -51,8 +53,8 @@ def add():
         new_play.players.append(new_player)
     if request.forms.get('minmax') and len(request.forms.get('minmax')) > 0:
         new_play.type = request.forms.get('minmax')
-    MSCORES.plays.append(new_play)
-    MSCORES.dump(os.path.join(THIS_DIR, 'scores.yml'))
+    mscores.plays.append(new_play)
+    mscores.dump(os.path.join(THIS_DIR, FILENAME))
     html = '<p>[<a href="/">OK</a>]:'
     html = html + ('added play %s (minmax was %s)</p>' %
                    (new_play, request.forms.get('minmax')))
@@ -62,9 +64,15 @@ def add():
 @get('/rm/<play_id:int>')
 def remove(play_id):
     " remove the play record at index play_id"
-    old_play = MSCORES.plays.pop(play_id)
-    MSCORES.dump(os.path.join(THIS_DIR, 'scores.yml'))
+    mscores = get_mscores()
+    old_play = mscores.plays.pop(play_id)
+    mscores.dump(os.path.join(THIS_DIR, 'scores.yml'))
     return '<p>[<a href="/">OK</a>]: play %s has been removed</p>' % old_play
+
+
+def get_mscores():
+    "returns the mscores"
+    return scores.Scores(filename=os.path.join(THIS_DIR, FILENAME))
 
 
 application = default_app()  # pylint: disable = C0103

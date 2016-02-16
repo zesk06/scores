@@ -130,7 +130,7 @@ class Player(object):
     def __init__(self, name='noname', score=0, team=None, yml_data=None):
         super(Player, self).__init__()
         self.name = name
-        self.score = score
+        self.score = int(score)
         self.team = team
         if yml_data is not None:
             self.__load_json(yml_data)
