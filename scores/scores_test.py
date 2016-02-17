@@ -4,10 +4,11 @@
 "test scores.py"
 
 import scores
-from scores import Play, Player, GameStat
+from scores import Play, Player, GameStat, PlayerStat, OverallWinnerStat
 import pytest
 import os
 import yaml
+import shutil
 
 if not os.path.exists('target'):
     os.makedirs('target')
@@ -27,6 +28,7 @@ def test_scores():
     assert len(mscores.plays) > 0
     for player in mscores.plays[0].players:
         print '%s' % player
+    print 'scores is %s' % mscores
 
 
 def test_scores_dump():
@@ -73,21 +75,37 @@ type: min
 
 def test_play():
     "test the play class"
-    myplay = Play()
-    myplay.players.append(Player('un', 100))
-    myplay.players.append(Player('deux', 10))
-    myplay.players.append(Player('trois', 1))
+    myplay = get_play()
     order = myplay.get_player_order()
     assert len(order) == 3
-    assert order == [(100, ['un']), (10, ['deux']), (1, ['trois'])]
+    assert order == [(100, ['cent']), (10, ['dix']), (1, ['un'])]
     myplay = Play()
-    myplay.players.append(Player('un', 100))
-    myplay.players.append(Player('deux', 100))
-    myplay.players.append(Player('trois', 1))
+    myplay.players.append(Player('cent', 100))
+    myplay.players.append(Player('cent2', 100))
+    myplay.players.append(Player('un', 1))
     order = myplay.get_player_order()
     assert len(order) == 2
-    assert order == [(100, ['un', 'deux']), (1, ['trois'])]
+    assert order == [(100, ['cent', 'cent2']), (1, ['un'])]
+    print 'play is %s' % myplay
+    myplay = Play()
+    myplay.winners = ['cent', 'un']
+    assert myplay.get_winners() == ['cent', 'un'], "expected winners list"
+    myplay.winners = 'not a list FFS'
+    with pytest.raises(TypeError):
+        myplay.get_winners()
 
+def test_play_to_json():
+    myplay = get_play()
+    myplay.winners = ['cent', 'un']
+    assert myplay.to_json() is not None
+
+
+def get_play():
+    myplay = Play()
+    myplay.players.append(Player('cent', 100))
+    myplay.players.append(Player('dix', 10))
+    myplay.players.append(Player('un', 1))
+    return myplay
 
 def test_game_stat():
     "Test the game stat class"
@@ -127,3 +145,23 @@ def test_game_stat():
 
     # test average score !
     assert game_stats.get_average_score() == 36/6
+
+def test_player_stat():
+    player_stat = PlayerStat('test_player')
+    assert player_stat
+    assert player_stat.__str__() != ''
+    assert player_stat.get_worst_ennemy() == ('none',0)
+
+
+def test_overall_winner_stat():
+    overall_stat = OverallWinnerStat()
+    mscores = scores.Scores(filename='scores.yml')
+    for play in mscores.plays:
+        overall_stat.new_play(play)
+
+    assert overall_stat
+    assert overall_stat.__str__() != ''
+    overall_stat.to_html()
+    if os.path.exists('target/anunexpectedfolder'):
+        shutil.rmtree('target/anunexpectedfolder')
+    overall_stat.to_html(filename='target/anunexpectedfolder/index.html')

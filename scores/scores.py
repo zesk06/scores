@@ -82,17 +82,16 @@ class Play(object):
 
     def to_json(self):
         "serialize to json"
-        if isinstance(self, Play):
-            yml_data = {"date": self.date,
-                        "game": self.game}
-            if hasattr(self, 'winners') and self.winners is not None:
-                yml_data['winners'] = self.winners
-            if hasattr(self, 'type') and self.type is not None:
-                yml_data['type'] = self.type
-            yml_data['players'] = [player.to_json()
-                                   for player in self.players]
-            return yml_data
-        raise TypeError(repr(self) + " cannot be serialized")
+        yml_data = {"date": self.date,
+                    "game": self.game}
+        if hasattr(self, 'winners') and self.winners is not None:
+            yml_data['winners'] = self.winners
+        if hasattr(self, 'type') and self.type is not None:
+            yml_data['type'] = self.type
+        yml_data['players'] = [player.to_json()
+                               for player in self.players]
+        return yml_data
+
 
     def get_player_order(self):
         "return a list of tuple [(score, [players])] ordered per score"
@@ -142,13 +141,11 @@ class Player(object):
 
     def to_json(self):
         "serialize to json"
-        if isinstance(self, Player):
-            yml_data = {"name": self.name,
-                        "score": self.score}
-            if self.team:
-                yml_data['team'] = self.team
-            return yml_data
-        raise TypeError(repr(self) + " cannot be serialized")
+        yml_data = {"name": self.name,
+                    "score": self.score}
+        if self.team:
+            yml_data['team'] = self.team
+        return yml_data
 
     def __load_json(self, yml_data):
         "loads json"
@@ -156,10 +153,6 @@ class Player(object):
         self.score = yml_data['score']
         if 'team' in yml_data:
             self.team = yml_data['team']
-
-    def dummy(self):
-        "dummy"
-        pass
 
 
 class GameStat(object):
@@ -276,18 +269,12 @@ class OverallWinnerStat(object):
             self.game_stats[play.game] = GameStat(play.game)
         self.game_stats[play.game].new_play(play)
 
-    @staticmethod
-    def description():
-        "return the stat header"
-        return "# Overall victories"
-
     def __str__(self):
         "to string !"
-        result = self.description() + '\n'
-        result = result + '%10s;%20s;%20s;%10s' % ('name',
-                                                   'victoires',
-                                                   'participations',
-                                                   'pourcentage V')
+        result = '%10s;%20s;%20s;%10s' % ('name',
+                                          'victoires',
+                                          'participations',
+                                          'pourcentage V')
 
         for item in sorted(self.player_stats.values(),
                            key=lambda x: x.win, reverse=True):
@@ -307,8 +294,8 @@ class OverallWinnerStat(object):
         " generate scores stats as html page"
         menv = Environment(loader=PackageLoader('scores', 'templates'))
         template = menv.get_template('index.html')
-        if not os.path.exists('target/site'):
-            os.makedirs('target/site')
+        if not os.path.exists(os.path.dirname(filename)):
+            os.makedirs(os.path.dirname(filename))
         with open(filename, 'w') as output:
             output_str = template.render(title=u'GAME STATS',
                                          stats=self)
