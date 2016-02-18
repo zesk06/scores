@@ -56,14 +56,18 @@ def add():
     mscores.plays.append(new_play)
     mscores.dump(os.path.join(THIS_DIR, FILENAME))
     html = '<p>[<a href="/">OK</a>]:'
-    html = html + ('added play %s (minmax was %s)</p>' %
-                   (new_play, request.forms.get('minmax')))
+    html += ('added play %s (minmax was %s)</p>' %
+             (new_play, request.forms.get('minmax')))
     return html
 
 
 @get('/rm/<play_id:int>')
 def remove(play_id):
-    " remove the play record at index play_id"
+    """
+    remove the play record at index play_id
+    :param play_id: The play id to be removed
+    :return:
+    """
     mscores = get_mscores()
     old_play = mscores.plays.pop(play_id)
     mscores.dump(os.path.join(THIS_DIR, FILENAME))

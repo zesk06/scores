@@ -94,6 +94,7 @@ def test_play():
     with pytest.raises(TypeError):
         myplay.get_winners()
 
+
 def test_play_to_json():
     myplay = get_play()
     myplay.winners = ['cent', 'un']
@@ -106,6 +107,7 @@ def get_play():
     myplay.players.append(Player('dix', 10))
     myplay.players.append(Player('un', 1))
     return myplay
+
 
 def test_game_stat():
     "Test the game stat class"
@@ -146,11 +148,12 @@ def test_game_stat():
     # test average score !
     assert game_stats.get_average_score() == 36/6
 
+
 def test_player_stat():
     player_stat = PlayerStat('test_player')
     assert player_stat
     assert player_stat.__str__() != ''
-    assert player_stat.get_worst_ennemy() == ('none',0)
+    assert player_stat.get_worst_ennemy() == ('none', 0)
 
 
 def test_overall_winner_stat():

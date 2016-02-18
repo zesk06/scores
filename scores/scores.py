@@ -23,7 +23,11 @@ class Scores(object):
         return "%s" % '\n'.join([str(play) for play in self.plays])
 
     def load(self, filename='scores.yml'):
-        "Load the given filename under YAML format"
+        """
+        Load the given filename under YAML format
+
+        :param filename: The filename to find the YAML
+        """
         with open(filename) as yml_file:
             # loading yaml.safe_load ensure byte str instead of unicode string
             yml_data = yaml.safe_load(yml_file)
@@ -32,7 +36,11 @@ class Scores(object):
                 self.plays.append(Play(yml_data=json_play))
 
     def dump(self, filename='scores.yml'):
-        "dumps the scores into given filename"
+        """
+        dumps the scores into given filename
+
+        @param filename the filename to dump to
+        """
         with open(filename, 'w') as yaml_file:
             yaml.dump(self.to_json(), yaml_file)
 
@@ -45,6 +53,7 @@ class Play(object):
     """A Play is a board game instance with players and scores.
     """
     id_counter = 0
+
     def __init__(self, yml_data=None):
         super(Play, self).__init__()
         self.play_id = Play.id_counter
@@ -91,7 +100,6 @@ class Play(object):
         yml_data['players'] = [player.to_json()
                                for player in self.players]
         return yml_data
-
 
     def get_player_order(self):
         "return a list of tuple [(score, [players])] ordered per score"
@@ -166,8 +174,12 @@ class GameStat(object):
         self.scores = []
 
     def new_play(self, play):
-        "handle a new play in stats"
-        self.plays_number = self.plays_number + 1
+        """
+        Handle a new play
+        :param play:  The play to add
+        :return: nothing
+        """
+        self.plays_number += 1
         self.scores.extend([player.score for player in play.players])
         if self.highest_score_play is None:
             self.highest_score_play = play
@@ -213,13 +225,16 @@ class PlayerStat(object):
         self.plays_number = 0
 
     def new_play(self, play):
-        "handle a new play in stats"
+        """
+        handle a new play in stats
+        :param play:    The new play to add to the stats
+        """
         if self.name in play.get_winners():
-            self.win = self.win + 1
+            self.win += 1
         else:
             self.beaten_by.extend(play.get_winners())
 
-        self.plays_number = self.plays_number + 1
+        self.plays_number += 1
         self.games.append(play.game)
 
     def __str__(self):
@@ -233,12 +248,15 @@ class PlayerStat(object):
         return int(100 * (float(self.win) / float(self.plays_number)))
 
     def get_worst_ennemy(self):
-        "return the player who beat most time (player, defeatnb)"
+        """
+        return the player who beat most time as a tuple (player, defeatnb)
+        :return: a tuple (player, defeatnb)
+        """
         most_commons = Counter(self.beaten_by).most_common(n=1)
         if len(most_commons) > 0:
             return Counter(self.beaten_by).most_common(n=1)[0]
         # when no one has ever beaten the player
-        return ('none', 0)
+        return 'none', 0
 
     def get_most_played_game(self):
         "return the player who beat most time (player, defeatnb)"
@@ -254,12 +272,20 @@ class OverallWinnerStat(object):
         self.plays = []
 
     def parse(self, scores):
-        "parse given scores"
+        """
+        parse given scores
+        :param scores: the scores to be parsed
+        :return:
+        """
         for play in scores.plays:
             self.new_play(play)
 
     def new_play(self, play):
-        "handle a new play in this stat"
+        """
+        handle a new play in this stat
+        :param play: The play to be added to the stats
+        :return:
+        """
         self.plays.append(play)
         for player in play.players:
             if player.name not in self.player_stats:
@@ -278,10 +304,10 @@ class OverallWinnerStat(object):
 
         for item in sorted(self.player_stats.values(),
                            key=lambda x: x.win, reverse=True):
-            result = result + '\n%10s;%20s;%20s;%10s' % (item.name,
-                                                         item.win,
-                                                         item.plays_number,
-                                                         item.get_percentage())
+            result += '\n%10s;%20s;%20s;%10s' % (item.name,
+                                                 item.win,
+                                                 item.plays_number,
+                                                 item.get_percentage())
         return result
 
     def get_sorted_players(self):
@@ -291,7 +317,11 @@ class OverallWinnerStat(object):
                       reverse=True)
 
     def to_html(self, filename='target/site/index.html'):
-        " generate scores stats as html page"
+        """
+        generate scores stats as html page
+        :param filename: The name of the html file to be generated
+        :return:
+        """
         menv = Environment(loader=PackageLoader('scores', 'templates'))
         template = menv.get_template('index.html')
         if not os.path.exists(os.path.dirname(filename)):
