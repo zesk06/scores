@@ -71,7 +71,19 @@ type: min
     assert loaded_play.players[0].name == 'allugan'
     assert loaded_play.players[0].score == 9
     assert loaded_play.type == 'min'
-
+    # yaml format?
+    yaml_str = """
+date: 15/01/16
+game: splendor
+winners:
+- lolo
+players:
+- {name: lolo, score: 16}
+- {name: maxime, score: 13}
+- {name: zesk, score: 16}
+"""
+    loaded_play = Play(yaml.load(yaml_str))
+    assert loaded_play.get_winners() == [ 'lolo' ]
 
 def test_play():
     "test the play class"
