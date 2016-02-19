@@ -166,4 +166,19 @@
   - {name: lolo, score: 1, team: felon}
   - {name: vincent_templier, score: 0, team: bien}
   - {name: zesk, score: 0, team: bien}
+- date: 19/02/16
+  game: splendor
+  winners:
+    - lolo
+  players:
+  - {name: lolo, score: 16}
+  - {name: maxime, score: 13}
+  - {name: zesk, score: 16}
+- date: 19/02/16
+  game: descendance
+  players:
+  - {name: lolo, score: 56}
+  - {name: maxime, score: 37}
+  - {name: zesk, score: 47}
+
 
