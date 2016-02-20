@@ -27,11 +27,14 @@
             <h1>Classement par nombre de victoires</h1>
             <table class="table">
                 <tr>
-                    <th><span class="glyphicon glyphicon-user" title="joueur"/> joueur</th>
-                    <th><span class="glyphicon glyphicon-king" title="Nombre de victoires"/> v</th>
-                    <th><span class="glyphicon glyphicon-th" title="Nombre de parties"/> p</th>
+                    <th><span class="glyphicon glyphicon-user" title="joueur"></span> joueur</th>
+                    <th><span class="glyphicon glyphicon-king" title="Nombre de victoires"></span> v</th>
+                    <th><span class="glyphicon glyphicon-th" title="Nombre de parties"></span> p</th>
                     <th>%</th>
                     <th><span class="glyphicon glyphicon-screenshot" title="Pire ennemi"></span> Pire ennemi</th>
+                    <th>Série de victoires - max</th>
+                    <th>Série de défaites - max</th>
+
                 </tr>
                 {% for player in  stats.get_sorted_players() %}
                 <tr>
@@ -40,6 +43,8 @@
                     <td>{{ player.plays_number }}</td>
                     <td>{{ player.get_percentage() }}</td>
                     <td><a href="#{{ player.get_worst_ennemy()[0] }}">{{ player.get_worst_ennemy()[0] }}</a> (defaite par {{ player.get_worst_ennemy()[1] }} fois)</td>
+                    <td>{{ player.streak_win }} - {{ player.streak_win_longest }}</td>
+                    <td>{{ player.streak_loose }} - {{ player.streak_loose_longest }}</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -72,8 +77,12 @@
                   </div>
                   <div class="panel-body">
                     <ul>
-                    <li>{{ player_stat.win }} /  {{ player_stat.plays_number }} = {{ player_stat.get_percentage() }} % de victoires</li>
-                    <li>Jeu le plus joué: {{ player_stat.get_most_played_game()[0] }} ({{ player_stat.get_most_played_game()[1] }})</li>
+                        <li>{{ player_stat.win }} /  {{ player_stat.plays_number }} = {{ player_stat.get_percentage() }} % de victoires</li>
+                        <li>Jeu le plus joué: {{ player_stat.get_most_played_game()[0] }} ({{ player_stat.get_most_played_game()[1] }})</li>
+                        {% if player_stat.streak_win >0 %}<li>Série de victoires en cours: {{ player_stat.streak_win }}</li>{% endif %}
+                        {% if player_stat.streak_loose >0 %}<li>Série de défaites en cours: {{ player_stat.streak_loose }}</li>{% endif %}
+                        <li>Max win streak: {{ player_stat.streak_win_longest }}</li>
+                        <li>Max loose streak: {{ player_stat.streak_loose_longest }}</li>
                     </ul>
                   </div>
                 </div>
@@ -92,7 +101,7 @@
                     <ul>
                     {% if game_stat.plays_number == 1 %}<li>Une seule partie.</li>{% endif %}
                     {% if game_stat.plays_number > 1  %}<li>{{ game_stat.plays_number }} parties !</li>{% endif %}
-                    <li>meilleur joueur: {{ game_stat.get_best_player() }} </li>
+                    <li>Le plus victorieux: {{ game_stat.get_best_player() }} </li>
                     {% set highest = game_stat.get_highest_score() %}
                     {% if highest != None %}
                     <li>

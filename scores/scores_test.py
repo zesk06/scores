@@ -160,8 +160,8 @@ def test_game_stat():
     # test average score !
     assert game_stats.get_average_score() == 36/6
 
-    # test best player
-    assert game_stats.get_best_player() == 'p1'
+    # test best player is p2
+    assert game_stats.get_best_player() == 'p2'
 
 
 def test_player_stat():
@@ -169,6 +169,43 @@ def test_player_stat():
     assert player_stat
     assert player_stat.__str__() != ''
     assert player_stat.get_worst_ennemy() == ('none', 0)
+
+
+def test_player_stat_winloss_streak():
+    """
+    test the streaks of win or loose
+    :return:
+    """
+    pstat = PlayerStat('test_player')
+    assert pstat.streak_win == 0
+    assert pstat.streak_loose == 0
+    pstat._PlayerStat__new_win()
+    assert pstat.streak_win == 1
+    assert pstat.streak_win_longest == 1
+    assert pstat.streak_loose == 0
+    pstat._PlayerStat__new_win()
+    assert pstat.streak_win == 2
+    assert pstat.streak_win_longest == 2
+    assert pstat.streak_loose == 0
+    pstat._PlayerStat__new_loss(['other'])
+    assert pstat.streak_win == 0
+    assert pstat.streak_loose == 1
+    assert pstat.streak_loose_longest == 1
+    pstat._PlayerStat__new_loss(['other'])
+    assert pstat.streak_win == 0
+    assert pstat.streak_win_longest == 2
+    assert pstat.streak_loose == 2
+    assert pstat.streak_loose_longest == 2
+    pstat._PlayerStat__new_win()
+    assert pstat.streak_win == 1
+    assert pstat.streak_win_longest == 2
+    assert pstat.streak_loose == 0
+    assert pstat.streak_loose_longest == 2
+    pstat._PlayerStat__new_win()
+    pstat._PlayerStat__new_win()
+    pstat._PlayerStat__new_win()
+    assert pstat.streak_win == 4
+    assert pstat.streak_win_longest == 4
 
 
 def test_overall_winner_stat():

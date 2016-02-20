@@ -62,7 +62,7 @@ class Play(object):
         self.date = '01/01/1977'
         self.game = 'nogame'
         self.players = []
-        self.winners = []
+        self.winners = None
         if yml_data is not None:
             self.__load_json(yml_data)
 
@@ -237,6 +237,10 @@ class PlayerStat(object):
         self.beaten_by = []
         self.games = []
         self.plays_number = 0
+        self.streak_win = 0
+        self.streak_win_longest = 0
+        self.streak_loose = 0
+        self.streak_loose_longest = 0
 
     def new_play(self, play):
         """
@@ -244,12 +248,33 @@ class PlayerStat(object):
         :param play:    The new play to add to the stats
         """
         if self.name in play.get_winners():
-            self.win += 1
+            self.__new_win()
         else:
-            self.beaten_by.extend(play.get_winners())
-
+            self.__new_loss(play.get_winners())
         self.plays_number += 1
         self.games.append(play.game)
+
+    def __new_win(self):
+        """
+        a new win !
+        """
+        self.win += 1
+        self.streak_win += 1
+        if self.streak_win > self.streak_win_longest:
+            self.streak_win_longest = self.streak_win
+        if self.streak_loose > 0:
+            self.streak_loose = 0
+
+    def __new_loss(self, winners):
+        """
+        a new loss, bouh !
+        """
+        self.beaten_by.extend(winners)
+        self.streak_loose += 1
+        if self.streak_loose > self.streak_loose_longest:
+            self.streak_loose_longest = self.streak_loose
+        if self.streak_win > 0:
+            self.streak_win = 0
 
     def __str__(self):
         "return a string representation"
