@@ -49,12 +49,13 @@
           <div class="col-md-12">
             <h1>Les parties</h1>
             <table class="table">
-                <tr><th>#</th><th>date</th><th>jeu</th><th>1ers</th><th>2nd</th><th>3emes</th><th>4emes</th><th>5emes</th><th>6emes</th></tr>
+                <tr><th>#</th><th>date</th><th>jeu</th><th>gagnant</th><th>1ers</th><th>2nd</th><th>3emes</th><th>4emes</th><th>5emes</th><th>6emes</th></tr>
                 {% for play in stats.plays %}
                 <tr id="p_{{ play.play_id }}" >
                     <td><a href="/rm/{{ loop.index - 1 }}"><span class="glyphicon glyphicon-remove-sign"/></a></td>
                     <td>{{ play.date }}</td>
                     <td><a href="#{{ play.game }}">{{ play.game }}</a></td>
+                    <td>{{ ', '.join(play.get_winners()) }}</td>
                     {% for (score, players) in play.get_player_order() %}<td><span class="label label-default">{{ score }}</span> {{ ', '.join(players) }}</td>{% endfor %}
                 </tr>
                 {% endfor %}
