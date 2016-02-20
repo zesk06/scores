@@ -160,6 +160,9 @@ def test_game_stat():
     # test average score !
     assert game_stats.get_average_score() == 36/6
 
+    # test best player
+    assert game_stats.get_best_player() == 'p1'
+
 
 def test_player_stat():
     player_stat = PlayerStat('test_player')

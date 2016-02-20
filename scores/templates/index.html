@@ -92,6 +92,7 @@
                     <ul>
                     {% if game_stat.plays_number == 1 %}<li>Une seule partie.</li>{% endif %}
                     {% if game_stat.plays_number > 1  %}<li>{{ game_stat.plays_number }} parties !</li>{% endif %}
+                    <li>meilleur joueur: {{ game_stat.get_best_player() }} </li>
                     {% set highest = game_stat.get_highest_score() %}
                     {% if highest != None %}
                     <li>

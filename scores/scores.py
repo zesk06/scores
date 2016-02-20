@@ -6,6 +6,7 @@
 from jinja2 import Environment
 from jinja2.loaders import PackageLoader
 from collections import Counter
+import operator
 import os
 import yaml
 
@@ -172,6 +173,7 @@ class GameStat(object):
         self.highest_score_play = None
         self.lowest_score_play = None
         self.scores = []
+        self.victories_per_player = {}
 
     def new_play(self, play):
         """
@@ -201,6 +203,12 @@ class GameStat(object):
                     self.lowest_score_play.get_lowest_score()):
                 self.lowest_score_play = play
 
+        # count victories for the player
+        for player in play.get_winners():
+            if player not in self.victories_per_player:
+                self.victories_per_player[player] = 0
+            self.victories_per_player[player] += 1
+
     def get_highest_score(self):
         "return the play that had the highest score"
         return self.highest_score_play
@@ -213,6 +221,12 @@ class GameStat(object):
         "return the average score"
         return sum(self.scores) / len(self.scores)
 
+    def get_best_player(self):
+        """
+        return the player with the maximum number of victories
+        :return: the player with the maximum number of victories
+        """
+        return sorted(self.victories_per_player, key=operator.itemgetter(1))[0]
 
 class PlayerStat(object):
     """A player stat"""
