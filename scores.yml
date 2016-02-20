@@ -66,7 +66,7 @@
   - {name: zesk, score: 9}
   - {name: vincent, score: 10}
 - date: 25/11/15
-  game: les chevaliers de la table ronde
+  game: les chevaliers
   players:
   - {name: lolo, score: 1, team: felon}
   - {name: clemence, score: 0, team: bien}
@@ -76,7 +76,7 @@
   - {name: anne, score: 0, team: bien}
   - {name: maxime, score: 0, team: bien}
 - date: 15/12/15
-  game: les chevaliers de la table ronde
+  game: les chevaliers
   players:
   - {name: lolo, score: 1, team: bien}
   - {name: clemence, score: 1, team: bien}
@@ -158,7 +158,7 @@
   - {name: lolo, score: 45}
   - {name: zesk, score: 45}
 - date: 06/02/16
-  game: les chevaliers de la table ronde
+  game: les chevaliers
   players:
   - {name: christine, score: 0, team: bien}
   - {name: claire, score: 0, team: bien}
