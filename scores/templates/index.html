@@ -9,9 +9,10 @@
     <meta name="description" content="{{ description }}" />
     <!-- Bootstrap -->
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/stylesheet.css" type="text/css" rel="stylesheet">
     <!-- highlight in light green the targeted item -->
     <style type="text/css">
-		  :target {background-color: #dff0d8;}
+
 	</style>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -71,9 +72,9 @@
             <h1>Les joueurs</h1>
             {% for playername, player_stat in stats.player_stats | dictsort %}
               <div class="col-md-3">
-                <div class="panel panel-default" id="{{ player_stat.name }}">
+                <div class="panel panel-default player-stat" id="{{ player_stat.name }}">
                   <div class="panel-heading">
-                    <h3 class="panel-title">{{ player_stat.name }}</h3>
+                    <h3 class="panel-title">{{ player_stat.name }}  <span class="glyphicon glyphicon-th-list player-stat-btn" title="Detailled infos"></span></h3>
                   </div>
                   <div class="panel-body">
                     <ul>
@@ -132,5 +133,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+<script src="static/app.js"></script>
 </body>
 </html>

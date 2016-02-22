@@ -6,6 +6,7 @@
 
 import bottle
 from bottle import default_app, request, route, post, get, run
+from bottle import static_file
 from jinja2 import Environment
 from jinja2.loaders import PackageLoader
 import scores
@@ -72,6 +73,14 @@ def remove(play_id):
     old_play = mscores.plays.pop(play_id)
     mscores.dump(os.path.join(THIS_DIR, FILENAME))
     return '<p>[<a href="/">OK</a>]: play %s has been removed</p>' % old_play
+
+
+@route('/static/<filename>')
+def server_static(filename):
+    """
+    :return: static files
+    """
+    return static_file(filename, root=os.path.join(THIS_DIR, 'static'))
 
 
 def get_mscores():
