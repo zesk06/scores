@@ -97,30 +97,31 @@
                 <div class="panel panel-default" id="{{ game_stat.game }}">
                   <div class="panel-heading">
                     <h3 class="panel-title">{{ game_stat.game }}</h3>
+                      <div class="play-nb" title="le nombre de parties">{{ game_stat.plays_number }}</div>
                   </div>
                   <div class="panel-body">
-                    <ul>
-                    {% if game_stat.plays_number == 1 %}<li>Une seule partie.</li>{% endif %}
-                    {% if game_stat.plays_number > 1  %}<li>{{ game_stat.plays_number }} parties !</li>{% endif %}
-                    <li>Le plus victorieux: {{ game_stat.get_best_player() }} </li>
-                    {% set highest = game_stat.get_highest_score() %}
-                    {% if highest != None %}
-                    <li>
-                        <span class="glyphicon glyphicon-hand-up" title="meilleur score"></span> <span class="label label-success">{{ highest.get_highest_score() }}</span>
-                        par {{ highest.get_winners() | join(', ')}} le <a href="#p_{{ highest.play_id }}">{{ highest.date }}</a>
-                    </li>
-                    {% endif %}
-                    <li>
-                        <span class="glyphicon glyphicon-hand-right" title="score moyen"></span> <span class="label label-default">{{ game_stat.get_average_score() }}</span>
-                    </li>
-                    {% set lowest = game_stat.get_lowest_score() %}
-                    {% if lowest != None %}
-                    <li>
-                        <span class="glyphicon glyphicon-hand-down" title="pire score"></span> <span class="label label-danger">{{ lowest.get_lowest_score() }}</span>
-                        par {{ lowest.get_player_order()[-1][1] | join(', ')}} le <a href="#p_{{ highest.play_id }}">{{ lowest.date }}</a>
-                    </li>
-                    {% endif %}
-                    </ul>
+                    <div class="game-stat">
+                        <ul>
+                        <li>Best: <a href="#p_{{ game_stat.get_best_player() }}">{{ game_stat.get_best_player() }}</a> </li>
+                        {% set highest = game_stat.get_highest_score() %}
+                        {% if highest != None %}
+                        <li>
+                            <span class="glyphicon glyphicon-hand-up" title="meilleur score"></span> <span class="label label-success">{{ highest.get_highest_score() }}</span>
+                            par {{ highest.get_winners() | join(', ')}} le <a href="#p_{{ highest.play_id }}">{{ highest.date }}</a>
+                        </li>
+                        {% endif %}
+                        <li>
+                            <span class="glyphicon glyphicon-hand-right" title="score moyen"></span> <span class="label label-default">{{ game_stat.get_average_score() }}</span>
+                        </li>
+                        {% set lowest = game_stat.get_lowest_score() %}
+                        {% if lowest != None %}
+                        <li>
+                            <span class="glyphicon glyphicon-hand-down" title="pire score"></span> <span class="label label-danger">{{ lowest.get_lowest_score() }}</span>
+                            par {{ lowest.get_player_order()[-1][1] | join(', ')}} le <a href="#p_{{ highest.play_id }}">{{ lowest.date }}</a>
+                        </li>
+                        {% endif %}
+                        </ul>
+                    </div>
                   </div>
                 </div>
               </div>
