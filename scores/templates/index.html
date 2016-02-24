@@ -1,139 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>{{ title }}</title>
-    <meta name="description" content="{{ description }}" />
-    <!-- Bootstrap -->
-    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="static/stylesheet.css" type="text/css" rel="stylesheet">
-    <!-- highlight in light green the targeted item -->
-    <style type="text/css">
+{% extends "base.html" %}
+{% block content %}
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Classement par nombre de victoires</h1>
+        <table class="table">
+            <tr>
+                <th><span class="glyphicon glyphicon-user" title="joueur"></span> joueur</th>
+                <th><span class="glyphicon glyphicon-king" title="Nombre de victoires"></span> v</th>
+                <th><span class="glyphicon glyphicon-th" title="Nombre de parties"></span> p</th>
+                <th>%</th>
+                <th><span class="glyphicon glyphicon-screenshot" title="Pire ennemi"></span> Pire ennemi</th>
+                <th>Série de victoires - max</th>
+                <th>Série de défaites - max</th>
 
-	</style>
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-      <![endif]-->
-  </head>
-  <body>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-12">
-            <h1>Classement par nombre de victoires</h1>
-            <table class="table">
-                <tr>
-                    <th><span class="glyphicon glyphicon-user" title="joueur"></span> joueur</th>
-                    <th><span class="glyphicon glyphicon-king" title="Nombre de victoires"></span> v</th>
-                    <th><span class="glyphicon glyphicon-th" title="Nombre de parties"></span> p</th>
-                    <th>%</th>
-                    <th><span class="glyphicon glyphicon-screenshot" title="Pire ennemi"></span> Pire ennemi</th>
-                    <th>Série de victoires - max</th>
-                    <th>Série de défaites - max</th>
-
-                </tr>
-                {% for player in  stats.get_sorted_players() %}
-                <tr>
-                    <td><a href="#{{ player.name }}">{{ player.name }}</a></td>
-                    <td>{{ player.win }}</td>
-                    <td>{{ player.plays_number }}</td>
-                    <td>{{ player.get_percentage() }}</td>
-                    <td><a href="#{{ player.get_worst_ennemy()[0] }}">{{ player.get_worst_ennemy()[0] }}</a> (defaite par {{ player.get_worst_ennemy()[1] }} fois)</td>
-                    <td>{{ player.streak_win }} - {{ player.streak_win_longest }}</td>
-                    <td>{{ player.streak_loose }} - {{ player.streak_loose_longest }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <h1>Les parties</h1>
-            <table class="table">
-                <tr><th>#</th><th>date</th><th>jeu</th><th>gagnant</th><th>1ers</th><th>2nd</th><th>3emes</th><th>4emes</th><th>5emes</th><th>6emes</th></tr>
-                {% for play in stats.plays %}
-                <tr id="p_{{ play.play_id }}" >
-                    <td><a href="/rm/{{ loop.index - 1 }}"><span class="glyphicon glyphicon-remove-sign"/></a></td>
-                    <td>{{ play.date }}</td>
-                    <td><a href="#{{ play.game }}">{{ play.game }}</a></td>
-                    <td>{{ ', '.join(play.get_winners()) }}</td>
-                    {% for (score, players) in play.get_player_order() %}<td><span class="label label-default">{{ score }}</span> {{ ', '.join(players) }}</td>{% endfor %}
-                </tr>
-                {% endfor %}
-            </table>
-          </div>
-        </div>
-        <div class="row" >
-            <h1>Les joueurs</h1>
-            {% for playername, player_stat in stats.player_stats | dictsort %}
-              <div class="col-md-3">
-                <div class="panel panel-default player-stat" id="{{ player_stat.name }}">
-                  <div class="panel-heading">
-                    <h3 class="panel-title">{{ player_stat.name }}  <span class="glyphicon glyphicon-th-list player-stat-btn" title="Detailled infos"></span></h3>
-                  </div>
-                  <div class="panel-body">
-                    <ul>
-                        <li>{{ player_stat.win }} /  {{ player_stat.plays_number }} = {{ player_stat.get_percentage() }} % de victoires</li>
-                        <li>Jeu le plus joué: {{ player_stat.get_most_played_game()[0] }} ({{ player_stat.get_most_played_game()[1] }})</li>
-                        {% if player_stat.streak_win >0 %}<li>Série de victoires en cours: {{ player_stat.streak_win }}</li>{% endif %}
-                        {% if player_stat.streak_loose >0 %}<li>Série de défaites en cours: {{ player_stat.streak_loose }}</li>{% endif %}
-                        <li>Max win streak: {{ player_stat.streak_win_longest }}</li>
-                        <li>Max loose streak: {{ player_stat.streak_loose_longest }}</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+            </tr>
+            {% for player in  stats.get_sorted_players() %}
+            <tr>
+                <td><a href="#{{ player.name }}">{{ player.name }}</a></td>
+                <td>{{ player.win }}</td>
+                <td>{{ player.plays_number }}</td>
+                <td>{{ player.get_percentage() }}</td>
+                <td><a href="#{{ player.get_worst_ennemy()[0] }}">{{ player.get_worst_ennemy()[0] }}</a> (defaite par {{ player.get_worst_ennemy()[1] }} fois)</td>
+                <td>{{ player.streak_win }} - {{ player.streak_win_longest }}</td>
+                <td>{{ player.streak_loose }} - {{ player.streak_loose_longest }}</td>
+            </tr>
             {% endfor %}
-        </div>
-        <div class="row" >
-            <h1>Les jeux</h1>
-            {% for game, game_stat in stats.game_stats | dictsort %}
-              <div class="col-md-3">
-                <div class="panel panel-default" id="{{ game_stat.game }}">
-                  <div class="panel-heading">
-                    <h3 class="panel-title">{{ game_stat.game }}</h3>
-                      <div class="play-nb" title="le nombre de parties">{{ game_stat.plays_number }}</div>
-                  </div>
-                  <div class="panel-body">
-                    <div class="game-stat">
-                        <ul>
-                        <li>Best: <a href="#p_{{ game_stat.get_best_player() }}">{{ game_stat.get_best_player() }}</a> </li>
-                        {% set highest = game_stat.get_highest_score() %}
-                        {% if highest != None %}
-                        <li>
-                            <span class="glyphicon glyphicon-hand-up" title="meilleur score"></span> <span class="label label-success">{{ highest.get_highest_score() }}</span>
-                            par {{ highest.get_winners() | join(', ')}} le <a href="#p_{{ highest.play_id }}">{{ highest.date }}</a>
-                        </li>
-                        {% endif %}
-                        <li>
-                            <span class="glyphicon glyphicon-hand-right" title="score moyen"></span> <span class="label label-default">{{ game_stat.get_average_score() }}</span>
-                        </li>
-                        {% set lowest = game_stat.get_lowest_score() %}
-                        {% if lowest != None %}
-                        <li>
-                            <span class="glyphicon glyphicon-hand-down" title="pire score"></span> <span class="label label-danger">{{ lowest.get_lowest_score() }}</span>
-                            par {{ lowest.get_player_order()[-1][1] | join(', ')}} le <a href="#p_{{ highest.play_id }}">{{ lowest.date }}</a>
-                        </li>
-                        {% endif %}
-                        </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            {% endfor %}
-        </div>
+        </table>
+      </div>
     </div>
-
-
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
-<script src="static/app.js"></script>
-</body>
-</html>
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Les parties</h1>
+        <table class="table">
+            <tr><th>#</th><th>date</th><th>jeu</th><th>gagnant</th><th>1ers</th><th>2nd</th><th>3emes</th><th>4emes</th><th>5emes</th><th>6emes</th></tr>
+            {% for play in stats.plays %}
+            <tr id="p_{{ play.play_id }}" >
+                <td><a href="/rm/{{ loop.index - 1 }}"><span class="glyphicon glyphicon-remove-sign"/></a></td>
+                <td>{{ play.date }}</td>
+                <td><a href="#{{ play.game }}">{{ play.game }}</a></td>
+                <td>{{ ', '.join(play.get_winners()) }}</td>
+                {% for (score, players) in play.get_player_order() %}<td><span class="label label-default">{{ score }}</span> {{ ', '.join(players) }}</td>{% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+      </div>
+    </div>
+    <div class="row" >
+        <h1>Les joueurs</h1>
+        {% for playername, player_stat in stats.player_stats | dictsort %}
+          <div class="col-md-3">
+            <div class="panel panel-default player-stat" id="{{ player_stat.name }}">
+              <div class="panel-heading">
+                <h3 class="panel-title">{{ player_stat.name }}  <span class="glyphicon glyphicon-th-list player-stat-btn" title="Detailled infos"></span></h3>
+              </div>
+              <div class="panel-body">
+                <ul>
+                    <li>{{ player_stat.win }} /  {{ player_stat.plays_number }} = {{ player_stat.get_percentage() }} % de victoires</li>
+                    <li>Jeu le plus joué: {{ player_stat.get_most_played_game()[0] }} ({{ player_stat.get_most_played_game()[1] }})</li>
+                    {% if player_stat.streak_win >0 %}<li>Série de victoires en cours: {{ player_stat.streak_win }}</li>{% endif %}
+                    {% if player_stat.streak_loose >0 %}<li>Série de défaites en cours: {{ player_stat.streak_loose }}</li>{% endif %}
+                    <li>Max win streak: {{ player_stat.streak_win_longest }}</li>
+                    <li>Max loose streak: {{ player_stat.streak_loose_longest }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+    </div>
+    <div class="row" >
+        <h1>Les jeux</h1>
+        {% for game, game_stat in stats.game_stats | dictsort %}
+          <div class="col-md-3">
+            <div class="panel panel-default" id="{{ game_stat.game }}">
+              <div class="panel-heading">
+                <h3 class="panel-title">{{ game_stat.game }}</h3>
+                  <div class="play-nb" title="le nombre de parties">{{ game_stat.plays_number }}</div>
+              </div>
+              <div class="panel-body">
+                <div class="game-stat">
+                    <ul>
+                    <li>Best: <a href="#p_{{ game_stat.get_best_player() }}">{{ game_stat.get_best_player() }}</a> </li>
+                    {% set highest = game_stat.get_highest_score() %}
+                    {% if highest != None %}
+                    <li>
+                        <span class="glyphicon glyphicon-hand-up" title="meilleur score"></span> <span class="label label-success">{{ highest.get_highest_score() }}</span>
+                        par {{ highest.get_winners() | join(', ')}} le <a href="#p_{{ highest.play_id }}">{{ highest.date }}</a>
+                    </li>
+                    {% endif %}
+                    <li>
+                        <span class="glyphicon glyphicon-hand-right" title="score moyen"></span> <span class="label label-default">{{ game_stat.get_average_score() }}</span>
+                    </li>
+                    {% set lowest = game_stat.get_lowest_score() %}
+                    {% if lowest != None %}
+                    <li>
+                        <span class="glyphicon glyphicon-hand-down" title="pire score"></span> <span class="label label-danger">{{ lowest.get_lowest_score() }}</span>
+                        par {{ lowest.get_player_order()[-1][1] | join(', ')}} le <a href="#p_{{ highest.play_id }}">{{ lowest.date }}</a>
+                    </li>
+                    {% endif %}
+                    </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+    </div>
+{% endblock %}
