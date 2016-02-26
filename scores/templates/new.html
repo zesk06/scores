@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block stylesheets %}
+<link type="text/css" rel="stylesheet" href="static/new.css"/>
+{%  endblock %}
 {% block content %}
     <div class="row">
         <div class="col-md-6">
@@ -9,6 +12,7 @@
                 <div class="panel-body">
                     <form action="/add" method="post">
                         <div class="form-group">
+                            <span class="date-btn" title="la date d'aujourd'hui"><span class="glyphicon glyphicon-save"></span></span>
                             <label for="dateId">date</label>
                             <input class="form-control" name="date" id="dateId" type="text" placeholder="10/01/16" />
                             <p class="help-block">La date de la partie, sous la forme DD/MM/YY</p>
@@ -39,4 +43,7 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block scripts %}
+    <script src="static/new.js"></script>
 {% endblock %}
