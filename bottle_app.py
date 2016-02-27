@@ -23,7 +23,9 @@ def index():
     mscores = get_mscores()
     stats = scores.OverallWinnerStat()
     stats.parse(mscores)
-    return stats.get_html()
+    menv = Environment(loader=PackageLoader('scores', 'templates'))
+    template = menv.get_template('index.html')
+    return template.render(title=u'GAME STATS', stats=stats)
 
 
 @get('/new')

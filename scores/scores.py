@@ -234,6 +234,7 @@ class PlayerStat(object):
         super(PlayerStat, self).__init__()
         self.name = name
         self.win = 0
+        self.last = 0
         self.beaten_by = []
         self.games = []
         self.plays_number = 0
@@ -253,6 +254,8 @@ class PlayerStat(object):
             self.__new_loss(play.get_winners())
         self.plays_number += 1
         self.games.append(play.game)
+        if self.name in play.get_player_order()[-1][1]:
+            self.last += 1
 
     def __new_win(self):
         """
@@ -366,9 +369,7 @@ class OverallWinnerStat(object):
         if not os.path.exists(os.path.dirname(filename)):
             os.makedirs(os.path.dirname(filename))
         with open(filename, 'w') as output:
-            output_str = template.render(title=u'GAME STATS',
-                                         stats=self)
-            output.write(output_str.encode('UTF-8'))
+            output.write(self.get_html().encode('UTF-8'))
 
     def get_html(self):
         " return the html"
