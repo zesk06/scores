@@ -13,18 +13,20 @@ import shutil
 if not os.path.exists('target'):
     os.makedirs('target')
 
+THIS_DIR = os.path.abspath(os.path.dirname(__file__))
+SCORES_YML = os.path.join(THIS_DIR, '..', 'scores.yml')
 
 def test_scores():
     " test the score class init"
     mscores = scores.Scores()
     assert mscores is not None
     assert len(mscores.plays) == 0
-    mscores = scores.Scores(filename='scores.yml')
+    mscores = scores.Scores(filename=SCORES_YML)
     assert mscores is not None
     assert len(mscores.plays) > 0
     mscores = scores.Scores()
     assert mscores is not None
-    mscores.load(filename='scores.yml')
+    mscores.load(filename=SCORES_YML)
     assert len(mscores.plays) > 0
     for player in mscores.plays[0].players:
         print '%s' % player
@@ -33,7 +35,7 @@ def test_scores():
 
 def test_scores_dump():
     "test the Scores serialization"
-    mscores = scores.Scores(filename='scores.yml')
+    mscores = scores.Scores(filename=SCORES_YML)
     assert mscores is not None
     mscores.dump(filename='target/new_scores.yml')
     mscores2 = scores.Scores()
@@ -46,7 +48,7 @@ def test_scores_dump():
 
 def test_scores_dump_yaml():
     "test the Scores serialization"
-    mscores = scores.Scores(filename='scores.yml')
+    mscores = scores.Scores(filename=SCORES_YML)
     assert mscores is not None
     mscores.dump(filename='target/new_scores.yml')
 
@@ -169,6 +171,8 @@ def test_player_stat():
     assert player_stat
     assert player_stat.__str__() != ''
     assert player_stat.get_worst_ennemy() == ('none', 0)
+    assert player_stat.last == 0
+
 
 
 def test_player_stat_winloss_streak():
@@ -210,7 +214,7 @@ def test_player_stat_winloss_streak():
 
 def test_overall_winner_stat():
     overall_stat = OverallWinnerStat()
-    mscores = scores.Scores(filename='scores.yml')
+    mscores = scores.Scores(filename=SCORES_YML)
     for play in mscores.plays:
         overall_stat.new_play(play)
 
