@@ -62,6 +62,7 @@
                     {% if player_stat.streak_loose >0 %}<li>Série de défaites en cours: {{ player_stat.streak_loose }}</li>{% endif %}
                     <li>Max win streak: {{ player_stat.streak_win_longest }}</li>
                     <li>Max loose streak: {{ player_stat.streak_loose_longest }}</li>
+                    <li>Nombre de dernières places: {{ player_stat.last }}</li>
                 </ul>
               </div>
             </div>
