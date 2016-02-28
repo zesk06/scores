@@ -89,19 +89,16 @@ players:
 
 def test_play():
     "test the play class"
-    myplay = get_play()
+    myplay = __get_play(players='cent=100,dix=10,un=1')
     order = myplay.get_player_order()
     assert len(order) == 3
     assert order == [(100, ['cent']), (10, ['dix']), (1, ['un'])]
-    myplay = Play()
-    myplay.players.append(Player('cent', 100))
-    myplay.players.append(Player('cent2', 100))
-    myplay.players.append(Player('un', 1))
+    myplay = __get_play(players='cent=100,cent2=100,un=1')
     order = myplay.get_player_order()
     assert len(order) == 2
     assert order == [(100, ['cent', 'cent2']), (1, ['un'])]
     print 'play is %s' % myplay
-    myplay = Play()
+    myplay = __get_play(players='', winners=['cent,un'])
     myplay.winners = ['cent', 'un']
     assert myplay.get_winners() == ['cent', 'un'], "expected winners list"
     myplay.winners = 'not a list FFS'
@@ -110,58 +107,30 @@ def test_play():
 
 
 def test_play_to_json():
-    myplay = get_play()
-    myplay.winners = ['cent', 'un']
+    myplay = __get_play(players='cent=100,dix=10,un=1', winners=['cent', 'un'])
     assert myplay.to_json() is not None
-
-
-def get_play():
-    myplay = Play()
-    myplay.players.append(Player('cent', 100))
-    myplay.players.append(Player('dix', 10))
-    myplay.players.append(Player('un', 1))
-    return myplay
 
 
 def test_game_stat():
     "Test the game stat class"
     game_stats = GameStat('parade')
-    new_play = Play()
-    new_play.game = 'parade'
-    new_play.type = 'min'
-    new_play.date = '10/01/16'
-    new_play.players.append(Player(name='p1', score=10))
-    new_play.players.append(Player(name='p2', score=1))
-
+    new_play = __get_play(type='min', players='P1=10,p2=1', date='10/01/16')
     game_stats.new_play(new_play)
     assert game_stats.get_highest_score() == new_play
     assert game_stats.get_lowest_score() == new_play
-
     # add new play
     # lowest
-    new_play2 = Play()
-    new_play2.game = 'parade'
-    new_play2.type = 'min'
-    new_play2.date = '11/01/16'
-    new_play2.players.append(Player(name='p1', score=12))
-    new_play2.players.append(Player(name='p2', score=1))
+    new_play2 = __get_play(type='min', players='P1=12,p2=1', date='11/01/16')
     game_stats.new_play(new_play2)
     # highest
-    new_play3 = Play()
-    new_play3.game = 'parade'
-    new_play3.type = 'min'
-    new_play3.date = '12/01/16'
-    new_play3.players.append(Player(name='p1', score=12))
-    new_play3.players.append(Player(name='p2', score=0))
+    new_play3 = __get_play(type='min', players='P1=12,p2=0', date='12/01/16')
     game_stats.new_play(new_play3)
     print ('highest score dates expected %s but found %s ' %
            (new_play3.date, game_stats.get_highest_score().date))
     assert game_stats.get_highest_score() == new_play3
     assert game_stats.get_lowest_score() == new_play2
-
     # test average score !
     assert game_stats.get_average_score() == 36/6
-
     # test best player is p2
     assert game_stats.get_best_player() == 'p2'
 
@@ -172,8 +141,35 @@ def test_player_stat():
     assert player_stat.__str__() != ''
     assert player_stat.get_worst_ennemy() == ('none', 0)
     assert player_stat.last == 0
+    player_stat.new_play(__get_play(players='test_player=0,first=10'))        # loss + last
+    player_stat.new_play(__get_play(players='test_player=5,other=10,last=0')) # loss + not last
+    assert player_stat.last == 1
 
-
+def __get_play(game='test_game',
+               date='31/12/16',
+               type='max', players='p1=12,p2=0',
+               winners=None):
+    """
+    return a test play
+    :param game:
+    :param date:
+    :param type:
+    :param players:
+    :return:
+    """
+    new_play = Play()
+    new_play.game = game
+    new_play.type = type
+    new_play.date = date
+    if players is None:
+        new_play.players.append(Player(name='p1', score=12))
+        new_play.players.append(Player(name='p2', score=0))
+    elif len(players) >0:
+        for name,score in [player.split('=') for player in players.split(',')]:
+            new_play.players.append(Player(name, score))
+    if winners:
+        new_play.winners = winners
+    return new_play
 
 def test_player_stat_winloss_streak():
     """
