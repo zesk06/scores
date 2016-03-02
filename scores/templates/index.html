@@ -16,11 +16,11 @@
             </tr>
             {% for player in  stats.get_sorted_players() %}
             <tr>
-                <td><a href="#{{ player.name }}">{{ player.name }}</a></td>
+                <td><a href="#p_{{ player.name }}">{{ player.name }}</a></td>
                 <td>{{ player.win }}</td>
                 <td>{{ player.plays_number }}</td>
                 <td>{{ player.get_percentage() }}</td>
-                <td><a href="#{{ player.get_worst_ennemy()[0] }}">{{ player.get_worst_ennemy()[0] }}</a> (defaite par {{ player.get_worst_ennemy()[1] }} fois)</td>
+                <td><a href="#p_{{ player.get_worst_ennemy()[0] }}">{{ player.get_worst_ennemy()[0] }}</a> (defaite par {{ player.get_worst_ennemy()[1] }} fois)</td>
                 <td>{{ player.streak_win }} - {{ player.streak_win_longest }}</td>
                 <td>{{ player.streak_loose }} - {{ player.streak_loose_longest }}</td>
             </tr>
@@ -49,7 +49,7 @@
         <h1>Les joueurs</h1>
         {% for playername, player_stat in stats.player_stats | dictsort %}
           <div class="col-md-3">
-            <div class="panel panel-default player-stat" id="{{ player_stat.name }}">
+            <div class="panel panel-default player-stat" id="p_{{ player_stat.name }}">
               <div class="panel-heading">
                 <h3 class="panel-title">{{ player_stat.name }}</h3>
                 <span class="player-stat-btn"><span class="glyphicon glyphicon-th-list" title="Detailled infos"></span></span>

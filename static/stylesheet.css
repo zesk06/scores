@@ -1,6 +1,8 @@
-// Make target light green
+/* Make target light green*/
 :target {
     background-color: #dff0d8;
+    border: 1px solid green;
+
 }
 
 .player-stat-btn {
