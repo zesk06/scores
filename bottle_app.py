@@ -44,7 +44,8 @@ def add():
     new_play.date = request.forms.get('date')
     new_play.game = request.forms.get('game')
     players = request.forms.get('players')
-    for player in [line for line in players.split('\n') if len(line.rstrip()) > 0]:
+    for player in [line for line in players.split('\n')
+                   if len(line.rstrip()) > 0]:
         elements = player.split(':')
         if len(elements) == 2:
             (player_name, player_score) = elements

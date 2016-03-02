@@ -7,4 +7,3 @@ from scores import Player
 from scores import PlayerStat
 from scores import Scores
 from scores import OverallWinnerStat
-

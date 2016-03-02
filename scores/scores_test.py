@@ -16,6 +16,7 @@ if not os.path.exists('target'):
 THIS_DIR = os.path.abspath(os.path.dirname(__file__))
 SCORES_YML = os.path.join(THIS_DIR, '..', 'scores.yml')
 
+
 def test_scores():
     " test the score class init"
     mscores = scores.Scores()
@@ -85,7 +86,8 @@ players:
 - {name: zesk, score: 16}
 """
     loaded_play = Play(yaml.load(yaml_str))
-    assert loaded_play.get_winners() == [ 'lolo' ]
+    assert loaded_play.get_winners() == ['lolo']
+
 
 def test_play():
     "test the play class"
@@ -107,6 +109,9 @@ def test_play():
 
 
 def test_play_to_json():
+    """
+    test play serialization
+    """
     myplay = __get_play(players='cent=100,dix=10,un=1', winners=['cent', 'un'])
     assert myplay.to_json() is not None
 
@@ -141,9 +146,12 @@ def test_player_stat():
     assert player_stat.__str__() != ''
     assert player_stat.get_worst_ennemy() == ('none', 0)
     assert player_stat.last == 0
-    player_stat.new_play(__get_play(players='test_player=0,first=10'))        # loss + last
-    player_stat.new_play(__get_play(players='test_player=5,other=10,last=0')) # loss + not last
+    # loss + last
+    player_stat.new_play(__get_play(players='test_player=0,first=10'))
+    # loss + not last
+    player_stat.new_play(__get_play(players='test_player=5,other=10,last=0'))
     assert player_stat.last == 1
+
 
 def __get_play(game='test_game',
                date='31/12/16',
@@ -164,12 +172,14 @@ def __get_play(game='test_game',
     if players is None:
         new_play.players.append(Player(name='p1', score=12))
         new_play.players.append(Player(name='p2', score=0))
-    elif len(players) >0:
-        for name,score in [player.split('=') for player in players.split(',')]:
+    elif len(players) > 0:
+        for name, score in [player.split('=')
+                            for player in players.split(',')]:
             new_play.players.append(Player(name, score))
     if winners:
         new_play.winners = winners
     return new_play
+
 
 def test_player_stat_winloss_streak():
     """

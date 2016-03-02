@@ -74,7 +74,8 @@ class Play(object):
 
         return "[%03d]%s: %s %s" % (self.play_id, self.date,
                                     self.game,
-                                    ', '.join(['%s(%s)' % (player.name, player.score)
+                                    ', '.join(['%s(%s)' % (player.name,
+                                                           player.score)
                                               for player in sorted_players]))
 
     def __load_json(self, yml_data):
@@ -163,6 +164,12 @@ class Player(object):
         if 'team' in yml_data:
             self.team = yml_data['team']
 
+    def dummy_pep8(self):
+        """
+        this is dummy
+        """
+        pass
+
 
 class GameStat(object):
     """A game stat"""
@@ -227,6 +234,7 @@ class GameStat(object):
         :return: the player with the maximum number of victories
         """
         return sorted(self.victories_per_player, key=operator.itemgetter(1))[0]
+
 
 class PlayerStat(object):
     """A player stat"""

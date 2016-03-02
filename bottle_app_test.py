@@ -4,7 +4,6 @@
 "test scores.py"
 
 import bottle_app
-from bottle import Request
 import shutil
 import os
 
@@ -15,6 +14,7 @@ if not os.path.exists(TEST_DIR):
     os.makedirs(TEST_DIR)
 shutil.copy(bottle_app.FILENAME, os.path.join(TEST_DIR, 'scores.yml'))
 bottle_app.FILENAME = 'target/scores.yml'
+
 
 class TRequest(object):
     """docstring for TRequest"""
@@ -35,13 +35,13 @@ def test_new():
 
 def test_add():
     "Test the index page"
-    newRequest = TRequest()
-    newRequest.forms['date'] = '10/03/16'
-    newRequest.forms['game'] = 'test_game'
-    newRequest.forms['players'] = """zesk:100
+    new_request = TRequest()
+    new_request.forms['date'] = '10/03/16'
+    new_request.forms['game'] = 'test_game'
+    new_request.forms['players'] = """zesk:100
 lolo:120
 """
-    bottle_app.request = newRequest
+    bottle_app.request = new_request
     assert bottle_app.add()
     assert bottle_app.get_mscores().plays[-1].game == 'test_game'
     assert bottle_app.get_mscores().plays[-1].date == '10/03/16'
@@ -50,4 +50,3 @@ lolo:120
 def test_remove():
     "Test the index page"
     assert bottle_app.remove(0)
-
