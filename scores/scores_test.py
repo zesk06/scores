@@ -54,6 +54,14 @@ def test_scores_dump_yaml(mscores, test_dir):
     mscores.dump(filename=os.path.join(test_dir, 'new_scores.yml'))
 
 
+def test_scores_get_games(mscores):
+    """
+    test the Scores.get_games method
+    :param mscores: the mscores
+    """
+    assert len(mscores.get_games()) > 0
+
+
 def test_play_load():
     "test"
     # yaml format?

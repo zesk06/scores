@@ -18,6 +18,11 @@ var main = function(){
         }
        $('#dateId').val(curr_date+'/'+curr_month+'/'+curr_year);
     });
+
+    $('.game-btn').click(function(){
+        game_name = $(this).text();
+        $('#gameId').val(game_name)
+    })
 }
 
 $(document).ready(main)

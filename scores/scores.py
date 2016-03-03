@@ -49,6 +49,12 @@ class Scores(object):
         "transform object to json"
         return [play.to_json() for play in self.plays]
 
+    def get_games(self):
+        """
+        :return: a set of game names
+        """
+        return frozenset([play.game for play in self.plays])
+
 
 class Play(object):
     """A Play is a board game instance with players and scores.

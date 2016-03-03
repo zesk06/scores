@@ -21,6 +21,11 @@
                             <label for="gameId">jeu</label>
                             <input class="form-control" name="game" id="gameId" type="text" placeholder="7wonders" />
                             <p class="help-block">Le nom du jeu</p>
+                            <div class="btn-group" role="group">
+                                {% for game in games | sort %}
+                                    <button type="button" class="btn btn-sm btn-default game-btn">{{ game }}</button>
+                                {% endfor %}
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="winnersId">gagnants</label>
