@@ -10,48 +10,48 @@ import os
 import yaml
 import shutil
 
-if not os.path.exists('target'):
-    os.makedirs('target')
 
-THIS_DIR = os.path.abspath(os.path.dirname(__file__))
-SCORES_YML = os.path.join(THIS_DIR, '..', 'scores.yml')
+@pytest.fixture()
+def test_dir():
+    """
+    :rtype: basestring
+    :return: a suitable dir for testing outputs
+    """
+    if not os.path.exists('target'):
+        os.makedirs('target')
+    return 'target'
 
 
-def test_scores():
+@pytest.fixture()
+def mscores():
+    """
+    :return: a test instance of mscores
+    """
+    this_dir = os.path.abspath(os.path.dirname(__file__))
+    return scores.Scores(filename=os.path.join(this_dir, '..', 'scores.yml'))
+
+
+def test_scores(mscores):
     " test the score class init"
-    mscores = scores.Scores()
-    assert mscores is not None
-    assert len(mscores.plays) == 0
-    mscores = scores.Scores(filename=SCORES_YML)
+    assert len(scores.Scores().plays) == 0
     assert mscores is not None
     assert len(mscores.plays) > 0
-    mscores = scores.Scores()
-    assert mscores is not None
-    mscores.load(filename=SCORES_YML)
-    assert len(mscores.plays) > 0
-    for player in mscores.plays[0].players:
-        print '%s' % player
-    print 'scores is %s' % mscores
 
 
-def test_scores_dump():
+def test_scores_dump(mscores, test_dir):
     "test the Scores serialization"
-    mscores = scores.Scores(filename=SCORES_YML)
-    assert mscores is not None
-    mscores.dump(filename='target/new_scores.yml')
+    mscores.dump(filename=os.path.join(test_dir, 'new_scores.yml'))
     mscores2 = scores.Scores()
-    mscores2.load('target/new_scores.yml')
+    mscores2.load(os.path.join(test_dir, 'new_scores.yml'))
     assert len(mscores.plays) == len(mscores2.plays)
     for play1, play2 in zip(mscores.plays, mscores2.plays):
         assert play1.date == play2.date
         assert play1.game == play2.game
 
 
-def test_scores_dump_yaml():
+def test_scores_dump_yaml(mscores, test_dir):
     "test the Scores serialization"
-    mscores = scores.Scores(filename=SCORES_YML)
-    assert mscores is not None
-    mscores.dump(filename='target/new_scores.yml')
+    mscores.dump(filename=os.path.join(test_dir, 'new_scores.yml'))
 
 
 def test_play_load():
@@ -218,15 +218,15 @@ def test_player_stat_winloss_streak():
     assert pstat.streak_win_longest == 4
 
 
-def test_overall_winner_stat():
+def test_overall_winner_stat(mscores, test_dir):
     overall_stat = OverallWinnerStat()
-    mscores = scores.Scores(filename=SCORES_YML)
     for play in mscores.plays:
         overall_stat.new_play(play)
 
     assert overall_stat
     assert overall_stat.__str__() != ''
     overall_stat.to_html()
-    if os.path.exists('target/anunexpectedfolder'):
-        shutil.rmtree('target/anunexpectedfolder')
-    overall_stat.to_html(filename='target/anunexpectedfolder/index.html')
+    if os.path.exists(os.path.join(test_dir, 'unexpected')):
+        shutil.rmtree(os.path.join(test_dir, 'unexpected'))
+    overall_stat.to_html(filename=os.path.join(test_dir,
+                                               'unexpected/index.html'))
