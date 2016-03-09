@@ -31,7 +31,7 @@
     <div class="row">
       <div class="col-md-12">
         <h1>Les parties</h1>
-        <table class="table">
+        <table class="table" id="plays_table">
             <tr><th>#</th><th>date</th><th>jeu</th><th>gagnant</th><th>1ers</th><th>2nd</th><th>3emes</th><th>4emes</th><th>5emes</th><th>6emes</th></tr>
             {% for play in stats.plays %}
             <tr id="p_{{ play.play_id }}" >

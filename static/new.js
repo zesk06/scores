@@ -21,7 +21,17 @@ var main = function(){
 
     $('.game-btn').click(function(){
         game_name = $(this).text();
-        $('#gameId').val(game_name)
+        $('#gameId').val(game_name);
+    })
+
+     $('.player-btn').click(function(){
+        player_name = $(this).text();
+        prev_value = $('#playersId').val()
+        if (prev_value === ""){
+            $('#playersId').val(player_name+':000');
+        }else{
+            $('#playersId').val(prev_value + '\n'+player_name+':000');
+        }
     })
 }
 

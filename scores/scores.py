@@ -55,6 +55,18 @@ class Scores(object):
         """
         return frozenset([play.game for play in self.plays])
 
+    def get_players(self):
+        """
+        return a set of players
+        :return: a set of players
+        """
+        players = []
+        for play in self.plays:
+            for player in play.players:
+                if player.name not in players:
+                    players.append(player.name)
+        return players
+
 
 class Play(object):
     """A Play is a board game instance with players and scores.

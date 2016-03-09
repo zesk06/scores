@@ -41,8 +41,11 @@
                             <label for="playersId">scores par joueur</label>
                             <textarea class="form-control" rows="8" name="players" id="playersId" placeholder="zesk:100 RED:lolo:250 BLUE:yohann:10:W"></textarea>
                             <p class="help-block">Les scores par joueur sous la forme joueur:score, un par ligne</p>
+                            {% for player in players | sort %}
+                                    <button type="button" class="btn btn-sm btn-default player-btn">{{ player }}</button>
+                            {% endfor %}
                         </div>
-                        <input value="Send" type="submit" class="btn btn-default" />
+                        <input value="Send" type="submit" id="sendId" class="btn btn-default btn-primary" />
                     </form>
                 </div>
             </div>

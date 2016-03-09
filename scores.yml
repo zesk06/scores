@@ -168,12 +168,11 @@
   - {name: zesk, score: 0, team: bien}
 - date: 19/02/16
   game: splendor
-  winners:
-    - lolo
   players:
   - {name: lolo, score: 16}
   - {name: maxime, score: 13}
   - {name: zesk, score: 16}
+  winners: [lolo]
 - date: 19/02/16
   game: descendance
   players:
@@ -204,4 +203,3 @@
   - {name: vincent_lalanne, score: 8}
   - {name: vincent, score: 72}
   - {name: zesk, score: 157}
-

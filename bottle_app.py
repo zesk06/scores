@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # encoding: utf-8
-# A very simple Bottle Hello World app for you to get started with...
 
 "This bottle app permits to display boardgame scores"
 
@@ -33,7 +32,10 @@ def new():
     " the page to create a new play record"
     menv = Environment(loader=PackageLoader('scores', 'templates'))
     template = menv.get_template('new.html')
-    return template.render(title=u'NEW GAME')
+    mscores = get_mscores()
+    games = mscores.get_games()
+    players = mscores.get_players()
+    return template.render(title=u'NEW GAME', games=games, players=players)
 
 
 @post('/add')
