@@ -203,3 +203,11 @@
   - {name: vincent_lalanne, score: 8}
   - {name: vincent, score: 72}
   - {name: zesk, score: 157}
+- date: 11/03/16
+  game: megawatts
+  players:
+  - {name: clemence, score: 12}
+  - {name: lolo, score: 12}
+  - {name: maxime, score: 12}
+  - {name: raphaelle, score: 17}
+  - {name: zesk, score: 17}
