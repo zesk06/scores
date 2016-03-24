@@ -211,3 +211,19 @@
   - {name: maxime, score: 12}
   - {name: raphaelle, score: 17}
   - {name: zesk, score: 17}
+- date: 23/03/16
+  game: dixit
+  players:
+  - {name: allugan, score: 26}
+  - {name: clemence, score: 31}
+  - {name: lolo, score: 20}
+  - {name: vincent, score: 30}
+  - {name: zesk, score: 28}
+- date: 23/03/16
+  game: dixit
+  players:
+  - {name: allugan, score: 23}
+  - {name: clemence, score: 19}
+  - {name: lolo, score: 24}
+  - {name: vincent, score: 24}
+  - {name: zesk, score: 22}
