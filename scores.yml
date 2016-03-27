@@ -227,3 +227,15 @@
   - {name: lolo, score: 24}
   - {name: vincent, score: 24}
   - {name: zesk, score: 22}
+- date: 27/03/16
+  game: splendor
+  players:
+  - {name: claire, score: 3}
+  - {name: vincent_templier, score: 15}
+  - {name: zesk, score: 14}
+- date: 27/03/16
+  game: splendor
+  players:
+  - {name: claire, score: 7}
+  - {name: vincent_templier, score: 17}
+  - {name: zesk, score: 10}
