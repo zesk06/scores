@@ -239,3 +239,11 @@
   - {name: claire, score: 7}
   - {name: vincent_templier, score: 17}
   - {name: zesk, score: 10}
+- date: 01/04/16
+  game: megawatts
+  players:
+  - {name: allugan, score: 15}
+  - {name: jc, score: 14}
+  - {name: lolo, score: 16}
+  - {name: maxime, score: 15}
+  - {name: zesk, score: 14}
