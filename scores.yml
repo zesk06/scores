@@ -247,3 +247,10 @@
   - {name: lolo, score: 16}
   - {name: maxime, score: 15}
   - {name: zesk, score: 14}
+- date: 16/04/16
+  game: splendor
+  players:
+  - {name: christelle, score: 10}
+  - {name: lolo, score: 15}
+  - {name: philippe, score: 12}
+  - {name: zesk, score: 14}
