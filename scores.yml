@@ -254,3 +254,21 @@
   - {name: lolo, score: 15}
   - {name: philippe, score: 12}
   - {name: zesk, score: 14}
+- date: 20/04/16
+  game: jamaica
+  players:
+  - {name: clemence, score: 15}
+  - {name: diane, score: 3}
+  - {name: lolo, score: 29}
+  - {name: vincent_lalanne, score: 4}
+  - {name: vincent, score: 18}
+  - {name: zesk, score: 5}
+- date: 20/04/16
+  game: dixit
+  players:
+  - {name: clemence, score: 29}
+  - {name: diane, score: 23}
+  - {name: lolo, score: 21}
+  - {name: vincent_lalanne, score: 16}
+  - {name: vincent, score: 14}
+  - {name: zesk, score: 16}
