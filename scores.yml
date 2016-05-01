@@ -272,3 +272,17 @@
   - {name: vincent_lalanne, score: 16}
   - {name: vincent, score: 14}
   - {name: zesk, score: 16}
+- date: 24/04/16
+  game: jamaica
+  players:
+  - {name: angelique, score: 31}
+  - {name: lolo, score: 20}
+  - {name: martine, score: 18}
+  - {name: patrick, score: 26}
+  - {name: zesk, score: 37}
+- date: 25/04/16
+  game: jamaica
+  players:
+  - {name: angelique, score: 23}
+  - {name: martine, score: 20}
+  - {name: zesk, score: 26}
