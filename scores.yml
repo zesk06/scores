@@ -301,3 +301,12 @@
   - {name: vincent, score: 5}
   - {name: vincent_lalanne, score: 23}
   - {name: zesk, score: -2}
+- date: 30/07/16
+  game: megawatts
+  players:
+  - {name: anthony, score: 14}
+  - {name: diane, score: 16}
+  - {name: maxime, score: 18}
+  - {name: vincent, score: 15}
+  - {name: vincent_lalanne, score: 15}
+  - {name: zesk, score: 14}
