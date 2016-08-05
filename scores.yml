@@ -310,3 +310,18 @@
   - {name: vincent, score: 15}
   - {name: vincent_lalanne, score: 15}
   - {name: zesk, score: 14}
+- date: 04/08/16
+  game: ascension
+  players:
+  - {name: lolo, score: 20}
+  - {name: zesk, score: 40}
+- date: 04/08/16
+  game: ascension
+  players:
+  - {name: lolo, score: 35}
+  - {name: zesk, score: 25}
+- date: 04/08/16
+  game: ascension
+  players:
+  - {name: lolo, score: 27}
+  - {name: zesk, score: 33}
