@@ -323,5 +323,12 @@
 - date: 04/08/16
   game: ascension
   players:
-  - {name: lolo, score: 27}
-  - {name: zesk, score: 33}
+  - {name: lolo, score: 76}
+  - {name: zesk, score: 74}
+- date: 15/08/16
+  game: ascension
+  players:
+  - {name: damien, score: 52}
+  - {name: lolo, score: 67}
+  - {name: maud, score: 50}
+  - {name: zesk, score: 66}
