@@ -10,6 +10,7 @@ from jinja2 import Environment
 from jinja2.loaders import PackageLoader
 import scores
 import os
+import sys
 
 
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
@@ -97,4 +98,4 @@ application = default_app()  # pylint: disable = C0103
 
 if __name__ == '__main__':
     bottle.debug(True)
-    run(reloader=True)
+    run(reloader=True, host='0.0.0.0', port=sys.argv[1])
