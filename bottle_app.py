@@ -3,21 +3,21 @@
 
 "This bottle app permits to display boardgame scores"
 
-import bottle
-from bottle import default_app, request, route, post, get, run
-from bottle import static_file
+from flask import Flask
 from jinja2 import Environment
 from jinja2.loaders import PackageLoader
-import scores
 import os
 import sys
 
+import scores
+
+app = Flask(__name__)
 
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 FILENAME = os.path.join(THIS_DIR, 'scores.yml')
 
 
-@route('/')
+@app.route('/')
 def index():
     "return the homepage"
     mscores = get_mscores()
@@ -28,7 +28,7 @@ def index():
     return template.render(title=u'GAME STATS', stats=stats)
 
 
-@get('/new')
+@app.route('/new')
 def new():
     " the page to create a new play record"
     menv = Environment(loader=PackageLoader('scores', 'templates'))
@@ -39,7 +39,7 @@ def new():
     return template.render(title=u'NEW GAME', games=games, players=players)
 
 
-@post('/add')
+# @post('/add')
 def add():
     " when posting for a new play record"
     mscores = get_mscores()
@@ -68,7 +68,7 @@ def add():
     return html
 
 
-@get('/rm/<play_id:int>')
+# @get('/rm/<play_id:int>')
 def remove(play_id):
     """
     remove the play record at index play_id
@@ -81,7 +81,7 @@ def remove(play_id):
     return '<p>[<a href="/">OK</a>]: play %s has been removed</p>' % old_play
 
 
-@route('/static/<filename>')
+# @route('/static/<filename>')
 def server_static(filename):
     """
     :return: static files
@@ -94,8 +94,5 @@ def get_mscores():
     return scores.Scores(filename=os.path.join(THIS_DIR, FILENAME))
 
 
-application = default_app()  # pylint: disable = C0103
-
 if __name__ == '__main__':
-    bottle.debug(True)
-    run(reloader=True, host='0.0.0.0', port=sys.argv[1])
+    app.run(debug=True)
