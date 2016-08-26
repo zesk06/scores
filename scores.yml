@@ -332,8 +332,3 @@
   - {name: lolo, score: 67}
   - {name: maud, score: 50}
   - {name: zesk, score: 66}
-- date: 10/12/16
-  game: 7wonders
-  players:
-  - {name: haha, score: 100}
-  - {name: toto, score: 10}

@@ -3,7 +3,7 @@
 
 "This bottle app permits to display boardgame scores"
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from jinja2 import Environment
 from jinja2.loaders import PackageLoader
 import os
@@ -15,6 +15,11 @@ app = Flask(__name__)
 
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 FILENAME = os.path.join(THIS_DIR, 'scores.yml')
+
+
+@app.route('/test')
+def test_page():
+    return render_template('test.html')
 
 
 @app.route('/')
@@ -86,9 +91,28 @@ def get_mscores():
     return scores.Scores(filename=os.path.join(THIS_DIR, FILENAME))
 
 
-@app.route('/api/v1/play', methods=["GET", "POST"])
-def plays():
+@app.route('/api/v1/plays', methods=["GET"])
+def get_plays():
+    """
+    :return: the plays
+    """
+    mscores = get_mscores()
+    return jsonify([play.to_json() for play in mscores.plays])
 
+
+@app.route('/api/v1/plays', methods=["POST"])
+def add_play():
+    """
+    :return: Adds a new play
+    """
+    json_data = request.get_json(force=True)
+    if json_data:
+        new_play = scores.Play()
+        new_play.from_json(data=json_data)
+        get_mscores().add_play(play=new_play)
+        return jsonify(new_play.to_json()), 201
+    else:
+        return jsonify('missing json data'), 400
 
 if __name__ == '__main__':
     if len(sys.argv) >  1:

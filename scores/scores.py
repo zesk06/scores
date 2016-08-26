@@ -11,6 +11,9 @@ import os
 import yaml
 
 
+from helper import required_fields
+
+
 class Scores(object):
     """docstring for Scores"""
     def __init__(self, filename=None):
@@ -67,6 +70,20 @@ class Scores(object):
                     players.append(player.name)
         return players
 
+    def get_plays(self):
+        """
+        :rtype: list[Play]
+        :return: The plays
+        """
+        return self.plays
+
+    def add_play(self, play):
+        """Add a new Play.
+        :type play: Play
+        :rtype: void
+        """
+        self.plays.append(play)
+
 
 class Play(object):
     """A Play is a board game instance with players and scores.
@@ -82,7 +99,7 @@ class Play(object):
         self.players = []
         self.winners = None
         if yml_data is not None:
-            self.__load_json(yml_data)
+            self.from_json(yml_data)
 
     def __str__(self):
         "return string representation of the Play"
@@ -96,18 +113,23 @@ class Play(object):
                                                            player.score)
                                               for player in sorted_players]))
 
-    def __load_json(self, yml_data):
-        "loads json datas"
-        self.date = yml_data['date']
-        self.game = yml_data['game']
+    @required_fields(['date', 'game'])
+    def from_json(self, data):
+        """
+        loads json datas
+        :param data: The json datas
+        :return:
+        """
+        self.date = data['date']
+        self.game = data['game']
         self.players = []
         self.winners = None
-        for player_json in yml_data['players']:
+        for player_json in data['players']:
             self.players.append(Player(yml_data=player_json))
-        if 'winners' in yml_data:
-            self.winners = yml_data['winners']
-        if 'type' in yml_data:
-            self.type = yml_data['type']
+        if 'winners' in data:
+            self.winners = data['winners']
+        if 'type' in data:
+            self.type = data['type']
 
     def to_json(self):
         "serialize to json"
