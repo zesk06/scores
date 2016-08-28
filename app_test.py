@@ -20,7 +20,7 @@ class TRequest(object):
     """docstring for TRequest"""
     def __init__(self):
         super(TRequest, self).__init__()
-        self.forms = dict()
+        self.form = dict()
 
 
 def test_index():
@@ -29,16 +29,16 @@ def test_index():
 
 
 def test_new():
-    "Test the index page"
+    "Test the new page"
     assert app.new()
 
 
 def test_add():
     "Test the index page"
     new_request = TRequest()
-    new_request.forms['date'] = '10/03/16'
-    new_request.forms['game'] = 'test_game'
-    new_request.forms['players'] = """zesk:100
+    new_request.form['date'] = '10/03/16'
+    new_request.form['game'] = 'test_game'
+    new_request.form['players'] = """zesk:100
 lolo:120
 """
     app.request = new_request

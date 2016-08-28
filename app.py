@@ -63,13 +63,13 @@ def add():
                     % player)
         new_player = scores.Player(name=player_name, score=player_score)
         new_play.players.append(new_player)
-    if request.form['minmax'] and len(request.form['minmax']) > 0:
-        new_play.type = request.form['minmax']
+    if 'minmax' in request.form \
+            and request.form['minmax'] \
+            and len(request.form['minmax']) > 0:
+            new_play.type = request.form['minmax']
     mscores.plays.append(new_play)
     mscores.dump(os.path.join(THIS_DIR, FILENAME))
-    html = '<p>[<a href="/">OK</a>]:'
-    html += ('added play %s (minmax was %s)</p>' %
-             (new_play, request.form['minmax']))
+    html = '<p>[<a href="/">OK</a>]: added play %s</p>' % new_play
     return html
 
 
@@ -115,7 +115,7 @@ def add_play():
         return jsonify('missing json data'), 400
 
 if __name__ == '__main__':
-    if len(sys.argv) >  1:
+    if len(sys.argv) > 1:
         port = int(sys.argv[1])
     else:
         port = 5000
