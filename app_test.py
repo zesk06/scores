@@ -3,50 +3,47 @@
 
 "test scores.py"
 
-import app
+import json
 import shutil
 import os
 
-print 'This run once'
+import app
+
+# This run once for all
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 TEST_DIR = os.path.join(THIS_DIR, 'target')
 if not os.path.exists(TEST_DIR):
     os.makedirs(TEST_DIR)
-shutil.copy(app.FILENAME, os.path.join(TEST_DIR, 'scores.yml'))
-app.FILENAME = 'target/scores.yml'
+shutil.copy(os.path.join(THIS_DIR, 'scores.yml'),
+            os.path.join(TEST_DIR, 'scores.yml'))
+app.app.config.from_object(app.TestConfig)
 
 
-class TRequest(object):
-    """docstring for TRequest"""
-    def __init__(self):
-        super(TRequest, self).__init__()
-        self.form = dict()
+class AppTest(object):
 
+    def test_index(self):
+        "Test the index page"
+        assert app.index(self)
 
-def test_index():
-    "Test the index page"
-    assert app.index()
+    def test_get_plays(self):
+        with app.app.test_client() as myapp:
+            myapp.get('/api/v1/plays')
 
-
-def test_new():
-    "Test the new page"
-    assert app.new()
-
-
-def test_add():
-    "Test the index page"
-    new_request = TRequest()
-    new_request.form['date'] = '10/03/16'
-    new_request.form['game'] = 'test_game'
-    new_request.form['players'] = """zesk:100
-lolo:120
-"""
-    app.request = new_request
-    assert app.add()
-    assert app.get_mscores().plays[-1].game == 'test_game'
-    assert app.get_mscores().plays[-1].date == '10/03/16'
-
-
-def test_remove():
-    "Test the index page"
-    assert app.remove(0)
+    def test_add_play(self):
+        """Test."""
+        with app.app.test_client() as myapp:
+            plays_before = myapp.get('/api/v1/plays')
+            json_data = {
+                'game': 'test_game',
+                'date': '10/03/16',
+                'players': [
+                    {'name': 'test_zesk', 'score': 100, 'team': None},
+                    {'name': 'test_lolo', 'score': 10, 'team': None}
+                ]
+            }
+            myapp.post(data=json.dumps(json_data),
+                       content_type='application/json')
+            plays_after = myapp.get('/api/v1/plays')
+            assert plays_after.status_code == 200
+            plays = plays_after.data
+            print 'received %s plays' % len(json.loads(plays))

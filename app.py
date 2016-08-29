@@ -11,10 +11,26 @@ import sys
 
 import scores
 
-app = Flask(__name__)
-
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-FILENAME = os.path.join(THIS_DIR, 'scores.yml')
+
+
+class Config(object):
+    DEBUG = False
+    TESTING = False
+    DATABASE_URI = os.path.join(THIS_DIR, 'scores.yml')
+
+
+class DevelopmentConfig(Config):
+    DEBUG = True
+
+
+class TestConfig(Config):
+    TESTING = True
+    DATABASE_URI = os.path.join(THIS_DIR, 'target/scores.yml')
+
+
+app = Flask(__name__)
+app.config.from_object(Config)
 
 
 @app.route('/test')
@@ -82,13 +98,13 @@ def remove(play_id):
     """
     mscores = get_mscores()
     old_play = mscores.plays.pop(play_id)
-    mscores.dump(os.path.join(THIS_DIR, FILENAME))
+    mscores.dump(app.config['DATABASE_URI'])
     return '<p>[<a href="/">OK</a>]: play %s has been removed</p>' % old_play
 
 
 def get_mscores():
     "returns the mscores"
-    return scores.Scores(filename=os.path.join(THIS_DIR, FILENAME))
+    return scores.Scores(filename=app.config['DATABASE_URI'])
 
 
 @app.route('/api/v1/plays', methods=["GET"])
