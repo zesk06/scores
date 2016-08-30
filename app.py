@@ -4,8 +4,6 @@
 "This bottle app permits to display boardgame scores"
 
 from flask import Flask, request, jsonify, render_template
-from jinja2 import Environment
-from jinja2.loaders import PackageLoader
 import os
 import sys
 
@@ -35,7 +33,7 @@ app.config.from_object(Config)
 
 @app.route('/test')
 def test_page():
-    return render_template('test.html')
+    return ('test.html')
 
 
 @app.route('/')
@@ -44,62 +42,17 @@ def index():
     mscores = get_mscores()
     stats = scores.OverallWinnerStat()
     stats.parse(mscores)
-    menv = Environment(loader=PackageLoader('scores', 'templates'))
-    template = menv.get_template('index.html')
-    return template.render(title=u'GAME STATS', stats=stats)
+    return render_template('index.html', title=u'GAME STATS', stats=stats)
 
 
 @app.route('/new')
 def new():
     " the page to create a new play record"
-    menv = Environment(loader=PackageLoader('scores', 'templates'))
-    template = menv.get_template('new.html')
     mscores = get_mscores()
     games = mscores.get_games()
     players = mscores.get_players()
-    return template.render(title=u'NEW GAME', games=games, players=players)
-
-
-@app.route('/add', methods=['POST'])
-def add():
-    " when posting for a new play record"
-    mscores = get_mscores()
-    new_play = scores.Play()
-    new_play.date = request.form['date'].encode('utf-8')
-    new_play.game = request.form['game'].encode('utf-8')
-    players = request.form['players'].encode('utf-8')
-    for player in [line for line in players.split('\n')
-                   if len(line.rstrip()) > 0]:
-        elements = player.split(':')
-        if len(elements) == 2:
-            (player_name, player_score) = elements
-        else:
-            return (('bad format for player line "%s", ' +
-                     'shall contains 2 ":" separated tokens')
-                    % player)
-        new_player = scores.Player(name=player_name, score=player_score)
-        new_play.players.append(new_player)
-    if 'minmax' in request.form \
-            and request.form['minmax'] \
-            and len(request.form['minmax']) > 0:
-            new_play.type = request.form['minmax']
-    mscores.plays.append(new_play)
-    mscores.dump(os.path.join(THIS_DIR, FILENAME))
-    html = '<p>[<a href="/">OK</a>]: added play %s</p>' % new_play
-    return html
-
-
-# @get('/rm/<play_id:int>')
-def remove(play_id):
-    """
-    remove the play record at index play_id
-    :param play_id: The play id to be removed
-    :return:
-    """
-    mscores = get_mscores()
-    old_play = mscores.plays.pop(play_id)
-    mscores.dump(app.config['DATABASE_URI'])
-    return '<p>[<a href="/">OK</a>]: play %s has been removed</p>' % old_play
+    return render_template('new.html', title=u'NEW GAME',
+                           games=games, players=players)
 
 
 def get_mscores():

@@ -4,7 +4,7 @@
 "Handles scores"
 
 from jinja2 import Environment
-from jinja2.loaders import PackageLoader
+from jinja2.loaders import FileSystemLoader
 from collections import Counter
 import operator
 import os
@@ -12,6 +12,10 @@ import yaml
 
 
 from helper import required_fields
+
+
+THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+TEMPLATE_DIR = os.path.join(THIS_DIR, '..', 'templates')
 
 
 class Scores(object):
@@ -412,7 +416,7 @@ class OverallWinnerStat(object):
         :param filename: The name of the html file to be generated
         :return:
         """
-        menv = Environment(loader=PackageLoader('scores', 'templates'))
+        menv = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
         template = menv.get_template('index.html')
         if not os.path.exists(os.path.dirname(filename)):
             os.makedirs(os.path.dirname(filename))
@@ -421,6 +425,6 @@ class OverallWinnerStat(object):
 
     def get_html(self):
         " return the html"
-        menv = Environment(loader=PackageLoader('scores', 'templates'))
+        menv = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
         template = menv.get_template('index.html')
         return template.render(title=u'GAME STATS', stats=self)
