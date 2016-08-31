@@ -11,6 +11,10 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/stylesheet.css" type="text/css" rel="stylesheet">
     {% block stylesheets %}{% endblock %}
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script src="static/app/app.js"></script>
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -18,8 +22,8 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
       <![endif]-->
   </head>
-  <body>
-        <div class="container-fluid">
+  <body ng-app="myApp">
+        <div class="container-fluid" ng-controller="myAppController">
             <nav class="navbar navbar-default">
               <div class="container-fluid">
                 <div class="navbar-header">

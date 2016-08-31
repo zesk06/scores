@@ -4,11 +4,18 @@
 "Handles scores"
 
 from jinja2 import Environment
-from jinja2.loaders import PackageLoader
+from jinja2.loaders import FileSystemLoader
 from collections import Counter
 import operator
 import os
 import yaml
+
+
+from helper import required_fields
+
+
+THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+TEMPLATE_DIR = os.path.join(THIS_DIR, '..', 'templates')
 
 
 class Scores(object):
@@ -67,6 +74,20 @@ class Scores(object):
                     players.append(player.name)
         return players
 
+    def get_plays(self):
+        """
+        :rtype: list[Play]
+        :return: The plays
+        """
+        return self.plays
+
+    def add_play(self, play):
+        """Add a new Play.
+        :type play: Play
+        :rtype: void
+        """
+        self.plays.append(play)
+
 
 class Play(object):
     """A Play is a board game instance with players and scores.
@@ -82,7 +103,7 @@ class Play(object):
         self.players = []
         self.winners = None
         if yml_data is not None:
-            self.__load_json(yml_data)
+            self.from_json(yml_data)
 
     def __str__(self):
         "return string representation of the Play"
@@ -96,18 +117,23 @@ class Play(object):
                                                            player.score)
                                               for player in sorted_players]))
 
-    def __load_json(self, yml_data):
-        "loads json datas"
-        self.date = yml_data['date']
-        self.game = yml_data['game']
+    @required_fields(['date', 'game'])
+    def from_json(self, data):
+        """
+        loads json datas
+        :param data: The json datas
+        :return:
+        """
+        self.date = data['date']
+        self.game = data['game']
         self.players = []
         self.winners = None
-        for player_json in yml_data['players']:
+        for player_json in data['players']:
             self.players.append(Player(yml_data=player_json))
-        if 'winners' in yml_data:
-            self.winners = yml_data['winners']
-        if 'type' in yml_data:
-            self.type = yml_data['type']
+        if 'winners' in data:
+            self.winners = data['winners']
+        if 'type' in data:
+            self.type = data['type']
 
     def to_json(self):
         "serialize to json"
@@ -390,7 +416,7 @@ class OverallWinnerStat(object):
         :param filename: The name of the html file to be generated
         :return:
         """
-        menv = Environment(loader=PackageLoader('scores', 'templates'))
+        menv = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
         template = menv.get_template('index.html')
         if not os.path.exists(os.path.dirname(filename)):
             os.makedirs(os.path.dirname(filename))
@@ -399,6 +425,6 @@ class OverallWinnerStat(object):
 
     def get_html(self):
         " return the html"
-        menv = Environment(loader=PackageLoader('scores', 'templates'))
+        menv = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
         template = menv.get_template('index.html')
         return template.render(title=u'GAME STATS', stats=self)
