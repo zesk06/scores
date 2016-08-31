@@ -332,3 +332,10 @@
   - {name: lolo, score: 67}
   - {name: maud, score: 50}
   - {name: zesk, score: 66}
+- date: 24/08/16
+  game: ascension
+  players:
+  - {name: helene, score: 64}
+  - {name: lolo, score: 86}
+  - {name: sebastien, score: 59}
+  - {name: zesk, score: 66}
