@@ -31,14 +31,8 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 
-@app.route('/test')
-def test_page():
-    return ('test.html')
-
-
 @app.route('/')
-def index():
-    "return the homepage"
+def index_angular():
     mscores = get_mscores()
     stats = scores.OverallWinnerStat()
     stats.parse(mscores)
