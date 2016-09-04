@@ -3,11 +3,12 @@
 
 "This bottle app permits to display boardgame scores"
 
-from flask import Flask, request, jsonify, render_template
+import json
 import os
 import sys
 
 import scores
+from flask import Flask, jsonify, render_template, request
 
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
@@ -63,6 +64,15 @@ def get_plays():
     return jsonify([play.to_json() for play in mscores.plays])
 
 
+@app.route('/api/v1/plays/<int:play_id>', methods=["GET"])
+def get_play(play_id):
+    """
+    :return: the play with given ID
+    """
+    mscores = get_mscores()
+    return jsonify(mscores.plays[play_id].to_json())
+
+
 @app.route('/api/v1/plays', methods=["POST"])
 def add_play():
     """
@@ -76,6 +86,7 @@ def add_play():
         return jsonify(new_play.to_json()), 201
     else:
         return jsonify('missing json data'), 400
+
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:

@@ -1,0 +1,41 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2">
+      <!--Sidebar content-->
+      <p>
+        Sort by:
+        <select ng-model="$ctrl.orderProp">
+          <option value="date">game</option>
+          <option value="other">date</option>
+        </select>
+        <span class="glyphicon glyphicon-search"></span><input ng-model="filterplay" type="text"/>
+      </p>
+    </div>
+    <div class="col-md-10">
+      <table class="table" id="plays_table">
+        <tr>
+          <th>#</th>
+          <th>date</th>
+          <th>jeu</th>
+          <th>1ers</th>
+          <th>2nd</th>
+          <th>3emes</th>
+          <th>4emes</th>
+          <th>5emes</th>
+          <th>6emes</th>
+        </tr>
+
+        <!--Body content-->
+        <tr ng-repeat="play in $ctrl.plays | filter:filterplay">
+          <td>
+            <a href="/#!/plays/{{ play.id }}"><span class="glyphicon glyphicon-sunglasses" /></a>
+          </td>
+          <td>{{ play.date }}</td>
+          <td>{{ play.game }}</td>
+          <!-- orderBy:'-scores'  reverse the sort -->
+          <td ng-repeat="player in play.players | orderBy:'-score'"><span class="label label-default">{{ player.score }}</span> {{ player.name }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
