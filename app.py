@@ -94,4 +94,4 @@ if __name__ == '__main__':
     else:
         port = 5000
     print('launching server with args [%s]' % ', '.join(sys.argv))
-    app.run(debug=True, port=port)
+    app.run(port=port)
