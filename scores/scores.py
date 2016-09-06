@@ -39,9 +39,12 @@ class Scores(object):
         with open(filename) as yml_file:
             # loading yaml.safe_load ensure byte str instead of unicode string
             yml_data = yaml.safe_load(yml_file)
-            print yml_data
+            play_id = 0
             for json_play in yml_data:
-                self.plays.append(Play(yml_data=json_play))
+                new_play = Play(yml_data=json_play)
+                new_play.play_id = play_id
+                self.plays.append(new_play)
+                play_id += 1
 
     def dump(self, filename='scores.yml'):
         """
@@ -137,7 +140,8 @@ class Play(object):
 
     def to_json(self):
         "serialize to json"
-        yml_data = {"date": self.date,
+        yml_data = {"id": self.play_id,
+                    "date": self.date,
                     "game": self.game}
         if hasattr(self, 'winners') and self.winners is not None:
             yml_data['winners'] = self.winners
