@@ -339,3 +339,10 @@
   - {name: lolo, score: 86}
   - {name: sebastien, score: 59}
   - {name: zesk, score: 66}
+- date: 31/08/16
+  game: descendance
+  players:
+  - {name: clemence, score: 53}
+  - {name: lolo, score: 44}
+  - {name: vincent, score: 48}
+  - {name: zesk, score: 48}
