@@ -1,12 +1,13 @@
 'use strict';
 
-// Define the `phonecatApp` module
-angular.module('phonecatApp', [
+// Define the `scoresApp` module
+angular.module('scoresApp', [
   'ngAnimate',
   'ngRoute',
   'core',
   'core.play',
-
+  'core.game',
   'playList',
   'playDetail',
+  'gameDetail'
 ]);

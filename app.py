@@ -73,6 +73,18 @@ def get_play(play_id):
     return jsonify(mscores.plays[play_id].to_json())
 
 
+@app.route('/api/v1/games/<string:game_id>', methods=["GET"])
+def get_game(game_id):
+    """
+    :return: the game with given ID
+    """
+    stats = scores.OverallWinnerStat()
+    stats.parse(get_mscores())
+    if game_id in stats.game_stats:
+        return jsonify(stats.game_stats[game_id].to_json())
+    return jsonify('Failed to find game %s' % game_id), 404
+
+
 @app.route('/api/v1/plays', methods=["POST"])
 def add_play():
     """
@@ -94,4 +106,4 @@ if __name__ == '__main__':
     else:
         port = 5000
     print('launching server with args [%s]' % ', '.join(sys.argv))
-    app.run(port=port)
+    app.run(debug=True, port=port)

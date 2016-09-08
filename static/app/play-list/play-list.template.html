@@ -8,6 +8,8 @@
           <option value="date">game</option>
           <option value="other">date</option>
         </select>
+      </p>
+      <p>
         <span class="glyphicon glyphicon-search"></span><input ng-model="filterplay" type="text"/>
       </p>
     </div>
@@ -31,7 +33,7 @@
             <a href="/#!/plays/{{ play.id }}"><span class="glyphicon glyphicon-sunglasses" /></a>
           </td>
           <td>{{ play.date }}</td>
-          <td>{{ play.game }}</td>
+          <td><a href="/#!/games/{{ play.game }}">{{ play.game }}</a></td>
           <!-- orderBy:'-scores'  reverse the sort -->
           <td ng-repeat="player in play.players | orderBy:'-score'"><span class="label label-default">{{ player.score }}</span> {{ player.name }}</td>
         </tr>

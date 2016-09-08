@@ -1,4 +1,8 @@
 'use strict';
 
 // Define the `core` module
-angular.module('core', ['core.play']);
+angular.module('core',
+    [
+    'core.play',
+    'core.game'
+    ]);

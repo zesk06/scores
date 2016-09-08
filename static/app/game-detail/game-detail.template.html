@@ -1,0 +1,18 @@
+
+<h1>{{ $ctrl.game.game }}</h1>
+played {{ $ctrl.game.plays_number }} times:<br>
+<ul>
+    <li><span class="glyphicon glyphicon-thumbs-up"></span> Highest: <span class="badge">{{$ctrl.game.highest_score}}</span>
+        <span ng-repeat="player in $ctrl.game.highest_score_play_players">{{ player }}</span>
+        <a href="/#!/plays/{{ $ctrl.game.highest_score_play_id }}"><span class="glyphicon glyphicon-king"></span></a>
+    </li>
+    <li><span class="glyphicon glyphicon-thumbs-down"></span> Lowest: <span class="badge">{{$ctrl.game.lowest_score}}</span>
+        <span ng-repeat="player in $ctrl.game.lowest_score_play_players"> {{ player }} |</span>
+        <a href="/#!/plays/{{ $ctrl.game.lowest_score_play_id }}"><span class="glyphicon glyphicon-king"></span></a>
+    </li>
+</ul>
+
+<h2>Victories</h2>
+<ul>
+    <li ng-repeat="(player, score) in $ctrl.game.victories_per_player"> {{ player }} {{ score }}</li>
+</ul>
