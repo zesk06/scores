@@ -285,6 +285,7 @@ class GameStat(object):
 
     def to_json(self):
         """Return the json version of this"""
+        lower_score_players = self.lowest_score_play.get_player_order()[-1][1]
         return {
             'game': self.game,
             'plays_number': self.plays_number,
@@ -294,8 +295,7 @@ class GameStat(object):
                 self.highest_score_play.get_winners(),
             'lowest_score': self.lowest_score_play.get_lowest_score(),
             'lowest_score_play_id': self.lowest_score_play.play_id,
-            'lowest_score_play_players':
-                self.lowest_score_play.get_player_order()[0][-1],
+            'lowest_score_play_players': lower_score_players,
             'victories_per_player': self.victories_per_player
         }
 
