@@ -5,9 +5,11 @@ angular.module('scoresApp', [
   'ngAnimate',
   'ngRoute',
   'core',
-  'core.play',
   'core.game',
-  'playList',
+  'core.play',
+  'core.player',
+  'gameDetail',
   'playDetail',
-  'gameDetail'
+  'playList',
+  'playerDetail'
 ]);

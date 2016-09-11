@@ -100,6 +100,18 @@ def add_play():
         return jsonify('missing json data'), 400
 
 
+@app.route('/api/v1/players/<string:player_id>', methods=["GET"])
+def get_player(player_id):
+    """
+    :return: the player with given ID
+    """
+    stats = scores.OverallWinnerStat()
+    stats.parse(get_mscores())
+    if player_id in stats.player_stats:
+        return jsonify(stats.player_stats[player_id].to_json())
+    return jsonify('Failed to find player with id %s' % player_id), 404
+
+
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         port = int(sys.argv[1])

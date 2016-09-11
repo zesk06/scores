@@ -15,6 +15,10 @@ angular.
         when('/games/:gameId', {
           template: '<game-detail></game-detail>'
         }).
+        otherwise('/plays').
+        when('/players/:playerId', {
+          template: '<player-detail></player-detail>'
+        }).
         otherwise('/plays');
     }
   ]);

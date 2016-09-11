@@ -1,0 +1,22 @@
+
+<h1>{{ $ctrl.player.name }}: {{ $ctrl.player.win }} victoire(s) / {{ $ctrl.player.plays_number }} partie(s)</h1>
+<ul>
+    <li>
+        <span class="glyphicon glyphicon-thumbs-up"></span> Plus longue série de victoires: <span class="badge">{{$ctrl.player.streak_win_longest}}</span>
+    </li>
+    <li>
+        <span class="glyphicon glyphicon-thumbs-down"></span> Plus longue série de défaites: <span class="badge">{{$ctrl.player.streak_loose_longest}}</span>
+    </li>
+</ul>
+
+<h2>Jeux</h2>
+<ul>
+    <!-- Need the 'track by' notation because there are duplicates in the beaten_by array -->
+    <li ng-repeat="game in $ctrl.player.games track by $index"> {{ game }}</li>
+</ul>
+
+<h2>battu par</h2>
+<ul>
+    <!-- Need the 'track by' notation because there are duplicates in the beaten_by array -->
+    <li ng-repeat="oponent in $ctrl.player.beaten_by track by $index"> {{ oponent }}</li>
+</ul>

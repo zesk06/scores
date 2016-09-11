@@ -19,12 +19,12 @@
           <th>#</th>
           <th>date</th>
           <th>jeu</th>
-          <th>1ers</th>
+          <th>1er</th>
           <th>2nd</th>
-          <th>3emes</th>
-          <th>4emes</th>
-          <th>5emes</th>
-          <th>6emes</th>
+          <th>3eme</th>
+          <th>4eme</th>
+          <th>5eme</th>
+          <th>6eme</th>
         </tr>
 
         <!--Body content-->
@@ -35,7 +35,7 @@
           <td>{{ play.date }}</td>
           <td><a href="/#!/games/{{ play.game }}">{{ play.game }}</a></td>
           <!-- orderBy:'-scores'  reverse the sort -->
-          <td ng-repeat="player in play.players | orderBy:'-score'"><span class="label label-default">{{ player.score }}</span> {{ player.name }}</td>
+          <td ng-repeat="player in play.players | orderBy:'-score'"><span class="label label-default">{{ player.score }}</span> <a href="/#!/players/{{ player.name }}">{{ player.name }}</a></td>
         </tr>
       </table>
     </div>

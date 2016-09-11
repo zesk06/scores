@@ -376,6 +376,22 @@ class PlayerStat(object):
         "return the player who beat most time (player, defeatnb)"
         return Counter(self.games).most_common(n=1)[0]
 
+    def to_json(self):
+        """Return the json version of this
+        :rtype: dict[str, obj]"""
+        return {
+            'name': self.name,
+            'win': self.win,
+            'last': self.last,
+            'beaten_by': self.beaten_by,
+            'games': self.games,
+            'plays_number': self.plays_number,
+            'streak_win': self.streak_win,
+            'streak_win_longest': self.streak_win_longest,
+            'streak_loose': self.streak_loose,
+            'streak_loose_longest': self.streak_loose_longest,
+        }
+
 
 class OverallWinnerStat(object):
     """Gets the overall number of victory """
