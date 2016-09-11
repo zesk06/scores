@@ -346,3 +346,9 @@
   - {name: lolo, score: 44}
   - {name: vincent, score: 48}
   - {name: zesk, score: 48}
+- date: 11/09/16
+  game: ascension
+  players:
+  - {name: diane, score: 65}
+  - {name: lolo, score: 63}
+  - {name: zesk, score: 74}
