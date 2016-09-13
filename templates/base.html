@@ -19,7 +19,8 @@
     <script src="static/app/bower_components/angular/angular.js"></script>
     <script src="static/app/bower_components/angular-animate/angular-animate.js"></script>
     <script src="static/app/bower_components/angular-resource/angular-resource.js"></script>
-    <script src="static/app/bower_components/angular-route/angular-route.js"></script>
+    <!-- router must come AFTER angular -->
+    <script src="static/app/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="static/app/app.module.js"></script>
 
     <script src="static/app/core/core.module.js"></script>
@@ -54,17 +55,9 @@
   </head>
   <body>
         <div class="container-fluid">
-            <nav class="navbar navbar-default">
-              <div class="container-fluid">
-                <div class="navbar-header">
-                  <a class="navbar-brand" href="#">
-                    Le Petit Cercle <span class="glyphicon glyphicon-copyright-mark"></span>
-                  </a>
-                </div>
-              </div>
-            </nav>
+
             <div class="view-container">
-              <div ng-view class="view-frame"></div>
+              <ui-view></ui-view>
             </div>
         </div>
         {% block scripts %}{% endblock %}

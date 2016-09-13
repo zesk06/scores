@@ -2,5 +2,6 @@
 <h1>Partie #{{$ctrl.play.id}}: {{$ctrl.play.game}}</h1>
 <p><span class="glyphicon glyphicon-calendar"></span>{{$ctrl.play.date}}</p>
 <li ng-repeat="player in $ctrl.play.players | orderBy:'-score'">
-    <span class="label label-default">{{ player.score }}</span> <a href="/#!/players/{{ player.name }}">{{ player.name }}</a>
+    <span class="label label-default">{{ player.score }}</span>
+    <a ui-sref="player-detail({playerId: player.name })">{{ player.name }}</a>
 </li>

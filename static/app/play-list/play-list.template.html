@@ -30,12 +30,12 @@
         <!--Body content-->
         <tr ng-repeat="play in $ctrl.plays | filter:filterplay">
           <td>
-            <a href="/#!/plays/{{ play.id }}"><span class="glyphicon glyphicon-sunglasses" /></a>
+            <a ui-sref="play-detail({playId: play.id })"><span class="glyphicon glyphicon-sunglasses" /></a>
           </td>
           <td>{{ play.date }}</td>
-          <td><a href="/#!/games/{{ play.game }}">{{ play.game }}</a></td>
+          <td><a ui-sref="game-detail({ gameId: play.game })">{{ play.game }}</a></td>
           <!-- orderBy:'-scores'  reverse the sort -->
-          <td ng-repeat="player in play.players | orderBy:'-score'"><span class="label label-default">{{ player.score }}</span> <a href="/#!/players/{{ player.name }}">{{ player.name }}</a></td>
+          <td ng-repeat="player in play.players | orderBy:'-score'"><span class="label label-default">{{ player.score }}</span> <a ui-sref="player-detail({playerId:  player.name })">{{ player.name }}</a></td>
         </tr>
       </table>
     </div>

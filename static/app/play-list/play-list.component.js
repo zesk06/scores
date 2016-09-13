@@ -3,7 +3,7 @@
 // Register `phoneList` component, along with its associated controller and template
 angular.
   module('playList').
-  component('playList', {
+  component('playListComponent', {
     templateUrl: 'static/app/play-list/play-list.template.html',
     controller: ['PlayResource',
       function PlayListController(PlayResource) {

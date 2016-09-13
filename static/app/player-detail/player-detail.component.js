@@ -2,18 +2,17 @@
 
 angular.
   module('playerDetail').
-  component('playerDetail', {
+  component('playerDetailComponent', {
+    bindings: { playerId: '<' },
     templateUrl: 'static/app/player-detail/player-detail.template.html',
-    controller: ['$routeParams', 'PlayerResource',
-      function PlayerDetailController($routeParams, PlayerResource) {
+    controller: ['PlayerResource',
+      function PlayerDetailController(PlayerResource) {
         var self = this;
-
-        PlayerResource.get({playerId: $routeParams.playerId}, function(player) {
+        PlayerResource.get({playerId: self.playerId}, function(player) {
           self.setPlayer(player);
         });
 
         self.setPlayer = function setPlayer(player) {
-          console.log(player);
           self.player = player;
         };
       }

@@ -3,13 +3,13 @@
 // Register `gameDetail` component, along with its associated controller and template
 angular.
   module('gameDetail').
-  component('gameDetail', {
+  component('gameDetailComponent', {
+    bindings: { gameId: '<' },
     templateUrl: 'static/app/game-detail/game-detail.template.html',
-    controller: ['$routeParams', 'GameResource',
-      function PhoneDetailController($routeParams, GameResource) {
+    controller: ['GameResource',
+      function PhoneDetailController(GameResource) {
         var self = this;
-
-        GameResource.get({gameId: $routeParams.gameId}, function(game) {
+        GameResource.get({ gameId: self.gameId }, function (game) {
           self.setGame(game);
         });
 

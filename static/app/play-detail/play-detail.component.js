@@ -3,12 +3,13 @@
 // Register `playDetail` component, along with its associated controller and template
 angular.
   module('playDetail').
-  component('playDetail', {
+  component('playDetailComponent', {
+    bindings: { playId: '<' },
     templateUrl: 'static/app/play-detail/play-detail.template.html',
-    controller: ['$routeParams', 'PlayResource',
-      function PhoneDetailController($routeParams, PlayResource) {
+    controller: ['PlayResource',
+      function PhoneDetailController(PlayResource) {
         var self = this;
-        PlayResource.get({playId: $routeParams.playId}, function(play) {
+        PlayResource.get({ playId: self.playId }, function (play) {
           self.setPlay(play);
         });
 

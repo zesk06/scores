@@ -3,7 +3,7 @@
 // Define the `scoresApp` module
 angular.module('scoresApp', [
   'ngAnimate',
-  'ngRoute',
+  'ui.router',
   'core',
   'core.game',
   'core.play',
