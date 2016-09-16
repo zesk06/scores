@@ -1,35 +1,69 @@
+// jshint esversion: 6
 'use strict';
 
-describe('phoneList', function() {
+describe('playList', function () {
 
-  // Load the module that contains the `phoneList` component before each test
-  beforeEach(module('phoneList'));
+    //load the module
+    beforeEach(module('playList'));
 
-  // Test the controller
-  describe('PhoneListController', function() {
-    var $httpBackend, ctrl;
+    // Test the controller
+    describe('PlayListControllerTest', function () {
+        var $httpBackend, ctrl;
 
-    beforeEach(inject(function($componentController, _$httpBackend_) {
-      $httpBackend = _$httpBackend_;
-      $httpBackend.expectGET('phones/phones.json')
-                  .respond([{name: 'Nexus S'}, {name: 'Motorola DROID'}]);
+        let plays = [
+            {
+                "date": "01/09/15",
+                "game": "7wonders",
+                "id": 0,
+                "players": [
+                    {
+                        "name": "lolo",
+                        "score": 28
+                    },
+                    {
+                        "name": "clemence",
+                        "score": 46
+                    },
+                ]
+            },
+            {
+                "date": "02/09/15",
+                "game": "7wonders",
+                "id": 1,
+                "players": [
+                    {
+                        "name": "lolo",
+                        "score": 39
+                    },
+                    {
+                        "name": "clemence",
+                        "score": 39
+                    }
+                ]
+            }
+        ];
 
-      ctrl = $componentController('phoneList');
-    }));
+        beforeEach(inject(function ($componentController, _$httpBackend_) {
+            $httpBackend = _$httpBackend_;
+            // program response
+            $httpBackend.expectGET('api/v1/plays')
+                .respond(plays);
+            //create controller here
+            ctrl = $componentController('playListComponent');
+        }));
+        // Test
+        it('should create a `plays` property with 2 plays fetched with `$http`', function () {
+            jasmine.addCustomEqualityTester(angular.equals);
+            expect(ctrl.plays).toEqual([]);
+            $httpBackend.flush();
+            expect(ctrl.plays.length).toBe(2);
+            expect(ctrl.plays).toEqual(plays);
+        });
+        // Test
+        it('should set a default value for the `orderProp` property', function () {
+            expect(ctrl.orderProp).toBe('date');
+        });
 
-    it('should create a `phones` property with 2 phones fetched with `$http`', function() {
-      jasmine.addCustomEqualityTester(angular.equals);
-
-      expect(ctrl.phones).toEqual([]);
-
-      $httpBackend.flush();
-      expect(ctrl.phones).toEqual([{name: 'Nexus S'}, {name: 'Motorola DROID'}]);
     });
-
-    it('should set a default value for the `orderProp` property', function() {
-      expect(ctrl.orderProp).toBe('age');
-    });
-
-  });
 
 });

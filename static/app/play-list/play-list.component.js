@@ -8,13 +8,14 @@ angular.
     controller: ['PlayResource',
       function PlayListController(PlayResource) {
         var self = this;
+        self.plays = [];
+        self.orderProp = 'date';
         PlayResource.query({playId:''}, function(plays){
           self.setPlays(plays);
         });
-        this.orderProp = 'date';
 
-        this.setPlays = function setPlays(plays){
-          this.plays = plays;
+        self.setPlays = function setPlays(plays){
+          self.plays = plays;
         };
       }]
   });
