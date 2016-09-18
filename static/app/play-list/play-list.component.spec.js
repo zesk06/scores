@@ -10,7 +10,7 @@ describe('playList', function () {
     describe('PlayListControllerTest', function () {
         var $httpBackend, ctrl;
 
-        let plays = [
+        var plays = [
             {
                 "date": "01/09/15",
                 "game": "7wonders",
