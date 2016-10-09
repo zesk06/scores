@@ -352,3 +352,15 @@
   - {name: diane, score: 65}
   - {name: lolo, score: 63}
   - {name: zesk, score: 74}
+- date: 05/10/16
+  game: codenames
+  players:
+  - {name: anne, score: 0, team: rouge}
+  - {name: cedric, score: 4, team: rouge}
+  - {name: clemence, score: 0, team: bleue}
+  - {name: lolo, score: 4, team: bleue}
+  - {name: raphaelle, score: 4, team: rouge}
+  - {name: vincent, score: 0, team: bleue}
+  - {name: zesk, score: 0, team: rouge}
+
+
