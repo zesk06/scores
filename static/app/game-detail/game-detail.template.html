@@ -3,7 +3,7 @@
 played {{ $ctrl.game.plays_number }} times:<br>
 <ul>
     <li><span class="glyphicon glyphicon-thumbs-up"></span> Highest: <span class="badge">{{$ctrl.game.highest_score}}</span>
-        <span ng-repeat="player in $ctrl.game.highest_score_play_players"><a ui-sref="player-detail({playerId:  player })">{{ player }}</a></span>
+        <span ng-repeat="player in $ctrl.game.highest_score_play_players"><a ui-sref="player-detail({playerId:  player })">{{ player }}</a> |</span>
         <a ui-sref="play-detail({ playId: $ctrl.game.highest_score_play_id })"><span class="glyphicon glyphicon-king"></span></a>
     </li>
     <li><span class="glyphicon glyphicon-thumbs-down"></span> Lowest: <span class="badge">{{$ctrl.game.lowest_score}}</span>
