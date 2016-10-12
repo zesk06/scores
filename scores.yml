@@ -362,5 +362,10 @@
   - {name: raphaelle, score: 4, team: rouge}
   - {name: vincent, score: 0, team: bleue}
   - {name: zesk, score: 0, team: rouge}
-
-
+- date: 09/10/16
+  game: ascension
+  players:
+  - {name: clemence, score: 70}
+  - {name: lolo, score: 64}
+  - {name: vincent, score: 64}
+  - {name: zesk, score: 83}
