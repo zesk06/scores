@@ -2,5 +2,6 @@
 
 // Define the `gameDetail` module
 angular.module('gameDetail', [
-  'core.game'
+  'core.game',
+  'chart.js'
 ]);

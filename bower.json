@@ -12,6 +12,9 @@
     "angular-resource": "1.5.x",
     "angular-ui-router": "1.0.x",
     "bootstrap": "3.3.x",
-    "jquery": "2.2.x"
+    "jquery": "2.2.x",
+    "chart.js": "^2.3.0",
+    "angular-chart.js": "^1.0.3",
+    "font-awesome": "^4.6.3"
   }
 }

@@ -16,3 +16,13 @@ played {{ $ctrl.game.plays_number }} times:<br>
 <ul>
     <li ng-repeat="(player, score) in $ctrl.game.victories_per_player"> <a ui-sref="player-detail({playerId:  player })">{{ player }}</a> {{ score }}</li>
 </ul>
+<h2>
+	Chart</h2>
+<p>
+    <canvas id="scoresByNumber" class="chart-bubble"
+    chart-data="$ctrl.chartScoresByNumberData"
+    chart-labels="$ctrl.chartScoresByNumberLabels"
+    chart-options="$ctrl.chartScoresByNumberOptions"
+    chart-series="$ctrl.chartScoresByNumberSeries">
+	</canvas>
+</p>

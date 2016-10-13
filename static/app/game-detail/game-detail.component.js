@@ -15,7 +15,42 @@ angular.
 
         self.setGame = function setGame(game) {
           self.game = game;
+          // update charts data
+          self.chartScoresByNumberData = [];
+          self.chartScoresByNumberLabels = [];
+          self.chartScoresByNumberSeries = [];
+          self.chartScoresByNumberOptions = {
+                title: {
+                    display: true,
+                    text: 'Score par nombre de joueurs',
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            fixedStepSize: 1,
+                            min: 0
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            suggestedMin: 0
+                        }
+                    }]
+                }
+            };
+
+          for(var player_nb in game.scores_per_number){
+              self.chartScoresByNumberSeries.push(player_nb);
+              var datasArray = [];
+              var scores = game.scores_per_number[player_nb];
+              for(var index in scores){
+                  datasArray.push({x:player_nb,
+                                   y:scores[index],
+                                   r: 5});
+              }
+              self.chartScoresByNumberData.push(datasArray);
+          }
         };
-      }
+     }
     ]
   });

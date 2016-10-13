@@ -229,6 +229,8 @@ class GameStat(object):
         self.lowest_score_play = None
         self.scores = []
         self.victories_per_player = {}
+        self.scores_per_player = {}
+        self.scores_per_number = {}
 
     def new_play(self, play):
         """
@@ -263,6 +265,18 @@ class GameStat(object):
             if player not in self.victories_per_player:
                 self.victories_per_player[player] = 0
             self.victories_per_player[player] += 1
+        # add score per number of players
+        player_nb = len(play.players)
+        if player_nb not in self.scores_per_number:
+            self.scores_per_number[player_nb] = []
+        scores = [player.score for player in play.players]
+        self.scores_per_number[player_nb].extend(scores)
+
+        # add scores per player
+        for player in play.players:
+            if player.name not in self.scores_per_player:
+                self.scores_per_player[player.name] = []
+            self.scores_per_player[player.name].append(player.score)
 
     def get_highest_score(self):
         "return the play that had the highest score"
@@ -296,6 +310,8 @@ class GameStat(object):
             'lowest_score': self.lowest_score_play.get_lowest_score(),
             'lowest_score_play_id': self.lowest_score_play.play_id,
             'lowest_score_play_players': lower_score_players,
+            'scores_per_number': self.scores_per_number,
+            'scores_per_player': self.scores_per_player,
             'victories_per_player': self.victories_per_player
         }
 
