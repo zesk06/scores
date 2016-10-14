@@ -1,5 +1,7 @@
 body {
   padding: 20px;
+  /* below the boostrap top navbar */
+  padding-top: 70px;
 }
 
 h1 {
