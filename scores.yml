@@ -359,6 +359,7 @@
   - {name: cedric, score: 4, team: rouge}
   - {name: clemence, score: 0, team: bleue}
   - {name: lolo, score: 4, team: bleue}
+  - {name: ludivine, score: 4, team: bleue}
   - {name: raphaelle, score: 4, team: rouge}
   - {name: vincent, score: 0, team: bleue}
   - {name: zesk, score: 0, team: rouge}
@@ -369,3 +370,11 @@
   - {name: lolo, score: 64}
   - {name: vincent, score: 64}
   - {name: zesk, score: 83}
+- date: 14/10/16
+  game: mysterium
+  players:
+  - {name: arnaud, score: 1, team: enqueteur}
+  - {name: clemence, score: 1, team: enqueteur}
+  - {name: frederic, score: 1, team: enqueteur}
+  - {name: jcrouge, score: 1, team: enqueteur}
+  - {name: zesk, score: 1, team: fantome}
