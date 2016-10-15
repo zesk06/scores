@@ -37,7 +37,7 @@ def index_angular():
     mscores = get_mscores()
     stats = scores.OverallWinnerStat()
     stats.parse(mscores)
-    return render_template('index.html', title=u'GAME STATS', stats=stats)
+    return render_template('base.html', title=u'GAME STATS', stats=stats)
 
 
 @app.route('/new')
