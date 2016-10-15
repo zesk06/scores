@@ -373,8 +373,8 @@
 - date: 14/10/16
   game: mysterium
   players:
-  - {name: arnaud, score: 1,    team: enqueteur, team_color: '#009688'}
-  - {name: clemence, score: 1,  team: enqueteur, team_color: '#009688'}
-  - {name: frederic, score: 1,  team: enqueteur, team_color: '#009688'}
-  - {name: jcrouge, score: 1,   team: enqueteur, team_color: '#009688'}
-  - {name: zesk, score: 1,      team: fantome  , team_color: '#BBBBBB'}
+  - {name: arnaud, score: 1,    color: '#F44336', team: enqueteur, team_color: '#009688'}
+  - {name: clemence, score: 1,  color: '#673AB7', team: enqueteur, team_color: '#009688'}
+  - {name: frederic, score: 1,  color: '#FFEB3B', team: enqueteur, team_color: '#009688'}
+  - {name: jcrouge, score: 1,   color: '#2196F3', team: enqueteur, team_color: '#009688'}
+  - {name: zesk, score: 1,      color: '#212121', team: fantome  , team_color: '#BBBBBB'}
