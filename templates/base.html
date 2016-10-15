@@ -30,6 +30,8 @@
     <script src="static/app/bower_components/chart.js/dist/Chart.min.js"></script>
     <script src="static/app/bower_components/angular-chart.js/dist/angular-chart.js"></script>
 
+    <!-- lo dash -->
+    <script src="static/app/bower_components/lodash/dist/lodash.min.js"></script>
 
     <script src="static/app/core/core.module.js"></script>
 
@@ -48,6 +50,10 @@
     <script src="static/app/play-detail/play-detail.component.js"></script>
     <script src="static/app/game-detail/game-detail.module.js"></script>
     <script src="static/app/game-detail/game-detail.component.js"></script>
+
+    <script src="static/app/player-list/player-list.module.js"></script>
+    <script src="static/app/player-list/player-list.component.js"></script>
+
     <script src="static/app/player-detail/player-detail.module.js"></script>
     <script src="static/app/player-detail/player-detail.component.js"></script>
 
@@ -70,7 +76,8 @@
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a ui-sref="index()">Home</a></li>
+                        <li><a ui-sref="index()">Parties</a></li>
+                        <li><a ui-sref="players()">Joueurs</a></li>
                     </ul>
                 </div>
                 <!--/.nav-collapse -->

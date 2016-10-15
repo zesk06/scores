@@ -11,5 +11,6 @@ angular.module('scoresApp', [
   'gameDetail',
   'playDetail',
   'playList',
+  'playerList',
   'playerDetail'
 ]);

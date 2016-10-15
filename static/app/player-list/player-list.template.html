@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="static/app/player-list/player-list.css" />
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2">
+      <!--Sidebar content-->
+      <p>
+        Sort by:
+        <select ng-model="$ctrl.orderProp">
+          <option value="name">name</option>
+          <option value="-plays_number">parties</option>
+          <option value="-percentage">ratio v/d</option>
+          <option value="-win">victoires</option>
+        </select>
+      </p>
+      <p>
+        <span class="glyphicon glyphicon-search"></span><input ng-model="filterplay" type="text"/>
+      </p>
+    </div>
+    <div class="col-md-10">
+      <table class="table" id="players_table">
+          <tr>
+                <th><span class="glyphicon glyphicon-user" title="joueur"></span> joueur</th>
+                <th><span class="glyphicon glyphicon-king" title="Nombre de victoires"></span> v</th>
+                <th><span class="glyphicon glyphicon-th" title="Nombre de parties"></span> p</th>
+                <th>%</th>
+                <th><span class="glyphicon glyphicon-screenshot" title="Pire ennemi"></span> Pire ennemi</th>
+                <th><span class="glyphicon glyphicon-flash"></span>v-streak (max)</th>
+                <th><span class="glyphicon glyphicon-flash"></span>d-streak (max)</th>
+
+            </tr>
+            <!--Body content-->
+            <tr ng-repeat="player in $ctrl.players | filter:filterplay | orderBy:$ctrl.orderProp">
+              <td><a ui-sref="player-detail({playerId:  player.name })">{{ player.name }}</a></td>
+                <td>{{ player.win }}</td>
+                <td>{{ player.plays_number }}</td>
+                <td>{{ player.percentage }}</td>
+                <td ng-if="player.worst_ennemy"><a ui-sref="player-detail({playerId:  player.worst_ennemy[0] })">{{ player.worst_ennemy[0] }}</a> ( <span class="glyphicon glyphicon-screenshot" title="Pire ennemi"></span> {{ player.worst_ennemy[1] }} fois)</td>
+                <td ng-if="!player.worst_ennemy"><span class="glyphicon glyphicon-thumbs-up"></span>Undefeated!</td>
+                <td>{{ player.streak_win }} ({{ player.streak_win_longest }})</td>
+                <td>{{ player.streak_loose }} ({{ player.streak_loose_longest }})</td>
+            </tr>
+
+      </table>
+    </div>
+  </div>
+</div>

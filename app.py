@@ -85,19 +85,15 @@ def get_game(game_id):
     return jsonify('Failed to find game %s' % game_id), 404
 
 
-@app.route('/api/v1/plays', methods=["POST"])
-def add_play():
+@app.route('/api/v1/players', methods=["GET"])
+def get_players():
     """
-    :return: Adds a new play
+    :return: Get all player stats
     """
-    json_data = request.get_json(force=True)
-    if json_data:
-        new_play = scores.Play()
-        new_play.from_json(data=json_data)
-        get_mscores().add_play(play=new_play)
-        return jsonify(new_play.to_json()), 201
-    else:
-        return jsonify('missing json data'), 400
+    stats = scores.OverallWinnerStat()
+    stats.parse(get_mscores())
+    return jsonify([player_stat.to_json()
+                    for player_stat in stats.player_stats.values()])
 
 
 @app.route('/api/v1/players/<string:player_id>', methods=["GET"])

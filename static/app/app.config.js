@@ -13,6 +13,12 @@ angular.
       url: '/plays',
       component: 'playListComponent'
     });
+    //player list
+    $stateProvider.state({
+      name: 'players',
+      url: '/players',
+      component: 'playerListComponent'
+    });
     //play detail '/plays/{playId}'
     $stateProvider.state({
       name: 'play-detail',
