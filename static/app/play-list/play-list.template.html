@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="static/app/play-list/play-list.css" />
+
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-2">
@@ -35,7 +37,11 @@
           <td>{{ play.date }}</td>
           <td><a ui-sref="game-detail({ gameId: play.game })">{{ play.game }}</a></td>
           <!-- orderBy:'-scores'  reverse the sort -->
-          <td ng-repeat="player in play.players | orderBy:'-score'"><span class="label label-default">{{ player.score }}</span> <a ui-sref="player-detail({playerId:  player.name })">{{ player.name }}</a></td>
+          <td ng-repeat="player in play.players | orderBy:'-score'">
+              <div><a ui-sref="player-detail({playerId:  player.name })">{{ player.name }}</a></div>
+              <div class="team" ng-if="player.team">{{ player.team }}</div>
+              <span class="label label-default">{{ player.score }}</span>
+          </td>
         </tr>
       </table>
     </div>
