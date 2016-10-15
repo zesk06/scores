@@ -12,7 +12,6 @@ angular.
         self.orderProp = '-id';
         PlayResource.query({playId:''}, function(plays){
           self.setPlays(plays);
-          console.log("une partie", plays);
         });
 
         self.setPlays = function setPlays(plays){
