@@ -39,7 +39,7 @@
           <!-- orderBy:'-scores'  reverse the sort -->
           <td ng-repeat="player in play.players | orderBy:'-score'">
               <div><a ui-sref="player-detail({playerId:  player.name })">{{ player.name }}</a></div>
-              <div class="team" ng-if="player.team">{{ player.team }}</div>
+              <div class="team" ng-if="player.team"><span ng-if="player.team_color" class="fa fa-users" style="color:{{ player.team_color }}"></span> {{ player.team }}</div>
               <span class="label label-default">{{ player.score }}</span>
           </td>
         </tr>

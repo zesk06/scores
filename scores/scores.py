@@ -184,11 +184,12 @@ class Play(object):
 
 class Player(object):
     """docstring for Player"""
-    def __init__(self, name='noname', score=0, team=None, yml_data=None):
+    def __init__(self, name='noname', score=0, team=None, team_color=None, yml_data=None):
         super(Player, self).__init__()
         self.name = name
         self.score = int(score)
         self.team = team
+        self.team_color = team_color
         if yml_data is not None:
             self.__load_json(yml_data)
 
@@ -203,6 +204,8 @@ class Player(object):
                     "score": self.score}
         if self.team:
             yml_data['team'] = self.team
+        if self.team_color:
+            yml_data['team_color'] = self.team_color
         return yml_data
 
     def __load_json(self, yml_data):
@@ -211,6 +214,8 @@ class Player(object):
         self.score = yml_data['score']
         if 'team' in yml_data:
             self.team = yml_data['team']
+        if 'team_color' in yml_data:
+            self.team_color = yml_data['team_color']
 
     def dummy_pep8(self):
         """

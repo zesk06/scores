@@ -68,22 +68,22 @@
 - date: 25/11/15
   game: les chevaliers
   players:
-  - {name: lolo, score: 1, team: felon}
-  - {name: clemence, score: 0, team: bien}
-  - {name: diane, score: 0, team: bien}
-  - {name: zesk, score: 0, team: bien}
-  - {name: vincent, score: 0, team: bien}
-  - {name: anne, score: 0, team: bien}
-  - {name: maxime, score: 0, team: bien}
+  - {name: lolo, score: 1,      team: felon , team_color: '#F44336'}
+  - {name: clemence, score: 0,  team: bien  , team_color: '#2196F3'}
+  - {name: diane, score: 0,     team: bien  , team_color: '#2196F3'}
+  - {name: zesk, score: 0,      team: bien  , team_color: '#2196F3'}
+  - {name: vincent, score: 0,   team: bien  , team_color: '#2196F3'}
+  - {name: anne, score: 0,      team: bien  , team_color: '#2196F3'}
+  - {name: maxime, score: 0,    team: bien  , team_color: '#2196F3'}
 - date: 15/12/15
   game: les chevaliers
   players:
-  - {name: lolo, score: 1, team: bien}
-  - {name: clemence, score: 1, team: bien}
-  - {name: zesk, score: 1, team: bien}
-  - {name: vincent, score: 1, team: bien}
-  - {name: severine, score: 1, team: bien}
-  - {name: yohann, score: 0, team: felon}
+  - {name: lolo, score: 1,      team: bien  , team_color: '#2196F3'}
+  - {name: clemence, score: 1,  team: bien  , team_color: '#2196F3'}
+  - {name: zesk, score: 1,      team: bien  , team_color: '#2196F3'}
+  - {name: vincent, score: 1,   team: bien  , team_color: '#2196F3'}
+  - {name: severine, score: 1,  team: bien  , team_color: '#2196F3'}
+  - {name: yohann, score: 0,    team: felon , team_color: '#F44336'}
 - date: 08/01/16
   game: colt express
   players:
@@ -160,12 +160,12 @@
 - date: 06/02/16
   game: les chevaliers
   players:
-  - {name: christine, score: 0, team: bien}
-  - {name: claire, score: 0, team: bien}
-  - {name: edmond, score: 0, team: bien}
-  - {name: lolo, score: 1, team: felon}
-  - {name: vincent_templier, score: 0, team: bien}
-  - {name: zesk, score: 0, team: bien}
+  - {name: christine, score: 0,         team: bien  , team_color: '#2196F3'}
+  - {name: claire, score: 0,            team: bien  , team_color: '#2196F3'}
+  - {name: edmond, score: 0,            team: bien  , team_color: '#2196F3'}
+  - {name: lolo, score: 1,              team: felon , team_color: '#F44336'}
+  - {name: vincent_templier, score: 0,  team: bien  , team_color: '#2196F3'}
+  - {name: zesk, score: 0,              team: bien  , team_color: '#2196F3'}
 - date: 19/02/16
   game: splendor
   players:
@@ -355,14 +355,14 @@
 - date: 05/10/16
   game: codenames
   players:
-  - {name: anne, score: 0, team: rouge}
-  - {name: cedric, score: 4, team: rouge}
-  - {name: clemence, score: 0, team: bleue}
-  - {name: lolo, score: 4, team: bleue}
-  - {name: ludivine, score: 4, team: bleue}
-  - {name: raphaelle, score: 4, team: rouge}
-  - {name: vincent, score: 0, team: bleue}
-  - {name: zesk, score: 0, team: rouge}
+  - {name: anne, score: 0,      team: rouge, team_color: '#F44336' }
+  - {name: cedric, score: 4,    team: bleue, team_color: '#2196F3' }
+  - {name: clemence, score: 0,  team: rouge, team_color: '#F44336' }
+  - {name: lolo, score: 4,      team: bleue, team_color: '#2196F3' }
+  - {name: ludivine, score: 4,  team: bleue, team_color: '#2196F3' }
+  - {name: raphaelle, score: 4, team: bleue, team_color: '#2196F3' }
+  - {name: vincent, score: 0,   team: rouge, team_color: '#F44336' }
+  - {name: zesk, score: 0,      team: rouge, team_color: '#F44336' }
 - date: 09/10/16
   game: ascension
   players:
@@ -373,8 +373,8 @@
 - date: 14/10/16
   game: mysterium
   players:
-  - {name: arnaud, score: 1, team: enqueteur}
-  - {name: clemence, score: 1, team: enqueteur}
-  - {name: frederic, score: 1, team: enqueteur}
-  - {name: jcrouge, score: 1, team: enqueteur}
-  - {name: zesk, score: 1, team: fantome}
+  - {name: arnaud, score: 1,    team: enqueteur, team_color: '#009688'}
+  - {name: clemence, score: 1,  team: enqueteur, team_color: '#009688'}
+  - {name: frederic, score: 1,  team: enqueteur, team_color: '#009688'}
+  - {name: jcrouge, score: 1,   team: enqueteur, team_color: '#009688'}
+  - {name: zesk, score: 1,      team: fantome  , team_color: '#BBBBBB'}
