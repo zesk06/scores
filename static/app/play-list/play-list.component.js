@@ -9,9 +9,10 @@ angular.
       function PlayListController(PlayResource) {
         var self = this;
         self.plays = [];
-        self.orderProp = 'date';
+        self.orderProp = '-id';
         PlayResource.query({playId:''}, function(plays){
           self.setPlays(plays);
+          console.log("une partie", plays);
         });
 
         self.setPlays = function setPlays(plays){

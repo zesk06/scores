@@ -5,8 +5,8 @@
       <p>
         Sort by:
         <select ng-model="$ctrl.orderProp">
-          <option value="date">game</option>
-          <option value="other">date</option>
+          <option value="game">game</option>
+          <option value="-id">date</option>
         </select>
       </p>
       <p>
@@ -28,7 +28,7 @@
         </tr>
 
         <!--Body content-->
-        <tr ng-repeat="play in $ctrl.plays | filter:filterplay">
+        <tr ng-repeat="play in $ctrl.plays | filter:filterplay | orderBy:$ctrl.orderProp">
           <td>
             <a ui-sref="play-detail({playId: play.id })"><span class="glyphicon glyphicon-sunglasses" /></a>
           </td>
