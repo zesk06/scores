@@ -1,13 +1,18 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-"This bottle app permits to display boardgame scores"
+"""
+    This wonderfull app permits to display boardgame scores and stats
+"""
+import scores.scores as scores
+from scores.users import User, MOCK_USERS
 
 import json
 import os
 import sys
 
-import scores
+import flask
+import flask_login
 from flask import Flask, jsonify, render_template, request
 
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
@@ -31,23 +36,97 @@ class TestConfig(Config):
 app = Flask(__name__)
 app.config.from_object(Config)
 
+# used by flask-login
+app.secret_key = 'idontwanttobeinthepubliccode'
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+
+
+@login_manager.user_loader
+def user_loader(email):
+    if email not in MOCK_USERS:
+        return
+    user = User(email)
+    user.id = email
+    return user
+
+
+@login_manager.request_loader
+def request_loader(request):
+    email = request.form.get('username')
+    if email not in MOCK_USERS:
+        return
+    user = User(email)
+    user.id = email
+    # DO NOT ever store passwords in plaintext and always compare password
+    # hashes using constant-time comparison!
+    user.is_authenticated = request.form['pw'] == MOCK_USERS[email]['pw']
+    return user
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if flask.request.method == 'GET':
+        return '''
+               <form action='login' method='POST'>
+                <input type='text' name='username' id='username' placeholder='username'></input>
+                <input type='password' name='pw' id='pw' placeholder='password'></input>
+                <input type='submit' name='submit'></input>
+               </form>
+               '''
+
+    email = flask.request.form['username']
+    password = flask.request.form['pw']
+    if email in MOCK_USERS and password == MOCK_USERS[email]['pw']:
+        user = User(email)
+        user.id = email
+        flask_login.login_user(user)
+        flask.flash('Logged in successfully.')
+        # what is the next page?
+        next_url = flask.request.args.get('next')
+        if not next_is_valid(next_url, authenticated=True):
+            return flask.abort(400)
+
+        return flask.redirect(next_url or flask.url_for('index'))
+
+    return 'Bad login'
+
+
+def next_is_valid(url, authenticated):
+    """Return True if next page is valid
+    """
+    protected_urls = ('protected', )
+    if url in protected_urls and not authenticated:
+        return False
+    return True
+
+
+@app.route('/logout')
+def logout():
+    """To logout from the web app"""
+    flask_login.logout_user()
+    flask.flash('Logged out successfully.')
+    # what is the next page?
+    next_url = flask.request.args.get('next')
+    if not next_is_valid(next_url, False):
+        return flask.abort(400)
+
+    return flask.redirect(next_url or flask.url_for('index'))
+
+
+@app.route('/protected')
+@flask_login.login_required
+def protected():
+    return 'Logged in as: ' + flask_login.current_user.id
+
 
 @app.route('/')
-def index_angular():
+def index():
     mscores = get_mscores()
     stats = scores.OverallWinnerStat()
     stats.parse(mscores)
     return render_template('base.html', title=u'GAME STATS', stats=stats)
-
-
-@app.route('/new')
-def new():
-    " the page to create a new play record"
-    mscores = get_mscores()
-    games = mscores.get_games()
-    players = mscores.get_players()
-    return render_template('new.html', title=u'NEW GAME',
-                           games=games, players=players)
 
 
 def get_mscores():
