@@ -378,3 +378,20 @@
   - {name: frederic, score: 1,  color: '#FFEB3B', team: enqueteur, team_color: '#009688'}
   - {name: jcrouge, score: 1,   color: '#2196F3', team: enqueteur, team_color: '#009688'}
   - {name: zesk, score: 1,      color: '#212121', team: fantome  , team_color: '#BBBBBB'}
+- date: 19/10/16
+  game: mysterium
+  players:
+  - {name: clemence, score: 1,  color: '#000000', team: enqueteur, team_color: '#009688'}
+  - {name: lolo, score: 1,      color: '#673AB7', team: enqueteur, team_color: '#009688'}
+  - {name: raphaelle, score: 1, color: '#F44336', team: enqueteur, team_color: '#009688'}
+  - {name: vincent, score: 1,   color: '#EEEEEE', team: enqueteur, team_color: '#009688'}
+  - {name: zesk, score: 1,      color: '#212121', team: fantome  , team_color: '#BBBBBB'}
+- date: 19/10/16
+  game: parade
+  players:
+  - {name: clemence, score: 8}
+  - {name: lolo, score: 9}
+  - {name: vincent, score: 35}
+  - {name: zesk, score: 17}
+  type: min
+
