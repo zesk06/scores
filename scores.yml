@@ -394,4 +394,12 @@
   - {name: vincent, score: 35}
   - {name: zesk, score: 17}
   type: min
-
+- date: 21/10/16
+  game: colt express
+  players:
+  - {name: arnaud,   score: 1250,   color: '#2196F3'}
+  - {name: clemence, score: 950,    color: '#000000'}
+  - {name: frederic, score: 2400,   color: '#F48FB1'}
+  - {name: jcrouge,  score: 1750,   color: '#4CAF50'}
+  - {name: matthieu, score: 2750,   color: '#F44336'}
+  - {name: zesk,     score: 2000,   color: '#212121'}
