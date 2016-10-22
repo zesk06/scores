@@ -134,6 +134,16 @@ def get_mscores():
     return scores.Scores(filename=app.config['DATABASE_URI'])
 
 
+@app.route('/api/v1/is_logged', methods=["GET"])
+def is_logged():
+    """
+    :return: {"logged": "true"} if user is logged
+    """
+
+    return jsonify({"logged": True, "user_id": flask_login.current_user.name})
+
+
+
 @app.route('/api/v1/plays', methods=["GET"])
 def get_plays():
     """
