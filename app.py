@@ -4,8 +4,9 @@
 """
     This wonderfull app permits to display boardgame scores and stats
 """
+from __future__ import print_function
 import scores.scores as scores
-from scores.users import User, MOCK_USERS
+import scores.users as users
 
 import json
 import os
@@ -21,7 +22,10 @@ THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 class Config(object):
     DEBUG = False
     TESTING = False
-    DATABASE_URI = os.path.join(THIS_DIR, 'scores.yml')
+    FILE_URI = os.path.join(THIS_DIR, 'scores.yml')
+    DATABASE_URI = 'mongodb://<dbuser>:<dbpassword>@<instance>.mlab.com:<port>/<dbname>'
+    if 'DATABASE_URI' in os.environ:
+        DATABASE_URI = os.environ['DATABASE_URI']
 
 
 class DevelopmentConfig(Config):
@@ -30,7 +34,10 @@ class DevelopmentConfig(Config):
 
 class TestConfig(Config):
     TESTING = True
-    DATABASE_URI = os.path.join(THIS_DIR, 'target/scores.yml')
+    FILE_URI = os.path.join(THIS_DIR, 'target/scores.yml')
+    DATABASE_URI = 'mongodb://<dbuser>:<dbpassword>@<instance>.mlab.com:<port>/<dbname>_test'
+    if 'TEST_DATABASE_URI' in os.environ:
+        DATABASE_URI = os.environ['TEST_DATABASE_URI']
 
 
 app = Flask(__name__)
@@ -45,8 +52,8 @@ login_manager.login_view = "login"
 
 @login_manager.user_loader
 def user_loader(email):
-    if email not in MOCK_USERS:
-        return
+    # if email not in MOCK_USERS:
+    #     return
     user = User(email)
     user.id = email
     return user
@@ -55,9 +62,9 @@ def user_loader(email):
 @login_manager.request_loader
 def request_loader(request):
     email = request.form.get('username')
-    if email not in MOCK_USERS:
-        return
-    user = User(email)
+    # if email not in MOCK_USERS:
+    #     return
+    # user = User(email)
     user.id = email
     # DO NOT ever store passwords in plaintext and always compare password
     # hashes using constant-time comparison!
@@ -78,17 +85,17 @@ def login():
 
     email = flask.request.form['username']
     password = flask.request.form['pw']
-    if email in MOCK_USERS and password == MOCK_USERS[email]['pw']:
-        user = User(email)
-        user.id = email
-        flask_login.login_user(user)
-        flask.flash('Logged in successfully.')
-        # what is the next page?
-        next_url = flask.request.args.get('next')
-        if not next_is_valid(next_url, authenticated=True):
-            return flask.abort(400)
+    # if email in MOCK_USERS and password == MOCK_USERS[email]['pw']:
+    #     user = User(email)
+    #     user.id = email
+    #     flask_login.login_user(user)
+    #     flask.flash('Logged in successfully.')
+    #     # what is the next page?
+    #     next_url = flask.request.args.get('next')
+    #     if not next_is_valid(next_url, authenticated=True):
+    #         return flask.abort(400)
 
-        return flask.redirect(next_url or flask.url_for('index'))
+    #     return flask.redirect(next_url or flask.url_for('index'))
 
     return 'Bad login'
 
@@ -131,7 +138,7 @@ def index():
 
 def get_mscores():
     "returns the mscores"
-    return scores.Scores(filename=app.config['DATABASE_URI'])
+    return scores.Scores(filename=app.config['FILE_URI'])
 
 
 @app.route('/api/v1/is_logged', methods=["GET"])
@@ -141,7 +148,6 @@ def is_logged():
     """
 
     return jsonify({"logged": True, "user_id": flask_login.current_user.name})
-
 
 
 @app.route('/api/v1/plays', methods=["GET"])

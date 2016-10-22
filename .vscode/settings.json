@@ -1,5 +1,9 @@
 // Place your settings in this file to overwrite default and user settings.
 {
     // Path to Python, you can use a custom version of Python by modifying this setting to include the full path.
-    "python.pythonPath": "/Users/booba/.virtualenvs/scores/bin/python"
+    "python.pythonPath": "/Users/booba/.virtualenvs/scores/bin/python",
+    // Whether to enable or disable unit testing using pytest.
+    "python.unitTest.pyTestEnabled": true,
+    // Path to pytest (py.test), you can use a custom version of pytest by modifying this setting to include the full path.
+    "python.unitTest.pyTestPath": "/Users/booba/.virtualenvs/scores/bin/py.test"
 }

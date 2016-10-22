@@ -3,8 +3,8 @@
 
 "test scores.py"
 
-import scores
-from scores import Play, Player, GameStat, PlayerStat, OverallWinnerStat
+
+from scores.scores import Play, Player, GameStat, PlayerStat, OverallWinnerStat, Scores
 import pytest
 import os
 import yaml
@@ -28,12 +28,12 @@ def mscores():
     :return: a test instance of mscores
     """
     this_dir = os.path.abspath(os.path.dirname(__file__))
-    return scores.Scores(filename=os.path.join(this_dir, '..', 'scores.yml'))
+    return Scores(filename=os.path.join(this_dir, '..', 'scores.yml'))
 
 
 def test_scores(mscores):
     " test the score class init"
-    assert len(scores.Scores().plays) == 0
+    assert len(Scores().plays) == 0
     assert mscores is not None
     assert len(mscores.plays) > 0
 
@@ -41,7 +41,7 @@ def test_scores(mscores):
 def test_scores_dump(mscores, test_dir):
     "test the Scores serialization"
     mscores.dump(filename=os.path.join(test_dir, 'new_scores.yml'))
-    mscores2 = scores.Scores()
+    mscores2 = Scores()
     mscores2.load(os.path.join(test_dir, 'new_scores.yml'))
     assert len(mscores.plays) == len(mscores2.plays)
     for play1, play2 in zip(mscores.plays, mscores2.plays):
@@ -143,7 +143,7 @@ def test_game_stat():
     assert game_stats.get_highest_score() == new_play3
     assert game_stats.get_lowest_score() == new_play2
     # test average score !
-    assert game_stats.get_average_score() == 36/6
+    assert game_stats.get_average_score() == 36 / 6
     # test best player is p2
     assert game_stats.get_best_player() == 'p2'
 
