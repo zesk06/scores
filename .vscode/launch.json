@@ -12,7 +12,10 @@
                 "WaitOnAbnormalExit",
                 "WaitOnNormalExit",
                 "RedirectOutput"
-            ]
+            ],
+            "env": {
+                "DATABASE_URI": "mongodb://heroku:heroku1SGREAT@ds019664.mlab.com:19664/zesk06"
+            }
         },
         {
             "name": "Attach",

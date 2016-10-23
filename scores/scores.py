@@ -20,6 +20,7 @@ TEMPLATE_DIR = os.path.join(THIS_DIR, '..', 'templates')
 
 class Scores(object):
     """docstring for Scores"""
+
     def __init__(self, filename=None):
         super(Scores, self).__init__()
         self.plays = []
@@ -118,7 +119,7 @@ class Play(object):
                                     self.game,
                                     ', '.join(['%s(%s)' % (player.name,
                                                            player.score)
-                                              for player in sorted_players]))
+                                               for player in sorted_players]))
 
     @required_fields(['date', 'game'])
     def from_json(self, data):
@@ -184,6 +185,7 @@ class Play(object):
 
 class Player(object):
     """docstring for Player"""
+
     def __init__(self, name='noname', score=0, team=None, yml_data=None):
         super(Player, self).__init__()
         self.name = name
@@ -234,6 +236,7 @@ class Player(object):
 
 class GameStat(object):
     """A game stat"""
+
     def __init__(self, game):
         super(GameStat, self).__init__()
         self.game = game
@@ -331,6 +334,7 @@ class GameStat(object):
 
 class PlayerStat(object):
     """A player stat"""
+
     def __init__(self, name):
         super(PlayerStat, self).__init__()
         self.name = name
@@ -424,6 +428,7 @@ class PlayerStat(object):
 
 class OverallWinnerStat(object):
     """Gets the overall number of victory """
+
     def __init__(self):
         super(OverallWinnerStat, self).__init__()
         self.player_stats = {}
@@ -492,4 +497,6 @@ class OverallWinnerStat(object):
         " return the html"
         menv = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
         template = menv.get_template('index.html')
-        return template.render(title=u'GAME STATS', stats=self)
+        return template.render(title=u'GAME STATS',
+                               stats=self,
+                               current_user='none')
