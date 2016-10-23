@@ -7,6 +7,7 @@
 from __future__ import print_function
 import scores.scores as scores
 import scores.users as users
+import scores.database as database
 
 import json
 import os
@@ -49,27 +50,41 @@ login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
+app.database = None
+
+
+def get_db():
+    """Return the Database
+    :rtype: database.Database"""
+    if app.database is None:
+        print('connecting to %s' % app.config['DATABASE_URI'])
+        app.database = database.Database(app.config['DATABASE_URI'])
+    return app.database
+
 
 @login_manager.user_loader
-def user_loader(email):
-    # if email not in MOCK_USERS:
-    #     return
-    user = User(email)
-    user.id = email
+def user_loader(login):
+    # retrieve user from database
+    print('user_loader')
+    db = get_db()
+    user = db.get_user(login)
     return user
 
 
 @login_manager.request_loader
 def request_loader(request):
-    email = request.form.get('username')
-    # if email not in MOCK_USERS:
-    #     return
-    # user = User(email)
-    user.id = email
-    # DO NOT ever store passwords in plaintext and always compare password
-    # hashes using constant-time comparison!
-    user.is_authenticated = request.form['pw'] == MOCK_USERS[email]['pw']
-    return user
+    print('request loader')
+    login = request.form.get('username')
+    passwd = request.form.get('pw')
+    if login and passwd:
+        db = get_db()
+        user = db.get_user(login)
+        if user:
+            if not user.authenticate(passwd):
+                print('wrong password for %s' % login)
+        else:
+            print('user %s not found' % login)
+        return user
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -83,20 +98,18 @@ def login():
                </form>
                '''
 
-    email = flask.request.form['username']
-    password = flask.request.form['pw']
-    # if email in MOCK_USERS and password == MOCK_USERS[email]['pw']:
-    #     user = User(email)
-    #     user.id = email
-    #     flask_login.login_user(user)
-    #     flask.flash('Logged in successfully.')
-    #     # what is the next page?
-    #     next_url = flask.request.args.get('next')
-    #     if not next_is_valid(next_url, authenticated=True):
-    #         return flask.abort(400)
-
-    #     return flask.redirect(next_url or flask.url_for('index'))
-
+    login = request.form.get('username')
+    password = request.form['pw']
+    db = get_db()
+    user = db.get_user(login)
+    if user and user.authenticate(password):
+        flask_login.login_user(user)
+        flask.flash('Logged in successfully.')
+        # what is the next page?
+        next_url = flask.request.args.get('next')
+        if not next_is_valid(next_url, authenticated=True):
+            return flask.abort(400)
+        return flask.redirect(next_url or flask.url_for('index'))
     return 'Bad login'
 
 
@@ -130,9 +143,11 @@ def protected():
 
 @app.route('/')
 def index():
+    print('index')
     mscores = get_mscores()
     stats = scores.OverallWinnerStat()
     stats.parse(mscores)
+    print('rendering')
     return render_template('base.html', title=u'GAME STATS', stats=stats)
 
 

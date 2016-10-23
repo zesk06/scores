@@ -8,11 +8,21 @@ from __future__ import print_function
 
 import hashlib
 from mongokit import Connection, Document
-from users import User
+import os
+
+from .common import hash_password
+from .users import User
 
 
 class Database(object):
     """The database connection"""
+
+    @staticmethod
+    def get_db():
+        if 'DATABASE_URI' in os.environ:
+            uri = os.environ['DATABASE_URI']
+            return Database(uri=uri)
+        raise EnvironmentError('DATABASE_URI environment variable is missing')
 
     def __init__(self, uri):
         """Init"""
@@ -41,7 +51,7 @@ class Database(object):
         user['login'] = login
         user['name'] = name
         user['email'] = email
-        user['passwd'] = Database.hash_password(passwd)
+        user['passwd'] = hash_password(passwd)
         user.save()
 
     def delete_user(self, login):
@@ -50,15 +60,9 @@ class Database(object):
         if user:
             user.delete()
 
-    @staticmethod
-    def hash_password(passwd):
-        """hash the password
-        similar to how MySQL hashes passwords with the password() function.
-        """
-        hash_password = hashlib.sha1(passwd.encode('utf-8')).digest()
-        hash_password = hashlib.sha1(hash_password).hexdigest()
-        hash_password = '*' + hash_password.upper()
-        return hash_password
+    def authenticate_user(self, user, passwd):
+        hashed_passwd = hash_password(passwd)
+        user.authauthenticate(hashed_passwd)
 
     def get_user(self, login):
         """Retrieve the user with given login or None"""

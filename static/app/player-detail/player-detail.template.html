@@ -1,4 +1,3 @@
-
 <h1>{{ $ctrl.player.name }}: {{ $ctrl.player.win }} victoire(s) / {{ $ctrl.player.plays_number }} partie(s)</h1>
 <ul>
     <li>
@@ -12,21 +11,15 @@
 <h2>Jeux</h2>
 <div>
 
-    <canvas id="games" class="chart-bar"
-    chart-data="$ctrl.chartGamesData"
-    chart-labels="$ctrl.chartGamesLabels"
-    chart-options="$ctrl.chartGamesOptions"
-    chart-colors="$ctrl.chartGamesColors">
-	</canvas>
+    <canvas id="games" class="chart-bar" chart-data="$ctrl.chartGamesData" chart-labels="$ctrl.chartGamesLabels" chart-options="$ctrl.chartGamesOptions"
+        chart-colors="$ctrl.chartGamesColors">
+    </canvas>
 
 </div>
 
 <h2>Battu par</h2>
 <div>
-    <canvas id="beatenBy" class="chart-bar"
-    chart-data="$ctrl.chartBeatenByData"
-    chart-labels="$ctrl.chartBeatenByLabels"
-    chart-options="$ctrl.chartBeatenByOptions"
-    chart-colors="$ctrl.chartBeatenByColors">
-	</canvas>
+    <canvas id="beatenBy" class="chart-bar" chart-data="$ctrl.chartBeatenByData" chart-labels="$ctrl.chartBeatenByLabels" chart-options="$ctrl.chartBeatenByOptions"
+        chart-colors="$ctrl.chartBeatenByColors">
+    </canvas>
 </div>

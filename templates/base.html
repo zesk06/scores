@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="scoresApp">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>{% block title %}{{ title }}{% endblock %}</title>
-    <meta name="description" content="{% block description %}{{ description }}{% endblock %}" />
-    {% block stylesheets %}{% endblock %}
+    <meta name="description" content="{% block description %}{{ description }}{% endblock %}" /> {% block stylesheets %}{% endblock %}
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="static/app/bower_components/bootstrap/dist/css/bootstrap.css" />
@@ -66,40 +66,43 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
       <![endif]-->
-  </head>
-  <body>
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" ui-sref="index()">Le petit cercle <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" ui-sref="index()">Le petit cercle <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
                     </a>
-                </div>
-                <div id="navbar" class="nav navbar-nav">
-                        <li><a ui-sref="index()">Parties</a></li>
-                        <li><a ui-sref="players()">Joueurs</a></li>
-                </div>
-                <div>
-                    <ul class="nav navbar-nav navbar-right">
-                        {% if current_user.is_authenticated %}
-                                <li><a href="/#/players/{{ current_user.name }}">{{ current_user.name }}</a></li><li><a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>
+            </div>
+            <div id="navbar" class="nav navbar-nav">
+                <li><a ui-sref="index()">Parties</a></li>
+                <li><a ui-sref="players()">Joueurs</a></li>
+            </div>
+            <div>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if current_user.is_authenticated %}
+                    <li><a href="/#/players/{{ current_user.login() }}">{{ current_user.login() }}</a></li>
+                    <li><a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>
 logout</a></li>
-                        {% else %}
-                                <li><a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i>
+                    {% else %}
+                    <li><a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i>
 login</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
-
-
+                    {% endif %}
+                </ul>
             </div>
-        </nav>
-        <div class="container-fluid">
 
-            <div class="view-container">
-              <ui-view></ui-view>
-            </div>
+
         </div>
-        {% block scripts %}{% endblock %}
-        <script src="static/app/bower_components/bootstrap/dist/js/bootstrap.min.js" />
-    </body>
+    </nav>
+    <div class="container-fluid">
+
+        <div class="view-container">
+            <ui-view></ui-view>
+        </div>
+    </div>
+    {% block scripts %}{% endblock %}
+    <script src="static/app/bower_components/bootstrap/dist/js/bootstrap.min.js" />
+</body>
+
 </html>

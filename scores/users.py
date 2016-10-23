@@ -5,16 +5,21 @@
     The user management
 """
 
-import flask_login
-import mongokit
+from mongokit import Document
+from .common import hash_password
 
 
-class User(mongokit.Document):
+class User(Document):
     """
     A custom User
     extending UserMixin will permits to have basic auth methods
     extending Document makes this serializable in a database
     """
+
+    def __init__(self, *args, **kwargs):
+        # Document needs a lot of parameters
+        Document.__init__(self, *args, **kwargs)
+        self.authenticated = False
 
     __collection__ = 'users'
     structure = {
@@ -40,6 +45,14 @@ class User(mongokit.Document):
     def is_authenticated(self):
         """Return True if user is authenticated"""
         return True
+
+    def authenticate(self, passwd):
+        """Try to authenticate with the given password
+        :return: True if authentication was sucessfull
+        :rtype: bool"""
+        hpasswd = hash_password(passwd)
+        self.authenticated = hpasswd == self['passwd']
+        return self.authenticated
 
     @property
     def is_anonymous(self):
