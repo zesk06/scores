@@ -6,12 +6,15 @@ The database connection management
 """
 from __future__ import print_function
 
+import datetime
 import hashlib
 from mongokit import Connection, Document
 import os
+import yaml
 
 from .common import hash_password
 from .users import User
+from .play import Play
 
 
 class Database(object):
@@ -33,7 +36,7 @@ class Database(object):
     def connect(self, uri):
         """Connect"""
         self.connection = Connection(host=uri)
-        self.connection.register([User])
+        self.connection.register([User, Play])
         return self.connection
 
     @property
@@ -67,3 +70,53 @@ class Database(object):
     def get_user(self, login):
         """Retrieve the user with given login or None"""
         return self.db.User.one({'login': login})
+
+    def add_play(self, date, game):
+        """Add a play
+        :type date: datetime.datetime"""
+        play = self.db.Play()
+        play.set_date(date)
+        play.set_game(game)
+        play.save()
+        return play
+
+    def get_plays(self):
+        """Return all plays"""
+        return [play for play in self.db.Play.find()]
+
+    def from_yaml(self, yaml_file, save=False):
+        """Imports plays from a yaml object
+        :param yaml_file: The yaml file to import
+        :param save: if True, will save the oject on the database, False will only validate"""
+        with open(yaml_file) as yml_file:
+            # loading yaml.safe_load ensure byte str instead of unicode string
+            yml_data = yaml.safe_load(yml_file)
+            for json_play in yml_data:
+                new_play = self.db.Play()
+                # date DD/MM/YYY to datetime ?
+                # let's put the time 21:00
+                new_play.date = datetime.datetime.strptime(json_play['date'], '%d/%m/%y')
+                new_play.date = new_play.date.replace(hour=21, minute=00)
+                new_play.game = json_play['game']
+                if 'winners' in json_play:
+                    new_play.winners = json_play['winners']
+                if 'type' in json_play:
+                    new_play.type = json_play['type']
+
+                for player_json in json_play['players']:
+                    new_player = Play.create_player(
+                        player_json['name'], player_json['score'])
+                    if 'team' in player_json:
+                        new_player['team'] = player_json['team']
+                    if 'team_color' in player_json:
+                        new_player['team_color'] = player_json['team_color']
+                    if 'color' in player_json:
+                        new_player['color'] = player_json['color']
+                    new_play.add_player(new_player)
+                if save:
+                    new_play.save()
+                    print('SAVED %s - %s' % (new_play.game, new_play.date))
+                else:
+                    new_play.validate()
+                    print('VALID %s - %s' % (new_play.game, new_play.date))
+
