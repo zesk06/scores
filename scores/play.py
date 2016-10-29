@@ -7,7 +7,7 @@
 
 from mongokit import Document, CustomType
 import datetime
-
+import json
 
 class Play(Document):
     """
@@ -82,3 +82,38 @@ class Play(Document):
             'team': None,
             'team_color': None
         }
+
+    def get_player_order(self):
+        "return a list of tuple [(score, [players])] ordered per score"
+        player_per_score = {}
+        for (player, score) in [(player['login'], player['score'])
+                                for player in self['players']]:
+            if score not in player_per_score:
+                player_per_score[score] = []
+            player_per_score[score].append(player)
+        if hasattr(self, 'type') and self['type'] == 'min':
+            return sorted(player_per_score.items(), key=lambda x: x[0])
+        return sorted(player_per_score.items(),
+                      key=lambda x: x[0], reverse=True)
+
+    def get_winners(self):
+        "return the list of player names that wins the play"
+        if self['winners'] is not None and isinstance(self['winners'], list):
+            return self['winners']
+        elif self['winners'] is not None:
+            raise TypeError('Expected type for winners is list but found %s' %
+                            type(self['winners']))
+        return self.get_player_order()[0][1]
+
+    def get_highest_score(self):
+        "return the high score of the play"
+        return self.get_player_order()[0][0]
+
+    def get_lowest_score(self):
+        "return the lowest score of the play"
+        return self.get_player_order()[-1][0]
+
+    @property
+    def id(self):
+        """return the id"""
+        return '%s' % self['_id']

@@ -42,3 +42,5 @@ class TestDatabase():
         new_play.save()
 
         assert len(db.get_plays()) == 1
+
+

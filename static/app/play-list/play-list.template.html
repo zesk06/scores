@@ -1,50 +1,55 @@
 <link rel="stylesheet" href="static/app/play-list/play-list.css" />
 
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-md-2">
-      <!--Sidebar content-->
-      <p>
-        Sort by:
-        <select ng-model="$ctrl.orderProp">
+    <div class="row">
+        <div class="col-md-2">
+            <!--Sidebar content-->
+            <p>
+                Sort by:
+                <select ng-model="$ctrl.orderProp">
           <option value="game">game</option>
-          <option value="-id">date</option>
+          <option value="-date">date</option>
         </select>
-      </p>
-      <p>
-        <span class="glyphicon glyphicon-search"></span><input ng-model="filterplay" type="text"/>
-      </p>
-    </div>
-    <div class="col-md-10">
-      <table class="table" id="plays_table">
-        <tr>
-          <th>#</th>
-          <th>date</th>
-          <th>jeu</th>
-          <th>1er</th>
-          <th>2nd</th>
-          <th>3eme</th>
-          <th>4eme</th>
-          <th>5eme</th>
-          <th>6eme</th>
-        </tr>
+            </p>
+            <p>
+                <span class="glyphicon glyphicon-search"></span><input ng-model="filterplay" type="text" />
+            </p>
+        </div>
+        <div class="col-md-10">
+            <table class="table" id="plays_table">
+                <tr>
+                    <th>#</th>
+                    <th>date</th>
+                    <th>jeu</th>
+                    <th>1er</th>
+                    <th>2nd</th>
+                    <th>3eme</th>
+                    <th>4eme</th>
+                    <th>5eme</th>
+                    <th>6eme</th>
+                </tr>
 
-        <!--Body content-->
-        <tr ng-repeat="play in $ctrl.plays | filter:filterplay | orderBy:$ctrl.orderProp">
-          <td>
-            <a ui-sref="play-detail({playId: play.id })"><span class="glyphicon glyphicon-sunglasses" /></a>
-          </td>
-          <td>{{ play.date }}</td>
-          <td><a ui-sref="game-detail({ gameId: play.game })">{{ play.game }}</a></td>
-          <!-- orderBy:'-scores'  reverse the sort -->
-          <td ng-repeat="player in play.players | orderBy:'-score'">
-              <div><span ng-if="player.color" class="glyphicon glyphicon-pawn" style="color:{{player.color}}"></span>
-                  <a ui-sref="player-detail({playerId:  player.name })">{{ player.name }}</a></div>
-              <div class="team" ng-if="player.team"><span ng-if="player.team_color" class="fa fa-users" style="color:{{ player.team_color }}"></span> {{ player.team }}</div>
-              <span class="label label-default">{{ player.score }}</span>
-          </td>
-        </tr>
-      </table>
+                <!--Body content-->
+                <tr ng-repeat="play in $ctrl.plays | filter:filterplay | orderBy:$ctrl.orderProp">
+                    <td>
+                        <a ui-sref="play-detail({playId: $ctrl.getPlayId(play) })"><span class="glyphicon glyphicon-sunglasses" /></a>
+                    </td>
+                    <td>{{ $ctrl.getDate(play) }}</td>
+                    <td><a ui-sref="game-detail({ gameId: play.game })">{{ play.game }}</a></td>
+                    <!-- orderBy:'-scores'  reverse the sort -->
+                    <td ng-repeat="player in play.players | orderBy:'-score'">
+                        <span class="label label-default">{{ player.score }}</span>
+                        <div><span ng-if="player.color" class="glyphicon glyphicon-pawn" style="color:{{player.color}}"></span>
+                            <a ui-sref="player-detail({playerId:  player.login })">{{ player.login }}</a></div>
+                        <div class="team" ng-if="player.team"><span ng-if="player.team_color" class="fa fa-users" style="color:{{ player.team_color }}"></span>{{
+                            player.team }}</div>
+                        <div class="rol" ng-if="player.role">
+                            <span ng-if="player.color" class="fa fa-registered" style="color:{{ player.color }}"></span>{{
+                            player.role }}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
-  </div>
 </div>
