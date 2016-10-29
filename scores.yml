@@ -403,3 +403,13 @@
   - {name: jcrouge,  score: 1750,   color: '#4CAF50'}
   - {name: matthieu, score: 2750,   color: '#F44336'}
   - {name: zesk,     score: 2000,   color: '#212121'}
+- date: 28/10/16
+  game: 7wonders
+  players:
+  - {name: arnaud,   score: 37,     role: 'gizeh'}
+  - {name: clemence, score: 32,     role: 'rhodes'}
+  - {name: frederic, score: 47,     role: 'halikarnasse'}
+  - {name: jcrouge,  score: 42,     role: 'babylone'}
+  - {name: matthieu, score: 56,     role: 'alexandrie'}
+  - {name: cavaille, score: 53,     role: 'ephese'}
+  - {name: zesk,     score: 35,     role: 'olympe'}
