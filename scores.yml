@@ -413,3 +413,25 @@
   - {name: matthieu, score: 56,     role: 'alexandrie'}
   - {name: cavaille, score: 53,     role: 'ephese'}
   - {name: zesk,     score: 35,     role: 'olympe'}
+- date: 29/10/16
+  game: 7wonders duel
+  players:
+  - {name: lolo, score: 53}
+  - {name: zesk, score: 62}
+- date: 01/11/16
+  game: 7wonders duel
+  players:
+  - {name: lolo, score: 47}
+  - {name: zesk, score: 52}
+- date: 04/11/16
+  game: 7wonders duel
+  players:
+  - {name: anthony, score: 65}
+  - {name: zesk, score: 47}
+  winners: [zesk]
+  comment: victoire scientifique
+- date: 04/11/16
+  game: 7wonders duel
+  players:
+  - {name: anthony, score: 34}
+  - {name: zesk, score: 78}
