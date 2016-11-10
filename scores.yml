@@ -435,3 +435,10 @@
   players:
   - {name: anthony, score: 34}
   - {name: zesk, score: 78}
+- date: 09/11/16
+  game: catane
+  players:
+  - {name: clemence, score:  4, color: "#F44336"}
+  - {name: lolo,     score: 11, color: "#FF9800"}
+  - {name: vincent,  score:  7, color: "#2196F3"}
+  - {name: zesk,     score:  6, color: "#CCCCCC"}
