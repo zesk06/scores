@@ -5,9 +5,28 @@
     The Play management
 """
 
-from mongokit import Document, CustomType
+from mongokit import Document, CustomType, DocumentMigration
 import datetime
-import json
+
+
+class PlayMigration(DocumentMigration):
+    """A DocumentMigration for the Play class"""
+    def __init__(self, *args):
+        DocumentMigration.__init__(self, *args)
+
+    def allmigration01_add_comment(self):
+        """Add the comment field to all"""
+        self.target = {'comment':{'$exists': False}} # pylint: disable=W0201
+        self.update = {'$set': {'comment': None}} # pylint: disable=W0201
+
+    def allmigration02_add_reason(self):
+        """Add the comment field to all"""
+        self.target = {'winners_reason':{'$exists': False}} # pylint: disable=W0201
+        self.update = {'$set': {'winners_reason': []}} # pylint: disable=W0201
+
+    def dummy(self):
+        """A dummy"""
+        pass
 
 class Play(Document):
     """
@@ -25,8 +44,10 @@ class Play(Document):
     structure = {
         'date': datetime.datetime,
         'game': basestring,
-        'winners': [basestring],
-        'wintype': basestring,
+        'winners': [basestring],       # a forced list of winners
+        'winners_reason': [basestring],# The forced list of winner reason
+        'wintype': basestring, # max or min
+        'comment': basestring, # A play comment
         'players': [
             {
                 'login': basestring,

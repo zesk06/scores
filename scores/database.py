@@ -14,7 +14,7 @@ import yaml
 
 from .common import hash_password
 from .users import User
-from .play import Play
+from .play import Play, PlayMigration
 
 
 class Database(object):
@@ -120,3 +120,7 @@ class Database(object):
                     new_play.validate()
                     print('VALID %s - %s' % (new_play.game, new_play.date))
 
+    def migrate_all(self):
+        """Runs the migration rules in bulk"""
+        migration_play = PlayMigration(Play)
+        migration_play.migrate_all(self.db.plays) # pylint: disable=E1101
