@@ -6,6 +6,7 @@
 from jinja2 import Environment
 from jinja2.loaders import FileSystemLoader
 from collections import Counter
+from .database import Database
 import operator
 import os
 import yaml
@@ -21,31 +22,18 @@ TEMPLATE_DIR = os.path.join(THIS_DIR, '..', 'templates')
 class Scores(object):
     """docstring for Scores"""
 
-    def __init__(self, filename=None):
+    def __init__(self, database=None):
+        """Init
+        :type database: Database
+        """
         super(Scores, self).__init__()
         self.plays = []
-        if filename is not None:
-            self.load(filename)
+        if database is not None:
+            self.plays.extend(database.get_plays())
 
     def __str__(self):
         "returns string representation"
         return "%s" % '\n'.join([str(play) for play in self.plays])
-
-    def load(self, filename='scores.yml'):
-        """
-        Load the given filename under YAML format
-
-        :param filename: The filename to find the YAML
-        """
-        with open(filename) as yml_file:
-            # loading yaml.safe_load ensure byte str instead of unicode string
-            yml_data = yaml.safe_load(yml_file)
-            play_id = 0
-            for json_play in yml_data:
-                new_play = Play(yml_data=json_play)
-                new_play.play_id = play_id
-                self.plays.append(new_play)
-                play_id += 1
 
     def dump(self, filename='scores.yml'):
         """
@@ -74,8 +62,9 @@ class Scores(object):
         players = []
         for play in self.plays:
             for player in play.players:
-                if player.name not in players:
-                    players.append(player.name)
+                login = player['login']
+                if login not in players:
+                    players.append(login)
         return players
 
     def get_plays(self):
@@ -85,153 +74,17 @@ class Scores(object):
         """
         return self.plays
 
+    def get_play(self, play_id):
+        for play in self.plays:
+            if play.id == play_id:
+                return play
+
     def add_play(self, play):
         """Add a new Play.
         :type play: Play
         :rtype: void
         """
         self.plays.append(play)
-
-
-class Play(object):
-    """A Play is a board game instance with players and scores.
-    """
-    id_counter = 0
-
-    def __init__(self, yml_data=None):
-        super(Play, self).__init__()
-        self.play_id = Play.id_counter
-        Play.id_counter += 1
-        self.date = '01/01/1977'
-        self.game = 'nogame'
-        self.players = []
-        self.winners = None
-        if yml_data is not None:
-            self.from_json(yml_data)
-
-    def __str__(self):
-        "return string representation of the Play"
-        sorted_players = sorted(self.players,
-                                key=lambda p: p.score,
-                                reverse=True)
-
-        return "[%03d]%s: %s %s" % (self.play_id, self.date,
-                                    self.game,
-                                    ', '.join(['%s(%s)' % (player.name,
-                                                           player.score)
-                                               for player in sorted_players]))
-
-    @required_fields(['date', 'game'])
-    def from_json(self, data):
-        """
-        loads json datas
-        :param data: The json datas
-        :return:
-        """
-        self.date = data['date']
-        self.game = data['game']
-        self.players = []
-        self.winners = None
-        for player_json in data['players']:
-            self.players.append(Player(yml_data=player_json))
-        if 'winners' in data:
-            self.winners = data['winners']
-        if 'type' in data:
-            self.type = data['type']
-
-    def to_json(self):
-        "serialize to json"
-        yml_data = {"id": self.play_id,
-                    "date": self.date,
-                    "game": self.game}
-        if hasattr(self, 'winners') and self.winners is not None:
-            yml_data['winners'] = self.winners
-        if hasattr(self, 'type') and self.type is not None:
-            yml_data['type'] = self.type
-        yml_data['players'] = [player.to_json()
-                               for player in self.players]
-        return yml_data
-
-    def get_player_order(self):
-        "return a list of tuple [(score, [players])] ordered per score"
-        player_per_score = {}
-        for (player, score) in [(player.name, player.score)
-                                for player in self.players]:
-            if score not in player_per_score:
-                player_per_score[score] = []
-            player_per_score[score].append(player)
-        if hasattr(self, 'type') and self.type == 'min':
-            return sorted(player_per_score.items(), key=lambda x: x[0])
-        return sorted(player_per_score.items(),
-                      key=lambda x: x[0], reverse=True)
-
-    def get_winners(self):
-        "return the list of player names that wins the play"
-        if self.winners is not None and isinstance(self.winners, list):
-            return self.winners
-        elif self.winners is not None:
-            raise TypeError('Expected type for winners is list but found %s' %
-                            type(self.winners))
-        return self.get_player_order()[0][1]
-
-    def get_highest_score(self):
-        "return the high score of the play"
-        return self.get_player_order()[0][0]
-
-    def get_lowest_score(self):
-        "return the lowest score of the play"
-        return self.get_player_order()[-1][0]
-
-
-class Player(object):
-    """docstring for Player"""
-
-    def __init__(self, name='noname', score=0, team=None, yml_data=None):
-        super(Player, self).__init__()
-        self.name = name
-        self.score = int(score)
-        self.team = team
-        self.team_color = None
-        self.color = None
-        if yml_data is not None:
-            self.__load_json(yml_data)
-
-    def __str__(self):
-        """return string representation of the Player
-        :rtype: str
-        """
-        return "%s(%s)" % (self.name,
-                           self.score)
-
-    def to_json(self):
-        """serialize to json
-        :rtype: dict[str, str]"""
-        yml_data = {"name": self.name,
-                    "score": self.score}
-        if self.team:
-            yml_data['team'] = self.team
-        if self.team_color:
-            yml_data['team_color'] = self.team_color
-        if self.color:
-            yml_data['color'] = self.color
-        return yml_data
-
-    def __load_json(self, yml_data):
-        "loads json"
-        self.name = yml_data['name']
-        self.score = yml_data['score']
-        if 'team' in yml_data:
-            self.team = yml_data['team']
-        if 'team_color' in yml_data:
-            self.team_color = yml_data['team_color']
-        if 'color' in yml_data:
-            self.color = yml_data['color']
-
-    def dummy_pep8(self):
-        """
-        this is dummy
-        """
-        pass
 
 
 class GameStat(object):
@@ -255,7 +108,7 @@ class GameStat(object):
         :return: nothing
         """
         self.plays_number += 1
-        self.scores.extend([player.score for player in play.players])
+        self.scores.extend([player['score'] for player in play.players])
         if self.highest_score_play is None:
             self.highest_score_play = play
         if self.lowest_score_play is None:
@@ -285,14 +138,15 @@ class GameStat(object):
         player_nb = len(play.players)
         if player_nb not in self.scores_per_number:
             self.scores_per_number[player_nb] = []
-        scores = [player.score for player in play.players]
+        scores = [player['score'] for player in play.players]
         self.scores_per_number[player_nb].extend(scores)
 
         # add scores per player
         for player in play.players:
-            if player.name not in self.scores_per_player:
-                self.scores_per_player[player.name] = []
-            self.scores_per_player[player.name].append(player.score)
+            login = player['login']
+            if login not in self.scores_per_player:
+                self.scores_per_player[login] = []
+            self.scores_per_player[login].append(player['score'])
 
     def get_highest_score(self):
         "return the play that had the highest score"
@@ -320,11 +174,11 @@ class GameStat(object):
             'game': self.game,
             'plays_number': self.plays_number,
             'highest_score': self.highest_score_play.get_highest_score(),
-            'highest_score_play_id': self.highest_score_play.play_id,
+            'highest_score_play_id': self.highest_score_play.id,
             'highest_score_play_players':
                 self.highest_score_play.get_winners(),
             'lowest_score': self.lowest_score_play.get_lowest_score(),
-            'lowest_score_play_id': self.lowest_score_play.play_id,
+            'lowest_score_play_id': self.lowest_score_play.id,
             'lowest_score_play_players': lower_score_players,
             'scores_per_number': self.scores_per_number,
             'scores_per_player': self.scores_per_player,
@@ -452,9 +306,10 @@ class OverallWinnerStat(object):
         """
         self.plays.append(play)
         for player in play.players:
-            if player.name not in self.player_stats:
-                self.player_stats[player.name] = PlayerStat(player.name)
-            self.player_stats[player.name].new_play(play)
+            login = player['login']
+            if login not in self.player_stats:
+                self.player_stats[login] = PlayerStat(login)
+            self.player_stats[login].new_play(play)
         if play.game not in self.game_stats:
             self.game_stats[play.game] = GameStat(play.game)
         self.game_stats[play.game].new_play(play)

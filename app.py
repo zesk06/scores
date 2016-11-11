@@ -153,7 +153,7 @@ def index():
 
 def get_mscores():
     "returns the mscores"
-    return scores.Scores(filename=app.config['FILE_URI'])
+    return scores.Scores(database=get_db())
 
 
 @app.route('/api/v1/is_logged', methods=["GET"])
@@ -171,16 +171,19 @@ def get_plays():
     :return: the plays
     """
     mscores = get_mscores()
-    return jsonify([play.to_json() for play in mscores.plays])
+    return jsonify([json.loads(play.to_json()) for play in mscores.plays])
 
 
-@app.route('/api/v1/plays/<int:play_id>', methods=["GET"])
+@app.route('/api/v1/plays/<play_id>', methods=["GET"])
 def get_play(play_id):
     """
     :return: the play with given ID
     """
     mscores = get_mscores()
-    return jsonify(mscores.plays[play_id].to_json())
+    play = mscores.get_play(play_id)
+    if play:
+        return jsonify(json.loads(play.to_json()))
+    return jsonify('Failed to find play with id %s' % play_id), 404
 
 
 @app.route('/api/v1/games/<string:game_id>', methods=["GET"])

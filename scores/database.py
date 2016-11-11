@@ -14,7 +14,7 @@ import yaml
 
 from .common import hash_password
 from .users import User
-from .play import Play
+from .play import Play, PlayMigration
 
 
 class Database(object):
@@ -100,9 +100,12 @@ class Database(object):
                 new_play.game = json_play['game']
                 if 'winners' in json_play:
                     new_play.winners = json_play['winners']
+                if 'winners_reason' in json_play:
+                    new_play.winners_reason = json_play['winners_reason']
                 if 'type' in json_play:
                     new_play.type = json_play['type']
-
+                if 'comment' in json_play:
+                    new_play.comment = json_play['comment']
                 for player_json in json_play['players']:
                     new_player = Play.create_player(
                         player_json['name'], player_json['score'])
@@ -112,6 +115,8 @@ class Database(object):
                         new_player['team_color'] = player_json['team_color']
                     if 'color' in player_json:
                         new_player['color'] = player_json['color']
+                    if 'role' in player_json:
+                        new_player['role'] = player_json['role']
                     new_play.add_player(new_player)
                 if save:
                     new_play.save()
@@ -120,3 +125,7 @@ class Database(object):
                     new_play.validate()
                     print('VALID %s - %s' % (new_play.game, new_play.date))
 
+    def migrate_all(self):
+        """Runs the migration rules in bulk"""
+        migration_play = PlayMigration(Play)
+        migration_play.migrate_all(self.db.plays) # pylint: disable=E1101
