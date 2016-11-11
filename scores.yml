@@ -429,7 +429,7 @@
   - {name: anthony, score: 65}
   - {name: zesk, score: 47}
   winners: [zesk]
-  comment: victoire scientifique
+  winners_reason: [victoire scientifique]
 - date: 04/11/16
   game: 7wonders duel
   players:

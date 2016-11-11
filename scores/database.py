@@ -100,9 +100,12 @@ class Database(object):
                 new_play.game = json_play['game']
                 if 'winners' in json_play:
                     new_play.winners = json_play['winners']
+                if 'winners_reason' in json_play:
+                    new_play.winners_reason = json_play['winners_reason']
                 if 'type' in json_play:
                     new_play.type = json_play['type']
-
+                if 'comment' in json_play:
+                    new_play.comment = json_play['comment']
                 for player_json in json_play['players']:
                     new_player = Play.create_player(
                         player_json['name'], player_json['score'])
