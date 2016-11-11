@@ -435,6 +435,12 @@
   players:
   - {name: anthony, score: 34}
   - {name: zesk, score: 78}
+- date: 06/11/16
+  game: battlelore
+  comment: scenario 1
+  players:
+  - {name: lolo,     score: 3, color: "#F44336", role: 'anglais'}
+  - {name: zesk,     score: 4, color: "#2196F3", role: 'francais'}
 - date: 09/11/16
   game: catane
   players:

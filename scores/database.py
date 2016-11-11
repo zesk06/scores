@@ -115,6 +115,8 @@ class Database(object):
                         new_player['team_color'] = player_json['team_color']
                     if 'color' in player_json:
                         new_player['color'] = player_json['color']
+                    if 'role' in player_json:
+                        new_player['role'] = player_json['role']
                     new_play.add_player(new_player)
                 if save:
                     new_play.save()
