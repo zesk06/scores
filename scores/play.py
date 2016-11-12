@@ -16,17 +16,18 @@ class PlayMigration(DocumentMigration):
 
     def allmigration01_add_comment(self):
         """Add the comment field to all"""
-        self.target = {'comment':{'$exists': False}} # pylint: disable=W0201
-        self.update = {'$set': {'comment': None}} # pylint: disable=W0201
+        self.target = {'comment': {'$exists': False}}  # pylint: disable=W0201
+        self.update = {'$set': {'comment': None}}     # pylint: disable=W0201
 
     def allmigration02_add_reason(self):
         """Add the comment field to all"""
-        self.target = {'winners_reason':{'$exists': False}} # pylint: disable=W0201
-        self.update = {'$set': {'winners_reason': []}} # pylint: disable=W0201
+        self.target = {'winners_reason': {'$exists': False}}  # pylint: disable=W0201
+        self.update = {'$set': {'winners_reason': []}}       # pylint: disable=W0201
 
     def dummy(self):
         """A dummy"""
         pass
+
 
 class Play(Document):
     """
@@ -44,10 +45,10 @@ class Play(Document):
     structure = {
         'date': datetime.datetime,
         'game': basestring,
-        'winners': [basestring],       # a forced list of winners
-        'winners_reason': [basestring],# The forced list of winner reason
-        'wintype': basestring, # max or min
-        'comment': basestring, # A play comment
+        'winners': [basestring],         # a forced list of winners
+        'winners_reason': [basestring],  # The forced list of winner reason
+        'wintype': basestring,   # max or min
+        'comment': basestring,   # A play comment
         'players': [
             {
                 'login': basestring,
@@ -112,16 +113,18 @@ class Play(Document):
             if score not in player_per_score:
                 player_per_score[score] = []
             player_per_score[score].append(player)
-        if hasattr(self, 'type') and self['type'] == 'min':
+        if hasattr(self, 'wintype') and self['wintype'] == 'min':
             return sorted(player_per_score.items(), key=lambda x: x[0])
         return sorted(player_per_score.items(),
                       key=lambda x: x[0], reverse=True)
 
     def get_winners(self):
         "return the list of player names that wins the play"
-        if self['winners'] is not None and isinstance(self['winners'], list):
+        if self['winners'] is not None and \
+           isinstance(self['winners'], list) and \
+           len(self['winners']) > 0:
             return self['winners']
-        elif self['winners'] is not None:
+        elif self['winners'] is not None and not isinstance(self['winners'], list):
             raise TypeError('Expected type for winners is list but found %s' %
                             type(self['winners']))
         return self.get_player_order()[0][1]

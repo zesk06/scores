@@ -9,38 +9,38 @@ import pytest
 import os
 
 
-class TestDatabase():
+class TestDatabase(object):
+    """ A Test class"""
 
     @pytest.fixture()
-    def db(self):
+    def database(self):
         """Create and return the connection"""
+        database_uri = ''
         if 'TEST_DATABASE_URI' in os.environ:
             database_uri = os.environ['TEST_DATABASE_URI']
         return Database(uri=database_uri)
 
-    def test_add_user(self, db):
+    def test_add_user(self, database):
         """
-        :type db: database.Database"""
-        if db.get_user('toto'):
-            db.delete_user(login='toto')
-        db.add_user('toto', 'Toto Doe', 'password01', 'toto@gmail.com')
-        user = db.get_user('toto')
+        :type database: database.Database"""
+        if database.get_user('toto'):
+            database.delete_user(login='toto')
+        database.add_user('toto', 'Toto Doe', 'password01', 'toto@gmail.com')
+        user = database.get_user('toto')
         assert user['login'] == 'toto'
-        db.delete_user('toto')
+        database.delete_user('toto')
 
-    def test_play_crud(self, db):
+    def test_play_crud(self, database):
         """Test the play CRUD
         :type play: scores.dadatabase.Database"""
-        for play in db.get_plays():
+        for play in database.get_plays():
             play.delete()
 
-        new_play = db.add_play(datetime.datetime.now(), 'test_game')
-        new_player = Play.get_player('login1', 1)
+        new_play = database.add_play(datetime.datetime.now(), 'test_game')
+        new_player = Play.create_player('login1', 1)
         new_play.add_player(new_player)
-        new_player = Play.get_player('login2', 2)
+        new_player = Play.create_player('login2', 2)
         new_play.add_player(new_player)
         new_play.save()
 
-        assert len(db.get_plays()) == 1
-
-
+        assert len(database.get_plays()) == 1

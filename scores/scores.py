@@ -75,6 +75,9 @@ class Scores(object):
         return self.plays
 
     def get_play(self, play_id):
+        """Return the play with the given id
+        :rtype: Play
+        """
         for play in self.plays:
             if play.id == play_id:
                 return play
@@ -113,8 +116,7 @@ class GameStat(object):
             self.highest_score_play = play
         if self.lowest_score_play is None:
             self.lowest_score_play = play
-        if (hasattr(self.highest_score_play, 'type') and
-                self.highest_score_play.type == 'min'):
+        if self.highest_score_play.wintype == 'min':
             if (play.get_highest_score() <
                     self.highest_score_play.get_highest_score()):
                 self.highest_score_play = play
@@ -130,6 +132,8 @@ class GameStat(object):
                 self.lowest_score_play = play
 
         # count victories for the player
+        if len(play.get_winners()) == 0:
+            raise RuntimeError('No winners?????', play)
         for player in play.get_winners():
             if player not in self.victories_per_player:
                 self.victories_per_player[player] = 0

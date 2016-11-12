@@ -2,8 +2,12 @@
 {
     // Path to Python, you can use a custom version of Python by modifying this setting to include the full path.
     "python.pythonPath": "/Users/booba/.virtualenvs/scores/bin/python",
+    // Path to Pylint, you can use a custom version of pylint by modifying this setting to include the full path.
+    "python.linting.pylintPath": "/Users/booba/.virtualenvs/scores/bin/pylint",
     // Whether to enable or disable unit testing using pytest.
     "python.unitTest.pyTestEnabled": true,
     // Path to pytest (py.test), you can use a custom version of pytest by modifying this setting to include the full path.
-    "python.unitTest.pyTestPath": "/Users/booba/.virtualenvs/scores/bin/py.test"
+    "python.unitTest.pyTestPath": "/Users/booba/.virtualenvs/scores/bin/py.test",
+    // Path to autopep8, you can use a custom version of autopep8 by modifying this setting to include the full path.
+    "python.formatting.autopep8Path": "/Users/booba/.virtualenvs/scores/bin/autopep8"
 }

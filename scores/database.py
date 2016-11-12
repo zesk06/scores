@@ -103,7 +103,7 @@ class Database(object):
                 if 'winners_reason' in json_play:
                     new_play.winners_reason = json_play['winners_reason']
                 if 'type' in json_play:
-                    new_play.type = json_play['type']
+                    new_play.wintype = json_play['type']
                 if 'comment' in json_play:
                     new_play.comment = json_play['comment']
                 for player_json in json_play['players']:
@@ -128,4 +128,4 @@ class Database(object):
     def migrate_all(self):
         """Runs the migration rules in bulk"""
         migration_play = PlayMigration(Play)
-        migration_play.migrate_all(self.db.plays) # pylint: disable=E1101
+        migration_play.migrate_all(self.db.plays)  # pylint: disable=E1101

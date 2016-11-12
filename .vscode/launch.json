@@ -18,6 +18,32 @@
             }
         },
         {
+            "name": "py.test",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": true,
+            "pythonPath": "/Users/booba/.virtualenvs/scores/bin/python",
+            "program": "${workspaceRoot}/debug_test.py",
+            "debugOptions": [
+                "WaitOnAbnormalExit",
+                "WaitOnNormalExit",
+                "RedirectOutput"
+            ]
+        },
+        {
+            "name": "Python",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": true,
+            "pythonPath": "/Users/booba/.virtualenvs/scores/bin/python",
+            "program": "${file}",
+            "debugOptions": [
+                "WaitOnAbnormalExit",
+                "WaitOnNormalExit",
+                "RedirectOutput"
+            ]
+        },
+        {
             "name": "Attach",
             "type": "python",
             "request": "attach",

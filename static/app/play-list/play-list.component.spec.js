@@ -61,7 +61,7 @@ describe('playList', function () {
         });
         // Test
         it('should set a default value for the `orderProp` property', function () {
-            expect(ctrl.orderProp).toBe('-id');
+            expect(ctrl.orderProp).toBe('-date');
         });
 
     });
