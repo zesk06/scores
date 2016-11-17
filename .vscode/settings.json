@@ -8,6 +8,8 @@
     "python.unitTest.pyTestEnabled": true,
     // Path to pytest (py.test), you can use a custom version of pytest by modifying this setting to include the full path.
     "python.unitTest.pyTestPath": "/Users/booba/.virtualenvs/scores/bin/py.test",
-    // Path to autopep8, you can use a custom version of autopep8 by modifying this setting to include the full path.
-    "python.formatting.autopep8Path": "/Users/booba/.virtualenvs/scores/bin/autopep8"
+    // List of paths to libraries and the like that need to be imported by auto complete engine. E.g. when using Google App SDK, the paths are not in system path, hence need to be added into this list.
+    "python.autoComplete.extraPaths": [
+        "/Users/booba/git/scoregame"
+    ]
 }

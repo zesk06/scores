@@ -28,7 +28,9 @@ class Scores(object):
         """
         super(Scores, self).__init__()
         self.plays = []
+        self.db = None
         if database is not None:
+            self.db = database
             self.plays.extend(database.get_plays())
 
     def __str__(self):

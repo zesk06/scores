@@ -211,8 +211,9 @@ class TestScores(object):
     def test_overall_winner_stat(self, mscores, test_dir):
         """Test"""
         overall_stat = OverallWinnerStat()
-        for play in mscores.plays:
-            overall_stat.new_play(play)
+        overall_stat.new_play(self.__get_play(players='P1=10,p2=1', date='10/01/16'))
+        overall_stat.new_play(self.__get_play(players='P1=20,p2=1', date='20/01/16'))
+        overall_stat.new_play(self.__get_play(players='P1=30,p2=1', date='30/01/16'))
 
         assert overall_stat
         assert overall_stat.__str__() != ''

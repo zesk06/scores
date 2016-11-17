@@ -8,8 +8,13 @@ from __future__ import print_function
 
 import datetime
 import hashlib
+import logging
 from mongokit import Connection, Document
 import os
+import re
+import shutil
+import subprocess
+import tempfile
 import yaml
 
 from .common import hash_password
@@ -29,12 +34,14 @@ class Database(object):
 
     def __init__(self, uri):
         """Init"""
+        self.uri = uri
         self.connect(uri)
         self.dbname = uri.split('/')[-1]
         print('dbname is %s' % self.dbname)
 
     def connect(self, uri):
         """Connect"""
+        logging.info('Connecting to uri %s' % uri)
         self.connection = Connection(host=uri)
         self.connection.register([User, Play])
         return self.connection
@@ -63,6 +70,10 @@ class Database(object):
         if user:
             user.delete()
 
+    def drop(self):
+        """Drop the database"""
+        self.connection.drop_database(self.dbname)
+
     def authenticate_user(self, user, passwd):
         hashed_passwd = hash_password(passwd)
         user.authauthenticate(hashed_passwd)
@@ -73,7 +84,9 @@ class Database(object):
 
     def add_play(self, date, game):
         """Add a play
-        :type date: datetime.datetime"""
+        :type date: datetime.datetime
+        :type game: basestring
+        :rtype: Play"""
         play = self.db.Play()
         play.set_date(date)
         play.set_game(game)
@@ -129,3 +142,78 @@ class Database(object):
         """Runs the migration rules in bulk"""
         migration_play = PlayMigration(Play)
         migration_play.migrate_all(self.db.plays)  # pylint: disable=E1101
+
+    def dump(self, dump_folder=None):
+        """Dump the database in the given dump_file
+            Use the archive option to compress
+            if uri is None, will use DATABASE_URI env var
+            if dump_folder is None, will use a timetagged folder"""
+        logging.info('mongodumping')
+        info = Database.get_uri_info(uri=self.uri)
+
+        if dump_folder is None:
+            timetag = datetime.datetime.now().strftime('%y%m%d_%H%M%S')
+            dump_foldername = '{}_{}'.format(timetag, info['db_name'])
+            dump_folder = os.path.join('dump', dump_foldername)
+        info['dump_folder'] = dump_folder
+        info['temp_folder'] = tempfile.mkdtemp()
+        logging.info('mongodump on %s', info)
+        cmd = '' \
+            'mongodump -h {host} --port {port} -u {user} -p {password}' \
+            ' --db {db_name} --out={temp_folder}'.format(**info)
+        logging.info(cmd)
+        if dump_folder != '' and not os.path.exists(dump_folder):
+            os.makedirs(dump_folder)
+        rcode = subprocess.call(cmd.split(' '))
+        if rcode == 0:
+            logging.info('dumped to %s', dump_folder)
+            os.rename(os.path.join(info['temp_folder'], info['db_name']), dump_folder)
+        else:
+            logging.fatal('Failed to dump! - return code is %s', rcode)
+
+    def restore(self, dump_folder, delete=False):
+        """Restore a dump saved using mongodump in the given database"""
+        logging.info('mongorestoring')
+        if not os.path.exists(dump_folder):
+            raise RuntimeError('dump folder does not exist %s' % dump_folder)
+        info = Database.get_uri_info(uri=self.uri)
+        info['dump_folder'] = dump_folder
+        logging.info('mongorestore on %s', info)
+
+        if delete:
+            database = self.drop()
+
+        cmd = '' \
+            'mongorestore -h {host} --port {port} -u {user} -p {password}' \
+            ' --db {db_name} {dump_folder}'.format(**info)
+        logging.info(cmd)
+        rcode = subprocess.call(cmd.split(' '))
+        if rcode == 0:
+            logging.info('restored from %s', dump_folder)
+        else:
+            logging.fatal('Failed to restore! - return code is %s', rcode)
+
+    @staticmethod
+    def get_uri_info(uri):
+        if uri is None and 'DATABASE_URI' not in os.environ:
+            raise RuntimeError('Must give uri or have os.environ[\'DATABASE_URI\']')
+        elif uri is None:
+            uri = os.environ['DATABASE_URI']
+
+        return Database.parse_uri(uri)
+
+    @staticmethod
+    def parse_uri(uri):
+        """Return the elements of the uri:
+        (host, port, username, password, dbname)
+        """
+        match = re.match(r'mongodb://([^:]+):([^@]+)@([^:]+):(\d+)/(\w+)', uri)
+        if match:
+            return {
+                'host': match.group(3),
+                'port': match.group(4),
+                'user': match.group(1),
+                'password': match.group(2),
+                'db_name': match.group(5)
+            }
+        raise RuntimeError('Failed to parse uri: {}'.format(uri))

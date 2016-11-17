@@ -127,15 +127,24 @@ class Play(Document):
         elif self['winners'] is not None and not isinstance(self['winners'], list):
             raise TypeError('Expected type for winners is list but found %s' %
                             type(self['winners']))
-        return self.get_player_order()[0][1]
+        order = self.get_player_order()
+        if len(order) > 0:
+            return self.get_player_order()[0][1]
+        return []
 
     def get_highest_score(self):
         "return the high score of the play"
-        return self.get_player_order()[0][0]
+        order = self.get_player_order()
+        if len(order) > 0:
+            return order[0][0]
+        return 0
 
     def get_lowest_score(self):
         "return the lowest score of the play"
-        return self.get_player_order()[-1][0]
+        order = self.get_player_order()
+        if len(order) > 0:
+            return order[-1][0]
+        return 0
 
     @property
     def id(self):
