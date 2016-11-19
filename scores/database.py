@@ -8,6 +8,7 @@ from __future__ import print_function
 
 import datetime
 import hashlib
+import json
 import logging
 from mongokit import Connection, Document
 import os
@@ -90,6 +91,15 @@ class Database(object):
         play = self.db.Play()
         play.set_date(date)
         play.set_game(game)
+        play.save()
+        return play
+
+    def add_play_from_json(self, json_play):
+        """Adds a play from a json definition
+        :type json_play: dict|basestring"""
+        if type(json_play) == dict:
+            json_play = json.dumps(json_play)
+        play = self.db.Play.from_json(json_play)
         play.save()
         return play
 

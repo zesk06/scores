@@ -162,13 +162,25 @@ def is_logged():
     :return: {"logged": "true"} if user is logged
     """
 
-    return jsonify({"logged": True, "user_id": flask_login.current_user.name})
+    return jsonify({"logged": True, "user_id": flask_login.current_user.get_id()})
+
+
+@app.route('/api/v1/plays', methods=["POST"])
+@flask_login.login_required
+def add_play():
+    """Adds a new play"""
+    if 'Logged in as: ' + flask_login.current_user.get_id():
+        play_json = request.json
+        print('adding play with json: %s' % play_json)
+        get_db().add_play_from_json(play_json)
+        return jsonify('added play %s' % play_json), 201
+    return jsonify('You must be logged in to add a play'), 401
 
 
 @app.route('/api/v1/plays', methods=["GET"])
 def get_plays():
     """
-    :return: the plays
+    : return: the plays
     """
     mscores = get_mscores()
     return jsonify([json.loads(play.to_json()) for play in mscores.plays])
@@ -177,7 +189,7 @@ def get_plays():
 @app.route('/api/v1/plays/<play_id>', methods=["GET"])
 def get_play(play_id):
     """
-    :return: the play with given ID
+    : return: the play with given ID
     """
     mscores = get_mscores()
     play = mscores.get_play(play_id)
@@ -189,7 +201,7 @@ def get_play(play_id):
 @app.route('/api/v1/games/<string:game_id>', methods=["GET"])
 def get_game(game_id):
     """
-    :return: the game with given ID
+    : return: the game with given ID
     """
     stats = scores.OverallWinnerStat()
     stats.parse(get_mscores())
@@ -201,7 +213,7 @@ def get_game(game_id):
 @app.route('/api/v1/players', methods=["GET"])
 def get_players():
     """
-    :return: Get all player stats
+    : return: Get all player stats
     """
     stats = scores.OverallWinnerStat()
     stats.parse(get_mscores())
@@ -212,7 +224,7 @@ def get_players():
 @app.route('/api/v1/players/<string:player_id>', methods=["GET"])
 def get_player(player_id):
     """
-    :return: the player with given ID
+    : return: the player with given ID
     """
     stats = scores.OverallWinnerStat()
     stats.parse(get_mscores())
