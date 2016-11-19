@@ -11,6 +11,7 @@ import logging
 import os
 import re
 import subprocess
+import time
 
 
 def hash_password(passwd):
@@ -23,6 +24,22 @@ def hash_password(passwd):
     hpasswd = '*' + hpasswd.upper()
     return hpasswd
 
+
+def datetime_to_timestamp(a_date):
+    """Transform a datetime.datetime to a timestamp
+    microseconds are lost !
+    :type a_date: datetime.datetime
+    :rtype: float
+    """
+    return time.mktime(a_date.timetuple())
+
+
+def timestamp_to_datetime(tstamp):
+    """Convert a timestamp to a datetime
+    :type tstamp: float
+    :rtype: datetime.datetime"""
+    return datetime.datetime.fromtimestamp(tstamp)
+
+
 if __name__ == '__main__':
     logging.basicConfig()
-    mongodump()
