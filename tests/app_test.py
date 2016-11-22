@@ -11,6 +11,7 @@ import time
 
 import app
 import scores.common as common
+import scores.database
 
 # This run once for all
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
@@ -42,8 +43,10 @@ class TestApp(object):
     def test_get_plays(self):
         self.app.get('/api/v1/plays')
 
-    def test_add_play(self):
+    def test_add_play(self, database):
         """Test."""
+        # add 'test' user
+        database.add_user(login='test', name='Test User', passwd='test01', email='test@test.com')
         # login dude
         plays_before = self.app.get('/api/v1/plays').data
         before_nb = len(json.loads(plays_before))
