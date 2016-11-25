@@ -1,0 +1,39 @@
+<h1>new play {{ $ctrl.fields.game }}</h1>
+
+<form name="myForm" ng-submit="$ctrl.submitMyForm()">
+    date: <input ng-model="$ctrl.date_s" placeholder="21/11/2016" type="date"></input><input ng-model="$ctrl.time_s" placeholder="21:00"
+        type="time"></input>
+    <br/> game: <input type="text" ng-model="$ctrl.fields.game" placeholder="game"></input> <input ng-repeat="game in $ctrl.games"
+        ng-click="$ctrl.setGame(game)" type="button" ng-value="game"></input>
+    <br/> comment: <input type="text" ng-model="$ctrl.fields.comment" placeholder="comment"></input>
+    <br/> wintype:
+    <select ng-model="$ctrl.fields.wintype">
+        <option value="max" selected>max</option>
+        <option value="min">min</option>
+        </select>
+    <br/>
+    <!-- Having type="button" avoid submit the form when clicking on it
+         because a button has type="submit" by default -->
+    <button class="fa fa-plus" aria-hidden="true" ng-click="$ctrl.addPlayer($ctrl.login)" type="button"></button>
+    <select ng-model="$ctrl.login">
+        <option ng-repeat="login in $ctrl.logins" ng-value="login">{{ login }}</option>
+        </select>
+    <br/>
+    <br/> players:
+    <div ng-repeat="player in $ctrl.fields.players"><button class="fa fa-minus" aria-hidden="true" ng-click="$ctrl.removePlayer(player)"></button>[{{ player.index }}] {{
+        player.login }} {{ player.score }} ({{ player.team }}) <br/>login: <input ng-model="player.login" placeholder="login"
+            </input> score: <input ng-model="player.score" placeholder="score" type="number"></input> color: <input ng-model="player.color"
+            placeholder="color" type="color"></input>
+        role: <input ng-model="player.role" placeholder="role" type="text"></input>
+        team: <input ng-model="player.team" placeholder="team" type="text"></input>
+        team_color: <input ng-model="player.team_color" placeholder="team_color" type="color"></input>
+    </div>
+
+    <br/><input type="submit" id="submit" value="Submit" />
+</form>
+<div ng-if="$ctrl.warnings.length !== 0" class="alert alert-danger">
+    <div ng-repeat="msg in $ctrl.warnings">{{ msg }}</div>
+</div>
+<div ng-if="$ctrl.infos.length !== 0" class="alert alert-infos">
+    <div ng-repeat="msg in $ctrl.infos">{{ msg }}</div>
+</div>

@@ -96,7 +96,8 @@ class Database(object):
 
     def add_play_from_json(self, json_play):
         """Adds a play from a json definition
-        :type json_play: dict|basestring"""
+        :type json_play: dict|basestring
+        :rtype: Play"""
         if type(json_play) == dict:
             json_play = json.dumps(json_play)
         play = self.db.Play.from_json(json_play)

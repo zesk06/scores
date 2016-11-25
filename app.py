@@ -8,7 +8,7 @@ from __future__ import print_function
 import scores.scores as scores
 import scores.users as users
 import scores.database as database
-
+from mongokit.document import StructureError
 import json
 import os
 import sys
@@ -55,7 +55,7 @@ app.database = None
 
 def get_db():
     """Return the Database
-    :rtype: database.Database"""
+    :rtype: scores.database.Database"""
     if app.database is None:
         print('connecting to %s' % app.config['DATABASE_URI'])
         app.database = database.Database(app.config['DATABASE_URI'])
@@ -171,9 +171,17 @@ def add_play():
     """Adds a new play"""
     if 'Logged in as: ' + flask_login.current_user.get_id():
         play_json = request.json
-        print('adding play with json: %s' % play_json)
-        get_db().add_play_from_json(play_json)
-        return jsonify('added play %s' % play_json), 201
+        if request.json is None and request.data:
+            play_json = request.data
+        if play_json:
+            print('adding play with json: %s' % play_json)
+            try:
+                new_play = get_db().add_play_from_json(play_json)
+                return jsonify(msg='added play %s' % new_play.id, id=new_play.id, data=new_play.to_json()), 201
+            except StructureError, error:
+                return jsonify('BAD JSON %s: %s' % (error, play_json)), 400
+        else:
+            return jsonify('Failed to find JSON data in your POST'), 404
     return jsonify('You must be logged in to add a play'), 401
 
 
@@ -239,4 +247,5 @@ if __name__ == '__main__':
     else:
         port = 5000
     print('launching server with args [%s]' % ', '.join(sys.argv))
-    app.run(debug=True, port=port)
+    # app.run(debug=True, port=port)
+    app.run(debug=False, port=port)
