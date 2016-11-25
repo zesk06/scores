@@ -8,7 +8,7 @@ from __future__ import print_function
 import scores.scores as scores
 import scores.users as users
 import scores.database as database
-
+from mongokit.document import StructureError
 import json
 import os
 import sys
@@ -55,7 +55,7 @@ app.database = None
 
 def get_db():
     """Return the Database
-    :rtype: database.Database"""
+    :rtype: scores.database.Database"""
     if app.database is None:
         print('connecting to %s' % app.config['DATABASE_URI'])
         app.database = database.Database(app.config['DATABASE_URI'])
@@ -162,13 +162,33 @@ def is_logged():
     :return: {"logged": "true"} if user is logged
     """
 
-    return jsonify({"logged": True, "user_id": flask_login.current_user.name})
+    return jsonify({"logged": True, "user_id": flask_login.current_user.get_id()})
+
+
+@app.route('/api/v1/plays', methods=["POST"])
+@flask_login.login_required
+def add_play():
+    """Adds a new play"""
+    if 'Logged in as: ' + flask_login.current_user.get_id():
+        play_json = request.json
+        if request.json is None and request.data:
+            play_json = request.data
+        if play_json:
+            print('adding play with json: %s' % play_json)
+            try:
+                new_play = get_db().add_play_from_json(play_json)
+                return jsonify(msg='added play %s' % new_play.id, id=new_play.id, data=new_play.to_json()), 201
+            except StructureError, error:
+                return jsonify('BAD JSON %s: %s' % (error, play_json)), 400
+        else:
+            return jsonify('Failed to find JSON data in your POST'), 404
+    return jsonify('You must be logged in to add a play'), 401
 
 
 @app.route('/api/v1/plays', methods=["GET"])
 def get_plays():
     """
-    :return: the plays
+    : return: the plays
     """
     mscores = get_mscores()
     return jsonify([json.loads(play.to_json()) for play in mscores.plays])
@@ -177,7 +197,7 @@ def get_plays():
 @app.route('/api/v1/plays/<play_id>', methods=["GET"])
 def get_play(play_id):
     """
-    :return: the play with given ID
+    : return: the play with given ID
     """
     mscores = get_mscores()
     play = mscores.get_play(play_id)
@@ -189,7 +209,7 @@ def get_play(play_id):
 @app.route('/api/v1/games/<string:game_id>', methods=["GET"])
 def get_game(game_id):
     """
-    :return: the game with given ID
+    : return: the game with given ID
     """
     stats = scores.OverallWinnerStat()
     stats.parse(get_mscores())
@@ -201,7 +221,7 @@ def get_game(game_id):
 @app.route('/api/v1/players', methods=["GET"])
 def get_players():
     """
-    :return: Get all player stats
+    : return: Get all player stats
     """
     stats = scores.OverallWinnerStat()
     stats.parse(get_mscores())
@@ -212,7 +232,7 @@ def get_players():
 @app.route('/api/v1/players/<string:player_id>', methods=["GET"])
 def get_player(player_id):
     """
-    :return: the player with given ID
+    : return: the player with given ID
     """
     stats = scores.OverallWinnerStat()
     stats.parse(get_mscores())
@@ -227,4 +247,5 @@ if __name__ == '__main__':
     else:
         port = 5000
     print('launching server with args [%s]' % ', '.join(sys.argv))
-    app.run(debug=True, port=port)
+    # app.run(debug=True, port=port)
+    app.run(debug=False, port=port)

@@ -3,8 +3,10 @@
 
 from scores.database import Database
 from scores.play import Play
+import scores.common
 
 import datetime
+import json
 import pytest
 import os
 import tempfile
@@ -78,7 +80,7 @@ class TestDatabase(object):
               'user',
               'password',
               'db_name'))
-            )
+        )
         for test in tests:
             uri = test[0]
             resp = test[1]
@@ -89,3 +91,17 @@ class TestDatabase(object):
                 'password': resp[3],
                 'db_name': resp[4]
             }
+
+    def test_add_play_from_json(self, database):
+        """A test"""
+        json_data = {
+            'game': 'test_game',
+            'date': scores.common.datetime_to_timestamp(datetime.datetime.now()),
+            'players': [
+                {'name': 'test_zesk', 'score': 100, 'team': None},
+                {'name': 'test_lolo', 'score': 10, 'team': None}
+            ]
+        }
+
+        new_play = database.add_play(datetime.datetime.now(), 'test_game')
+        database.add_play_from_json(new_play.to_json())

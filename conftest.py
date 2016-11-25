@@ -17,7 +17,8 @@ def pytest_addoption(parser):
 
 @pytest.fixture()
 def database():
-    """Create and return the connection"""
+    """Create and return the connection
+    :rtype: database.Database"""
     database_uri = ''
     if 'TEST_DATABASE_URI' in os.environ:
         database_uri = os.environ['TEST_DATABASE_URI']

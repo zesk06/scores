@@ -10,6 +10,7 @@ angular.module('scoresApp', [
   'core.player',
   'gameDetail',
   'playDetail',
+  'playNew',
   'playList',
   'playerList',
   'playerDetail'

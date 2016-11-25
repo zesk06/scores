@@ -134,8 +134,6 @@ class GameStat(object):
                 self.lowest_score_play = play
 
         # count victories for the player
-        if len(play.get_winners()) == 0:
-            raise RuntimeError('No winners?????', play)
         for player in play.get_winners():
             if player not in self.victories_per_player:
                 self.victories_per_player[player] = 0
