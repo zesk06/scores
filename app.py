@@ -6,10 +6,10 @@
 """
 from __future__ import print_function
 
+import argparse
 import json
 import os
 import sys
-
 import flask
 import flask_login
 from flask import Flask, jsonify, render_template, request
@@ -263,10 +263,11 @@ def get_player(player_id):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        port = int(sys.argv[1])
-    else:
-        port = 5000
+    parser = argparse.ArgumentParser('app.py')
+    parser.add_argument('-d', help='goes in flask debug mode', action="store_true")
+    parser.add_argument('port', help='The port, 5000 by default', nargs='?',
+                        type=int, default=5000)
+    args = parser.parse_args()
+
     print('launching server with args [%s]' % ', '.join(sys.argv))
-    # app.run(debug=True, port=port)
-    app.run(debug=False, port=port)
+    app.run(debug=args.d, port=args.port)
