@@ -5,10 +5,7 @@
     This wonderfull app permits to display boardgame scores and stats
 """
 from __future__ import print_function
-import scores.scores as scores
-import scores.users as users
-import scores.database as database
-from mongokit.document import StructureError
+
 import json
 import os
 import sys
@@ -17,10 +14,15 @@ import flask
 import flask_login
 from flask import Flask, jsonify, render_template, request
 
+import scores.scores as scores
+import scores.database as database
+from mongokit.document import StructureError
+
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
 
 class Config(object):
+    """A configuration class"""
     DEBUG = False
     TESTING = False
     FILE_URI = os.path.join(THIS_DIR, 'scores.yml')
@@ -30,10 +32,12 @@ class Config(object):
 
 
 class DevelopmentConfig(Config):
+    """The dev configuration"""
     DEBUG = True
 
 
 class TestConfig(Config):
+    """The test config"""
     TESTING = True
     FILE_URI = os.path.join(THIS_DIR, 'target/scores.yml')
     DATABASE_URI = 'mongodb://<dbuser>:<dbpassword>@<instance>.mlab.com:<port>/<dbname>_test'
@@ -63,27 +67,27 @@ def get_db():
 
 
 @login_manager.user_loader
-def user_loader(login):
+def user_loader(login_s):
     # retrieve user from database
     print('user_loader')
     db = get_db()
-    user = db.get_user(login)
+    user = db.get_user(login_s)
     return user
 
 
 @login_manager.request_loader
-def request_loader(request):
+def request_loader(mrequest):
     print('request loader')
-    login = request.form.get('username')
-    passwd = request.form.get('pw')
-    if login and passwd:
+    mlogin = mrequest.form.get('username')
+    passwd = mrequest.form.get('pw')
+    if mlogin and passwd:
         db = get_db()
-        user = db.get_user(login)
+        user = db.get_user(mlogin)
         if user:
             if not user.authenticate(passwd):
-                print('wrong password for %s' % login)
+                print('wrong password for %s' % mlogin)
         else:
-            print('user %s not found' % login)
+            print('user %s not found' % mlogin)
         return user
 
 
@@ -177,7 +181,9 @@ def add_play():
             print('adding play with json: %s' % play_json)
             try:
                 new_play = get_db().add_play_from_json(play_json)
-                return jsonify(msg='added play %s' % new_play.id, id=new_play.id, data=new_play.to_json()), 201
+                return jsonify(msg='added play %s' % new_play.id,
+                               id=new_play.id,
+                               data=new_play.to_json()), 201
             except StructureError, error:
                 return jsonify('BAD JSON %s: %s' % (error, play_json)), 400
         else:
@@ -203,6 +209,21 @@ def get_play(play_id):
     play = mscores.get_play(play_id)
     if play:
         return jsonify(json.loads(play.to_json()))
+    return jsonify('Failed to find play with id %s' % play_id), 404
+
+
+@app.route('/api/v1/plays/<play_id>', methods=["DELETE"])
+@flask_login.login_required
+def delete_play(play_id):
+    """
+    Delete the play with the given id
+    :param play_id: The id of the play to delete
+    """
+    mscores = get_mscores()
+    play = mscores.get_play(play_id)
+    if play:
+        play.delete()
+        return jsonify(msg='play deleted id %s' % play_id, data=play), 200
     return jsonify('Failed to find play with id %s' % play_id), 404
 
 

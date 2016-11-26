@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from scores.database import Database
-from scores.play import Play
-import scores.common
+""" A test module docstring"""
+
+from __future__ import print_function
 
 import datetime
-import json
-import pytest
 import os
 import tempfile
+
+from scores.database import Database
+from scores.play import Play
 
 
 class TestDatabase(object):
@@ -50,8 +51,8 @@ class TestDatabase(object):
         database.drop()
         assert len(database.get_plays()) == 0
         # insert something
-        new_play = database.add_play(datetime.datetime.now(), 'test_game1')
-        new_play = database.add_play(datetime.datetime.now(), 'test_game2')
+        database.add_play(datetime.datetime.now(), 'test_game1')
+        database.add_play(datetime.datetime.now(), 'test_game2')
         assert len(database.get_plays()) == 2
         dump_folder = tempfile.mkdtemp()
 
@@ -59,7 +60,7 @@ class TestDatabase(object):
         database.dump(dump_folder=dump_folder)
         assert os.path.exists(dump_folder)
         # insert a third item, that will be erased by the restore
-        new_play = database.add_play(datetime.datetime.now(), 'test_game3')
+        database.add_play(datetime.datetime.now(), 'test_game3')
         assert len(database.get_plays()) == 3
 
         database.restore(dump_folder=dump_folder, delete=True)
@@ -94,14 +95,5 @@ class TestDatabase(object):
 
     def test_add_play_from_json(self, database):
         """A test"""
-        json_data = {
-            'game': 'test_game',
-            'date': scores.common.datetime_to_timestamp(datetime.datetime.now()),
-            'players': [
-                {'name': 'test_zesk', 'score': 100, 'team': None},
-                {'name': 'test_lolo', 'score': 10, 'team': None}
-            ]
-        }
-
         new_play = database.add_play(datetime.datetime.now(), 'test_game')
         database.add_play_from_json(new_play.to_json())
