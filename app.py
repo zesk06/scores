@@ -223,7 +223,7 @@ def delete_play(play_id):
     play = mscores.get_play(play_id)
     if play:
         play.delete()
-        return jsonify(msg='play deleted id %s' % play_id, data=play), 200
+        return jsonify(msg='play deleted id %s' % play_id, data=play.to_json()), 200
     return jsonify('Failed to find play with id %s' % play_id), 404
 
 
