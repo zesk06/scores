@@ -1,9 +1,8 @@
 # TODO list
 
-- dump database
-- ajout d'un play via code
-- ajout d'un play via rest
-- ajout d'un play via site
+- new page as a modal
+- new stats: best game for player
+
 
 # Bugs
 
