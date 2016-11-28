@@ -7,7 +7,6 @@ import datetime
 import json
 import os
 import pytest
-import time
 
 import app
 import scores.common as common
@@ -45,8 +44,10 @@ class TestApp(object):
 
     def test_add_play(self, database):
         """Test."""
-        # add 'test' user
-        database.add_user(login='test', name='Test User', passwd='test01', email='test@test.com')
+        # add 'test' user if needed
+        if database.get_user(login='test') is None:
+            database.add_user(login='test', name='Test User',
+                              passwd='test01', email='test@test.com')
         # login dude
         plays_before = self.app.get('/api/v1/plays').data
         before_nb = len(json.loads(plays_before))
@@ -57,10 +58,11 @@ class TestApp(object):
             'date': tstamp,
             'comment': 'This is a comment',
             'players': [
-                {'login': 'test_zesk', 'score': 100, 'team': None,
-                    'color': None, 'role': None, 'team_color': None},
+                {'login': 'test_zesk',
+                 'score': 100, 'team': None,
+                 'color': None, 'role': None, 'team_color': None},
                 {'login': 'test_lolo', 'score': 10, 'team': None,
-                    'color': None, 'role': None, 'team_color': None},
+                 'color': None, 'role': None, 'team_color': None},
             ],
             'winners_reason': [],
             'winners': [],
@@ -77,10 +79,20 @@ class TestApp(object):
         response = self.app.post('/api/v1/plays',
                                  data=json.dumps(json_data),
                                  content_type='application/json')
-
+        added_id = json.loads(response.data)['id']
         plays_after = self.app.get('/api/v1/plays')
         assert plays_after.status_code == 200
         plays = plays_after.data
         after_nb = len(json.loads(plays))
         print('received %s plays' % after_nb)
+        assert after_nb == before_nb + 1
+
+        # test the delete
+        response = self.app.delete('/api/v1/plays/%s' % added_id)
+        assert response.status_code == 200
+        print(response.data)
+
+        plays_after = self.app.get('/api/v1/plays')
+        assert plays_after.status_code == 200
+        after_nb = len(json.loads(plays))
         assert after_nb == before_nb + 1

@@ -1,12 +1,11 @@
 'use strict';
 
-// Register `phoneList` component, along with its associated controller and template
 angular.
     module('playList').
     component('playListComponent', {
         templateUrl: 'static/app/play-list/play-list.template.html',
-        controller: ['PlayResource',
-            function PlayListController(PlayResource) {
+        controller: ['PlayResource', '$http',
+            function PlayListController(PlayResource, $http) {
                 var self = this;
                 self.plays = [];
                 self.orderProp = '-date';
@@ -30,5 +29,38 @@ angular.
                 self.getPlayId = function getPlayId(play) {
                     return play._id['$oid'];
                 };
+
+                self.isLogged = function(){
+                    return document.user_is_logged;
+                };
+
+                self.deleteModal = function(play){
+                    // ask to confirm such an operation
+                    if(play){
+                        self.delete_modal_play = play;
+                    }
+                    $('#myModal').modal();
+                    return;
+                };
+
+                self.delete = function(play){
+                    //send DELETE request you fool
+                    console.log('DELETE ', play);
+                    self.delete_modal_play = undefined;
+                    var req = {
+                        method: 'DELETE',
+                        url: '/api/v1/plays/'+self.getPlayId(play),
+                    };
+                    $http(req).then(
+                        function(response){
+                            console.log('delete successfull', response);
+                            $('#myModal').modal('hide');
+                        },
+                        function(response){
+                            console.log('delete failed', response);
+                            $('#myModal').modal('hide');
+                        }
+                    );
+                }
             }]
     });

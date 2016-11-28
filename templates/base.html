@@ -85,12 +85,13 @@
             <div>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
-                    <li><a href="/#/players/{{ current_user.login() }}">{{ current_user.login() }}</a></li>
-                    <li><a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>
-logout</a></li>
+                        <li><a href="/#/players/{{ current_user.login() }}">{{ current_user.login() }}</a></li>
+                        <li><a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>logout</a></li>
+                        <script type="text/javascript">
+                            document.user_is_logged = true;
+                        </script>
                     {% else %}
-                    <li><a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i>
-login</a></li>
+                        <li><a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i>login</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -105,7 +106,8 @@ login</a></li>
         </div>
     </div>
     {% block scripts %}{% endblock %}
-    <script src="static/app/bower_components/bootstrap/dist/js/bootstrap.min.js" />
+
+    <script src="static/app/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 
 </html>
