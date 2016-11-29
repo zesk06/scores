@@ -80,7 +80,9 @@
             <div id="navbar" class="nav navbar-nav">
                 <li><a ui-sref="index()">Parties</a></li>
                 <li><a ui-sref="players()">Joueurs</a></li>
-                <li><a ui-sref="play-new()">new</a></li>
+                {% if current_user.is_authenticated %}
+                    <li><a ui-sref="play-new()">New</a></li>
+                {% endif %}
             </div>
             <div>
                 <ul class="nav navbar-nav navbar-right">
