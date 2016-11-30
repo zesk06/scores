@@ -5,8 +5,8 @@ angular.
     component('playNewComponent', {
         bindings: { playId: '<' },
         templateUrl: 'static/app/play-new/play-new.template.html',
-        controller: ['PlayResource', '$http',
-            function PhoneNewController(PlayResource, $http) {
+        controller: ['PlayResource', 'GameResource', 'PlayerResource', '$http',
+            function PlayNewController(PlayResource, GameResource, PlayerResource, $http) {
                 var self = this;
                 // An object to retrieve the form values
                 self.fields = {
@@ -36,23 +36,24 @@ angular.
                     team_color: ""
                 }
                 // the available player logins
-                self.logins = ["player", "clemence", "lolo", "vincent", "zesk"];
+                self.logins = [];
                 // The selected login to add a new player
                 self.login = self.logins[0];
                 // the available games
-                self.games = ["7wonders", "mysterium"];
+                self.games = [];
+                //the available players
+                self.players = [];
+
                 // an index to autoname players
                 self.player_index = 0;
 
-                // addPlayer(login)
-                // Adds a player
                 self.addPlayer = function (login) {
                     var player = JSON.parse(JSON.stringify(self.new_player));
                     if (login) {
                         player.login = login;
                     }
-                    if (player.login === "") {
-                        player.login = "player" + self.player_index;
+                    if (player.login === "player") {
+                        player.login = "player_" + self.player_index;
                     }
                     player.index = self.player_index;
                     self.fields.players.push(player);
@@ -69,6 +70,14 @@ angular.
 
                 self.setGame = function (game) {
                     self.fields.game = game;
+                }
+
+                self.getGames = function(){
+                    self.games = GameResource.query();
+                }
+
+                self.getPlayers = function(){
+                    self.players = PlayerResource.query();
                 }
 
                 self.submitMyForm = function () {
@@ -111,8 +120,10 @@ angular.
                             console.log('failed to add new play', response);
                         });
                     };
-                    /* post to server*/
-                }
-            }
+                }//submitMyForm
+
+                self.getGames();
+                self.getPlayers();
+            }//PlayNewController
         ]
-    });
+    });// component

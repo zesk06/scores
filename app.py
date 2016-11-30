@@ -227,6 +227,14 @@ def delete_play(play_id):
     return jsonify('Failed to find play with id %s' % play_id), 404
 
 
+@app.route('/api/v1/games', methods=["GET"])
+def get_games():
+    """Return the list of games"""
+    stats = scores.OverallWinnerStat()
+    stats.parse(get_mscores())
+    return jsonify(sorted(list(stats.game_stats)))
+
+
 @app.route('/api/v1/games/<string:game_id>', methods=["GET"])
 def get_game(game_id):
     """

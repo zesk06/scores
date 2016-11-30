@@ -6,6 +6,6 @@ angular.
     // see $resource documentation:
     // https://docs.angularjs.org/api/ngResource/service/$resource
     function($resource) {
-      return $resource('api/v1/plays/:playId');
+      return $resource('api/v1/plays/:playId', {playId: '@_id.$oid'});
     }
   ]);
