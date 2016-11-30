@@ -18,30 +18,61 @@ Click to select your players
 <button ng-repeat="player in $ctrl.players | orderBy : 'name'" ng-click="$ctrl.addPlayer(player.name)" type="button">{{ player.name }}</button>
 
 <h2>Game Details</h2>
-<form name="myForm" ng-submit="$ctrl.submitMyForm()">
-    date: <input ng-model="$ctrl.date_s" placeholder="21/11/2016" type="date"></input><input ng-model="$ctrl.time_s" placeholder="21:00"
-        type="time"></input>
-    <br/> game: <input type="text" ng-model="$ctrl.fields.game" placeholder="game"></input>
-    <br/> comment: <input type="text" ng-model="$ctrl.fields.comment" placeholder="comment"></input>
-    <br/> wintype:
-    <select ng-model="$ctrl.fields.wintype">
-        <option value="max" selected>max</option>
-        <option value="min">min</option>
-        </select>
-    <br/>
-    <br/>
-    <h2>Player Details</h2>
-    <div ng-repeat="player in $ctrl.fields.players">
-        <button class="fa fa-minus" aria-hidden="true" ng-click="$ctrl.removePlayer(player)"></button>
-        [{{ player.index }}] {{ player.login }} {{ player.score }} ({{ player.team }}) <br/>
-        login: <input ng-model="player.login" placeholder="login"></input>
-        score: <input ng-model="player.score" placeholder="score" type="number"></input>
-        color: <input ng-model="player.color" placeholder="color" type="color"></input>
-        <br/>
-        role: <input ng-model="player.role" placeholder="role" type="text"></input>
-        team: <input ng-model="player.team" placeholder="team" type="text"></input>
-        team_color: <input ng-model="player.team_color" placeholder="team_color" type="color"></input>
+<form name="myForm" ng-submit="$ctrl.submitMyForm()" class="form-horizontal">
+    <div class="form-group">
+        <label for="inputDate" class="col-sm-2 control-label">Date</label>
+        <div class="col-sm-10">
+            Le <input ng-model="$ctrl.date_s" placeholder="21/11/2016" type="date" id="inputDate"></input> à <input ng-model="$ctrl.time_s" placeholder="21:00" type="time"></input>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputGame" class="col-sm-2 control-label">Game</label>
+        <div class="col-sm-10">
+            <input type="text" ng-model="$ctrl.fields.game" placeholder="game" id="inputGame"></input>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputComment" class="col-sm-2 control-label">Comment</label>
+        <div class="col-sm-10">
+            <input type="text" ng-model="$ctrl.fields.comment" placeholder="comment" id="inputComment"></input>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputWinType" class="col-sm-2 control-label">wintype</label>
+        <div class="col-sm-10">
+            <select ng-model="$ctrl.fields.wintype" id="inputWintype">
+                <option value="max" selected>max</option>
+                <option value="min">min</option>
+            </select>
+        </div>
     </div>
 
-    <br/><input type="submit" class='btn btn-success' id="submit" value="Submit" />
+    <h2>Player Details</h2>
+    <div ng-repeat="player in $ctrl.fields.players" class="form-inline">
+        <button class="fa fa-minus btn btn-danger" aria-hidden="true" ng-click="$ctrl.removePlayer(player)"></button>
+        [{{ player.index }}] {{ player.login }} {{ player.score }} ({{ player.team }}) <br/>
+        <div class="form-group">
+            <label>login</label>
+            <input ng-model="player.login" placeholder="login"></input>
+            <label>score</label>
+            <input ng-model="player.score" placeholder="score" type="number"></input>
+            <label>color</label>
+            <input ng-model="player.color" placeholder="color" type="color"></input>
+        </div>
+        <br/>
+        <div class="form-group">
+            <label>role</label>
+            <input ng-model="player.role" placeholder="role" type="text"></input>
+            <label>team</label>
+            <input ng-model="player.team" placeholder="team" type="text"></input>
+            <label>team-color</label>
+            <input ng-model="player.team_color" placeholder="team_color" type="color"></input>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input type="submit" class='btn btn-success' id="submit" value="Submit" />
+        </div>
+    </div>
 </form>
