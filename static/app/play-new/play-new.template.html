@@ -10,12 +10,25 @@
 <h2>Your game</h2>
 <input ng-repeat="game in $ctrl.games" ng-click="$ctrl.setGame(game)" type="button" ng-value="game"></input>
 
-<h2>Your players</h2>
-Click to select your players
-<!-- Having type="button" avoid submit the form when clicking on it
-        because a button has type="submit" by default -->
-<button ng-click="$ctrl.addPlayer('player')" type="button">player</button>
-<button ng-repeat="player in $ctrl.players | orderBy : 'name'" ng-click="$ctrl.addPlayer(player.name)" type="button">{{ player.name }}</button>
+<!-- Player Selection Modal -->
+<div class="modal fade" id="playerModal" tabindex="-1" role="dialog" aria-labelledby="playerModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="playerModalLabel">Choose your players</h4>
+      </div>
+      <div class="modal-body">
+        <!-- Having type="button" avoid submit the form when clicking on it
+                because a button has type="submit" by default -->
+        <button ng-repeat="player in $ctrl.players | orderBy : '-plays_number'" ng-click="$ctrl.addPlayer(player.name)"><font size="{{ player.plays_number }}">{{ player.name }}</font></button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <h2>Game Details</h2>
 <form name="myForm" ng-submit="$ctrl.submitMyForm()" class="form-horizontal">
@@ -46,6 +59,9 @@ Click to select your players
             </select>
         </div>
     </div>
+
+    <button ng-click="$ctrl.addPlayer('player')" type="button">player</button>
+    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#playerModal">+++</button>
 
     <h2>Player Details</h2>
     <div ng-repeat="player in $ctrl.fields.players" class="form-inline">
