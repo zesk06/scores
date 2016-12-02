@@ -1,39 +1,107 @@
-<h1>new play {{ $ctrl.fields.game }}</h1>
+<h1>{{ $ctrl.fields.game }} - {{ $ctrl.fields.players.length }} players</h1>
 
-<form name="myForm" ng-submit="$ctrl.submitMyForm()">
-    date: <input ng-model="$ctrl.date_s" placeholder="21/11/2016" type="date"></input><input ng-model="$ctrl.time_s" placeholder="21:00"
-        type="time"></input>
-    <br/> game: <input type="text" ng-model="$ctrl.fields.game" placeholder="game"></input> <input ng-repeat="game in $ctrl.games"
-        ng-click="$ctrl.setGame(game)" type="button" ng-value="game"></input>
-    <br/> comment: <input type="text" ng-model="$ctrl.fields.comment" placeholder="comment"></input>
-    <br/> wintype:
-    <select ng-model="$ctrl.fields.wintype">
-        <option value="max" selected>max</option>
-        <option value="min">min</option>
-        </select>
-    <br/>
-    <!-- Having type="button" avoid submit the form when clicking on it
-         because a button has type="submit" by default -->
-    <button class="fa fa-plus" aria-hidden="true" ng-click="$ctrl.addPlayer($ctrl.login)" type="button"></button>
-    <select ng-model="$ctrl.login">
-        <option ng-repeat="login in $ctrl.logins" ng-value="login">{{ login }}</option>
-        </select>
-    <br/>
-    <br/> players:
-    <div ng-repeat="player in $ctrl.fields.players"><button class="fa fa-minus" aria-hidden="true" ng-click="$ctrl.removePlayer(player)"></button>[{{ player.index }}] {{
-        player.login }} {{ player.score }} ({{ player.team }}) <br/>login: <input ng-model="player.login" placeholder="login"
-            </input> score: <input ng-model="player.score" placeholder="score" type="number"></input> color: <input ng-model="player.color"
-            placeholder="color" type="color"></input>
-        role: <input ng-model="player.role" placeholder="role" type="text"></input>
-        team: <input ng-model="player.team" placeholder="team" type="text"></input>
-        team_color: <input ng-model="player.team_color" placeholder="team_color" type="color"></input>
-    </div>
-
-    <br/><input type="submit" id="submit" value="Submit" />
-</form>
 <div ng-if="$ctrl.warnings.length !== 0" class="alert alert-danger">
     <div ng-repeat="msg in $ctrl.warnings">{{ msg }}</div>
 </div>
 <div ng-if="$ctrl.infos.length !== 0" class="alert alert-infos">
     <div ng-repeat="msg in $ctrl.infos">{{ msg }}</div>
 </div>
+
+<!-- Game Selection Modal -->
+<div class="modal fade" id="gameModal" tabindex="-1" role="dialog" aria-labelledby="gameModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="gameModalLabel">Choose your game</h4>
+      </div>
+      <div class="modal-body">
+        <input ng-repeat="game in $ctrl.games | orderBy : 'name'" ng-click="$ctrl.setGame(game)" type="button" ng-value="game" data-dismiss="modal"></input>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Player Selection Modal -->
+<div class="modal fade" id="playerModal" tabindex="-1" role="dialog" aria-labelledby="playerModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="playerModalLabel">Choose your players</h4>
+      </div>
+      <div class="modal-body">
+        <!-- Having type="button" avoid submit the form when clicking on it
+                because a button has type="submit" by default -->
+        <button ng-repeat="player in $ctrl.players | orderBy : '-plays_number'" ng-click="$ctrl.addPlayer(player.name)"><font size="{{ player.plays_number }}">{{ player.name }}</font></button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>Game Details</h2>
+<form name="myForm" ng-submit="$ctrl.submitMyForm()" class="form-horizontal">
+    <div class="form-group">
+        <label for="inputDate" class="col-sm-2 control-label">Date</label>
+        <div class="col-sm-10">
+            Le <input ng-model="$ctrl.date_s" placeholder="21/11/2016" type="date" id="inputDate"></input> à <input ng-model="$ctrl.time_s" placeholder="21:00" type="time"></input>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputGame" class="col-sm-2 control-label">Game</label>
+        <div class="col-sm-10">
+            <input type="text" ng-model="$ctrl.fields.game" placeholder="game" id="inputGame"></input><i class="fa fa-gamepad" aria-hidden="true" data-toggle="modal" data-target="#gameModal"></i>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputComment" class="col-sm-2 control-label">Comment</label>
+        <div class="col-sm-10">
+            <input type="text" ng-model="$ctrl.fields.comment" placeholder="comment" id="inputComment"></input>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputWinType" class="col-sm-2 control-label">wintype</label>
+        <div class="col-sm-10">
+            <select ng-model="$ctrl.fields.wintype" id="inputWintype">
+                <option value="max" selected>max</option>
+                <option value="min">min</option>
+            </select>
+        </div>
+    </div>
+
+    <h2>Players Details
+    <button class="btn btn-sm btn-primary" ng-click="$ctrl.addPlayer('player')" type="button">+ player</button>
+    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#playerModal" title="quick add players" type="button"><i class="fa fa-user-circle" aria-hidden="true"></i></button>
+    </h2>
+    <div ng-repeat="player in $ctrl.fields.players" class="form-inline">
+        <div class="form-group">
+            <button class="fa fa-minus btn btn-danger btn-sm" aria-hidden="true" ng-click="$ctrl.removePlayer(player)"></button>
+        <!--[{{ player.index }}] {{ player.login }} {{ player.score }} ({{ player.team }})-->
+            <label>login</label>
+            <input ng-model="player.login" placeholder="login"></input>
+            <label>score</label>
+            <input ng-model="player.score" placeholder="score" type="number"></input>
+
+            <label>color</label>
+            <input ng-model="player.color" placeholder="color" type="color"></input>
+            <label>role </label>
+            <input ng-model="player.role" placeholder="role" type="text"></input>
+            <label>team      </label>
+            <input ng-model="player.team" placeholder="team" type="text"></input>
+            <label>team-color</label>
+            <input ng-model="player.team_color" placeholder="team_color" type="color"></input>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input type="submit" class='btn btn-success' id="submit" value="Submit" />
+        </div>
+    </div>
+</form>
