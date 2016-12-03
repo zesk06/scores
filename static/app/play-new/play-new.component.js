@@ -15,6 +15,7 @@ angular.
                 self.time_s.setMilliseconds(0);
                 self.infos = [];
                 self.warnings = [];
+                self.added_plays = [];
 
                 // The new player default values
                 self.new_player = {
@@ -79,6 +80,12 @@ angular.
                 self.getPlayers = function(){
                     self.players = PlayerResource.query();
                 }
+                /**
+                 * Return the id of the given play
+                 */
+                self.getPlayId = function getPlayId(play) {
+                    return play._id['$oid'];
+                };
 
                 self.submitMyForm = function () {
                     /* while compiling form , angular created this object*/
@@ -114,7 +121,10 @@ angular.
                             data: data
                         };
                         var req = $http(config).then(function (response) {
-                            self.infos.push('Added new play ' + response.data.id);
+                            // response is
+                            // { "msg":"a message", "data": play", "id":"play_id" }
+                            var added_play = JSON.parse(response.data.data);
+                            self.added_plays.push(added_play);
                             self.initFields();
                         }, function (response) {
                             self.warnings.push('Failed to POST new Play');

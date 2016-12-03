@@ -7,6 +7,12 @@
     <div ng-repeat="msg in $ctrl.infos">{{ msg }}</div>
 </div>
 
+<div ng-if="$ctrl.added_plays.length !== 0" class="alert alert-success">
+    <ul>
+        <li ng-repeat="play in $ctrl.added_plays">Partie <a ui-sref="play-detail({playId: $ctrl.getPlayId(play) })">{{ $ctrl.getPlayId(play) }}</a> ajoutée!
+    </ul>
+</div>
+
 <!-- Game Selection Modal -->
 <div class="modal fade" id="gameModal" tabindex="-1" role="dialog" aria-labelledby="gameModalLabel">
   <div class="modal-dialog" role="document">
