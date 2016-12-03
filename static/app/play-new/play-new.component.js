@@ -9,16 +9,6 @@ angular.
             function PlayNewController(PlayResource, GameResource, PlayerResource, $http) {
                 var self = this;
                 // An object to retrieve the form values
-                self.fields = {
-                    game: "",
-                    date: 0,
-                    wintype: "max",
-                    comment: "",
-                    players: [],
-                    winners: [],
-                    winners_reason: []
-                }
-
                 self.date_s = new Date();
                 self.time_s = new Date();
                 self.time_s.setSeconds(0);
@@ -46,7 +36,17 @@ angular.
 
                 // an index to autoname players
                 self.player_index = 0;
-
+                self.initFields = function(){
+                    self.fields = {
+                        game: "",
+                        date: 0,
+                        wintype: "max",
+                        comment: "",
+                        players: [],
+                        winners: [],
+                        winners_reason: []
+                    }
+                }
                 self.addPlayer = function (login) {
                     var player = JSON.parse(JSON.stringify(self.new_player));
                     if (login) {
@@ -115,13 +115,14 @@ angular.
                         };
                         var req = $http(config).then(function (response) {
                             self.infos.push('Added new play ' + response.data.id);
+                            self.initFields();
                         }, function (response) {
                             self.warnings.push('Failed to POST new Play');
                             console.log('failed to add new play', response);
                         });
                     };
                 }//submitMyForm
-
+                self.initFields();
                 self.getGames();
                 self.getPlayers();
             }//PlayNewController
