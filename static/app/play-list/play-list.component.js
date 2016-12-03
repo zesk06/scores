@@ -55,12 +55,22 @@ angular.
                         function(response){
                             console.log('delete successfull', response);
                             $('#myModal').modal('hide');
+                            self.removePlay(self.getPlayId(play));
                         },
                         function(response){
                             console.log('delete failed', response);
                             $('#myModal').modal('hide');
                         }
                     );
-                }
+                };
+
+                self.removePlay = function(playId){
+                    for(var playIndex in self.plays){
+                        var play = self.plays[playIndex];
+                        if(self.getPlayId(play) === playId){
+                            self.plays.splice(playIndex, 1);
+                        }
+                    }
+                };
             }]
     });
