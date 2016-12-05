@@ -7,6 +7,7 @@
       <p>
         Sort by:
         <select ng-model="$ctrl.orderProp">
+          <option value="-elo">elo</option>
           <option value="name">name</option>
           <option value="-plays_number">parties</option>
           <option value="-percentage">ratio v/d</option>
@@ -21,6 +22,7 @@
       <table class="table" id="players_table">
           <tr>
                 <th><span class="glyphicon glyphicon-user" title="joueur"></span> joueur</th>
+                <th><span class="fa fa-bolt" title="elo"></span> ELO</th>
                 <th><span class="glyphicon glyphicon-king" title="Nombre de victoires"></span> v</th>
                 <th><span class="glyphicon glyphicon-th" title="Nombre de parties"></span> p</th>
                 <th>%</th>
@@ -32,6 +34,7 @@
             <!--Body content-->
             <tr ng-repeat="player in $ctrl.players | filter:filterplay | orderBy:$ctrl.orderProp">
               <td><a ui-sref="player-detail({playerId:  player.name })">{{ player.name }}</a></td>
+                <td>{{ player.elo }}</td>
                 <td>{{ player.win }}</td>
                 <td>{{ player.plays_number }}</td>
                 <td>{{ player.percentage }}</td>

@@ -9,7 +9,7 @@ angular.
       function playerListController(PlayerResource) {
         var self = this;
         self.plays = [];
-        self.orderProp = '-win';
+        self.orderProp = '-elo';
         PlayerResource.query({playerId:''}, function(players){
             self.setPlayers(players);
         });

@@ -7,6 +7,7 @@ from jinja2 import Environment
 from jinja2.loaders import FileSystemLoader
 from collections import Counter
 from .database import Database
+import elo
 import operator
 import os
 import yaml
@@ -190,6 +191,45 @@ class GameStat(object):
         }
 
 
+class EloStat(object):
+    """To follow ELO score of players"""
+
+    initial_elo = 1000
+
+    def __init__(self):
+        super(EloStat, self).__init__()
+        self.elo_per_player = dict()
+
+    def new_play(self, play):
+        """
+        handle a new play in stats
+        :param play:    The new play to add to the stats
+        """
+        oplayers = []
+        elos = []
+        rank = []
+        current_rank = 0
+        for _, player_list in play.get_player_order():
+            for login in player_list:
+                if login not in self.elo_per_player:
+                    self.elo_per_player[login] = EloStat.initial_elo
+                oplayers.append(login)
+                elos.append(self.elo_per_player[login])
+                rank.append(current_rank)
+            current_rank += 1
+        # Compute ELO variations
+        elo_diff = elo.compute_elos(elos, rank, 40)
+        # apply new Elos
+        for index, login in enumerate(oplayers):
+            self.elo_per_player[login] += elo_diff[index]
+
+    def get_elo(self, login):
+        """Returnt the ELO of a login
+        :rtype: int
+        """
+        return self.elo_per_player[login]
+
+
 class PlayerStat(object):
     """A player stat"""
 
@@ -199,12 +239,18 @@ class PlayerStat(object):
         self.win = 0
         self.last = 0
         self.beaten_by = []
+        self.elo = 0
         self.games = []
         self.plays_number = 0
         self.streak_win = 0
         self.streak_win_longest = 0
         self.streak_loose = 0
         self.streak_loose_longest = 0
+
+    def set_elo(self, new_elo):
+        """Elo is set by EloStat
+        :type new_elo: int"""
+        self.elo = new_elo
 
     def new_play(self, play):
         """
@@ -275,6 +321,7 @@ class PlayerStat(object):
             'win': self.win,
             'last': self.last,
             'beaten_by': self.beaten_by,
+            'elo': self.elo,
             'games': self.games,
             'plays_number': self.plays_number,
             'streak_win': self.streak_win,
@@ -291,6 +338,7 @@ class OverallWinnerStat(object):
         super(OverallWinnerStat, self).__init__()
         self.player_stats = {}
         self.game_stats = {}
+        self .elo_stats = EloStat()
         self.plays = []
 
     def parse(self, scores):
@@ -309,11 +357,13 @@ class OverallWinnerStat(object):
         :return:
         """
         self.plays.append(play)
+        self.elo_stats.new_play(play)
         for player in play.players:
             login = player['login']
             if login not in self.player_stats:
                 self.player_stats[login] = PlayerStat(login)
             self.player_stats[login].new_play(play)
+            self.player_stats[login].set_elo(self.elo_stats.get_elo(login))
         if play.game not in self.game_stats:
             self.game_stats[play.game] = GameStat(play.game)
         self.game_stats[play.game].new_play(play)
