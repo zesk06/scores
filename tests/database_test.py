@@ -96,4 +96,5 @@ class TestDatabase(object):
     def test_add_play_from_json(self, database):
         """A test"""
         new_play = database.add_play(datetime.datetime.now(), 'test_game')
+        print('New play is %s' % new_play.to_json())
         database.add_play_from_json(new_play.to_json())

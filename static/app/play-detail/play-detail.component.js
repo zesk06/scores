@@ -9,6 +9,9 @@ angular.
         controller: ['PlayResource',
             function PhoneDetailController(PlayResource) {
                 var self = this;
+
+                self.elos = [];
+
                 PlayResource.get({ playId: self.playId }, function (play) {
                     self.setPlay(play);
                 });
@@ -16,12 +19,24 @@ angular.
                 self.setPlay = function setPlay(play) {
                     self.play = play;
                     self.date = self.getDate(play.date);
+                    PlayResource.elos({ playId: self.playId }).$promise.then(function(elos) {
+                        self.elos = elos;
+                    });
                 };
 
                 self.getDate = function getDate(timestamp) {
                     //convert it to date using Date constructor
                     return new Date(timestamp).toISOString().slice(0, 10).replace(/-/g, "/");
                 };
+
+                self.getElo = function getElo(login){
+                    for(let elo of self.elos){
+                        if(elo.login === login){
+                            return elo;
+                        }
+                    }
+                    return null;
+                }
             }
         ]
     });

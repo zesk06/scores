@@ -23,16 +23,21 @@ app.app.config.from_object(app.TestConfig)
 class TestApp(object):
 
     @pytest.fixture(autouse=True)
-    def set_up_app(self):
+    def set_up_app(self, database):
+        """Doc."""
+        # ensure test user is there
+        assert database.get_user('test') is not None
         self.app = app.app.test_client()
 
     def login(self, username, password):
+        """Doc."""
         return self.app.post('/login', data=dict(
             username=username,
             pw=password
         ), follow_redirects=True)
 
     def logout(self):
+        """Doc."""
         return self.app.get('/logout', follow_redirects=True)
 
     def test_index(self):
@@ -40,26 +45,18 @@ class TestApp(object):
         assert self.app.get('/')
 
     def test_get_plays(self):
+        """Doc."""
         self.app.get('/api/v1/plays')
 
-    def test_add_play(self, database):
-        """Test."""
-        # add 'test' user if needed
-        if database.get_user(login='test') is None:
-            database.add_user(login='test', name='Test User',
-                              passwd='test01', email='test@test.com')
-        # login dude
-        plays_before = self.app.get('/api/v1/plays').data
-        before_nb = len(json.loads(plays_before))
-        print('Before there are %s plays' % before_nb)
+    def get_play_json(self):
+        """Return a json to add a new play for the tests"""
         tstamp = common.datetime_to_timestamp(datetime.datetime.now())
-        json_data = {
+        return {
             'game': 'test_game',
             'date': tstamp,
             'comment': 'This is a comment',
             'players': [
-                {'login': 'test_zesk',
-                 'score': 100, 'team': None,
+                {'login': 'test_zesk', 'score': 100, 'team': None,
                  'color': None, 'role': None, 'team_color': None},
                 {'login': 'test_lolo', 'score': 10, 'team': None,
                  'color': None, 'role': None, 'team_color': None},
@@ -68,6 +65,14 @@ class TestApp(object):
             'winners': [],
             'wintype': 'max'
         }
+
+    def test_add_play(self):
+        """Test."""
+        # login dude
+        plays_before = self.app.get('/api/v1/plays').data
+        before_nb = len(json.loads(plays_before))
+        print('Before there are %s plays' % before_nb)
+        json_data = self.get_play_json()
         # post without login? shall not be ok
         response = self.app.post('/api/v1/plays',
                                  data=json.dumps(json_data),
@@ -94,5 +99,19 @@ class TestApp(object):
 
         plays_after = self.app.get('/api/v1/plays')
         assert plays_after.status_code == 200
-        after_nb = len(json.loads(plays))
-        assert after_nb == before_nb + 1
+        after_nb = len(json.loads(plays_after.data))
+        assert after_nb == before_nb
+
+    def test_play_elos(self):
+        """Test."""
+        # Add a play
+        self.login('test', 'test01')
+        json_data = self.get_play_json()
+        response = self.app.post('/api/v1/plays',
+                                 data=json.dumps(json_data),
+                                 content_type='application/json')
+        added_id = json.loads(response.data)['id']
+        # Test the elos
+        response = self.app.get('/api/v1/plays/%s/elos' % added_id)
+        assert response.status_code == 200
+        print(response)

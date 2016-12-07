@@ -1,7 +1,11 @@
 <h1>
     Partie #{{$ctrl.play.id}}: {{$ctrl.play.game}}</h1>
 <p><span class="glyphicon glyphicon-calendar"></span>{{ $ctrl.date }}</p>
-<li ng-repeat="player in $ctrl.play.players | orderBy:'-score'">
-    <span class="label label-default">{{ player.score }}</span>
-    <a ui-sref="player-detail({playerId: player.login })">{{ player.login }}</a>
-</li>
+<table class="table">
+    <tr><th>Points</th><th>login</th><th>ELOS</th></tr>
+<tr ng-repeat="player in $ctrl.play.players | orderBy:'-score'">
+    <td><span class="label label-default">{{ player.score }}</span></td>
+    <td><a ui-sref="player-detail({playerId: player.login })">{{ player.login }}</a></td>
+    <td><span ng-show="$ctrl.getElo(player.login)" > {{ $ctrl.getElo(player.login).elo_after - $ctrl.getElo(player.login).elo_before }} </span></td>
+</tr>
+</table>

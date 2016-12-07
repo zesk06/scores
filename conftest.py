@@ -22,4 +22,9 @@ def database():
     database_uri = ''
     if 'TEST_DATABASE_URI' in os.environ:
         database_uri = os.environ['TEST_DATABASE_URI']
-    return Database(uri=database_uri)
+    database = Database(uri=database_uri)
+    # add 'test' user if needed
+    if database.get_user(login='test') is None:
+        database.add_user(login='test', name='Test User',
+                          passwd='test01', email='test@test.com')
+    return database

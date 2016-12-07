@@ -199,6 +199,7 @@ class EloStat(object):
     def __init__(self):
         super(EloStat, self).__init__()
         self.elo_per_player = dict()
+        self.elos_per_play = dict()
 
     def new_play(self, play):
         """
@@ -219,15 +220,25 @@ class EloStat(object):
             current_rank += 1
         # Compute ELO variations
         elo_diff = elo.compute_elos(elos, rank, 40)
-        # apply new Elos
+        # apply new Elos and save them to play
+        elos_per_player = {}
         for index, login in enumerate(oplayers):
-            self.elo_per_player[login] += elo_diff[index]
+            base_elo = self.elo_per_player[login]
+            final_elo = base_elo + elo_diff[index]
+            elos_per_player[login] = (base_elo, final_elo)
+            self.elo_per_player[login] = final_elo
+        self.elos_per_play[play.id] = elos_per_player
 
     def get_elo(self, login):
         """Returnt the ELO of a login
         :rtype: int
         """
         return self.elo_per_player[login]
+
+    def get_elos_per_player(self, play_id):
+        """Return the elos per player of the given play
+        :rtype: dict(basestring, tuple(int, int))"""
+        return self.elos_per_play[play_id]
 
 
 class PlayerStat(object):
@@ -338,7 +349,7 @@ class OverallWinnerStat(object):
         super(OverallWinnerStat, self).__init__()
         self.player_stats = {}
         self.game_stats = {}
-        self .elo_stats = EloStat()
+        self.elo_stats = EloStat()
         self.plays = []
 
     def parse(self, scores):

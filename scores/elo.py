@@ -5,9 +5,9 @@
     A module to compute ELOs
 """
 
-K = 40
+K = 100
 
-F = 2000
+F = 1500
 
 S_VICT = 1
 S_DRAW = 0.5
@@ -21,11 +21,8 @@ def compute_elo(elo_1, elo_2, rank_1, rank_2, k_factor=K):
     :param rank_1: The first player game's rank (1 means victory)
     :param rank_2: The second player game's rank (1 means victory)
     """
-    rating_1 = pow(10, elo_1 / F)
-    rating_2 = pow(10, elo_2 / F)
-
-    expected_1 = float(rating_1) / (rating_1 + rating_2)
-    expected_2 = float(rating_2) / (rating_1 + rating_2)
+    expected_1 = float(1) / (1 + pow(10, (float(elo_2)-elo_1)/F))
+    expected_2 = float(1) / (1 + pow(10, (float(elo_1)-elo_2)/F))
 
     if rank_1 < rank_2:
         score_1 = S_VICT
@@ -36,8 +33,10 @@ def compute_elo(elo_1, elo_2, rank_1, rank_2, k_factor=K):
     else:
         score_1 = S_DRAW
         score_2 = S_DRAW
+
     elo_1_diff = k_factor * (score_1 - expected_1)
     elo_2_diff = k_factor * (score_2 - expected_2)
+
     return (int(elo_1_diff), int(elo_2_diff))
 
 

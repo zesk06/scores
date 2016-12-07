@@ -212,6 +212,27 @@ def get_play(play_id):
     return jsonify('Failed to find play with id %s' % play_id), 404
 
 
+@app.route('/api/v1/plays/<play_id>/elos', methods=["GET"])
+def get_play_elos(play_id):
+    """
+    : return: the elos of the play with given ID
+    """
+    stats = scores.OverallWinnerStat()
+    stats.parse(get_mscores())
+    elos_per_player = stats.elo_stats.get_elos_per_player(play_id)
+    if elos_per_player:
+        json_object = []
+        for player_login, elos in elos_per_player.iteritems():
+            json_object.append({
+                "login": player_login,
+                "elo_before": elos[0],
+                "elo_after": elos[1],
+                "elos": elos[1] - elos[0],
+            })
+        return jsonify(json_object)
+    return jsonify('Failed to find elos of play with id %s' % play_id), 404
+
+
 @app.route('/api/v1/plays/<play_id>', methods=["DELETE"])
 @flask_login.login_required
 def delete_play(play_id):

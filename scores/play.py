@@ -11,6 +11,7 @@ import datetime
 
 class PlayMigration(DocumentMigration):
     """A DocumentMigration for the Play class"""
+
     def __init__(self, *args):
         DocumentMigration.__init__(self, *args)
 
@@ -37,6 +38,8 @@ class Play(Document):
     def __init__(self, *args, **kwargs):
         # Document needs a lot of parameters
         Document.__init__(self, *args, **kwargs)
+        # store the elo per player (before, after)
+        self.elos_per_player = {}
     # with this you will be able to use
     #  play.date = blah
     # play.players = blah2
@@ -150,3 +153,10 @@ class Play(Document):
     def id(self):
         """return the id"""
         return '%s' % self['_id']
+
+    def set_elos(self, elos_per_player):
+        """Set the elos per player
+        :param elos_per_player: The elos per player whre key is player login
+                                and value is a tuple (elo_pre_play, elo_post_play)
+        :type elos_per_player: dict(basestring, tuple(int,int))"""
+        self.elos_per_player = elos_per_player
