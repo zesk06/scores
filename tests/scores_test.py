@@ -11,6 +11,7 @@ import pytest
 import os
 import yaml
 import shutil
+import uuid
 
 
 class TestScores(object):
@@ -161,6 +162,7 @@ class TestScores(object):
         new_play.game = game
         new_play.wintype = wintype
         new_play.date = date
+        new_play['_id'] = uuid.uuid4()
         if players is None:
             new_play.players.append(Play.create_player(login='p1', score=12))
             new_play.players.append(Play.create_player(login='p1', score=12))
