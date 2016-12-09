@@ -30,7 +30,7 @@ angular.
                 };
 
                 self.getElo = function getElo(login){
-                    for(let elo of self.elos){
+                    for(var elo of self.elos){
                         if(elo.login === login){
                             return elo;
                         }
