@@ -3,11 +3,11 @@
 
 "Handles scores"
 
+import elo
+
 from jinja2 import Environment
 from jinja2.loaders import FileSystemLoader
 from collections import Counter
-from .database import Database
-import elo
 import operator
 import os
 import yaml

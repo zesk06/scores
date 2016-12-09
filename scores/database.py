@@ -7,13 +7,11 @@ The database connection management
 from __future__ import print_function
 
 import datetime
-import hashlib
 import json
 import logging
-from mongokit import Connection, Document
+from mongokit import Connection
 import os
 import re
-import shutil
 import subprocess
 import tempfile
 import yaml
@@ -42,7 +40,7 @@ class Database(object):
 
     def connect(self, uri):
         """Connect"""
-        logging.info('Connecting to uri %s' % uri)
+        logging.info('Connecting to uri %s', uri)
         self.connection = Connection(host=uri)
         self.connection.register([User, Play])
         return self.connection
@@ -192,7 +190,7 @@ class Database(object):
         logging.info('mongorestore on %s', info)
 
         if delete:
-            database = self.drop()
+            self.drop()
 
         cmd = '' \
             'mongorestore -h {host} --port {port} -u {user} -p {password}' \

@@ -5,7 +5,7 @@
     The Play management
 """
 
-from mongokit import Document, CustomType, DocumentMigration
+from mongokit import Document, DocumentMigration
 import datetime
 
 

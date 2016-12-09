@@ -10,7 +10,6 @@ import pytest
 
 import app
 import scores.common as common
-import scores.database
 
 # This run once for all
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
@@ -21,7 +20,7 @@ app.app.config.from_object(app.TestConfig)
 
 
 class TestApp(object):
-
+    """Doc"""
     @pytest.fixture(autouse=True)
     def set_up_app(self, database):
         """Doc."""
@@ -48,7 +47,8 @@ class TestApp(object):
         """Doc."""
         self.app.get('/api/v1/plays')
 
-    def get_play_json(self):
+    @staticmethod
+    def get_play_json():
         """Return a json to add a new play for the tests"""
         tstamp = common.datetime_to_timestamp(datetime.datetime.now())
         return {
@@ -72,7 +72,7 @@ class TestApp(object):
         plays_before = self.app.get('/api/v1/plays').data
         before_nb = len(json.loads(plays_before))
         print('Before there are %s plays' % before_nb)
-        json_data = self.get_play_json()
+        json_data = TestApp.get_play_json()
         # post without login? shall not be ok
         response = self.app.post('/api/v1/plays',
                                  data=json.dumps(json_data),
@@ -106,7 +106,7 @@ class TestApp(object):
         """Test."""
         # Add a play
         self.login('test', 'test01')
-        json_data = self.get_play_json()
+        json_data = TestApp.get_play_json()
         response = self.app.post('/api/v1/plays',
                                  data=json.dumps(json_data),
                                  content_type='application/json')

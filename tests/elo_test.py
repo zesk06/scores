@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+"""A test module"""
+
 import scores.elo
 
 
