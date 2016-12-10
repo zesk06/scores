@@ -56,7 +56,7 @@ def compute_elos(player_elos, players_rank, k_factor=K):
         elo_diff.append(0)
     for player_1 in range(0, player_nb):
         # compute elo variation against each other player
-        for player_2 in range(player_1, player_nb):
+        for player_2 in range(player_1 + 1, player_nb):
             elo_1 = player_elos[player_1]
             rank_1 = players_rank[player_1]
             elo_2 = player_elos[player_2]
