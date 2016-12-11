@@ -27,7 +27,10 @@ angular.
                  * Return the id of the given play
                  */
                 self.getPlayId = function getPlayId(play) {
-                    return play._id['$oid'];
+                    if(play._id){
+                        return play._id['$oid'];
+                    }
+                    return undefined;
                 };
 
                 self.isLogged = function(){

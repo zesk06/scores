@@ -46,7 +46,7 @@ describe('playList', function () {
         beforeEach(inject(function ($componentController, _$httpBackend_) {
             $httpBackend = _$httpBackend_;
             // program response
-            $httpBackend.expectGET('api/v1/plays')
+            $httpBackend.expectGET('/api/v1/plays')
                 .respond(plays);
             //create controller here
             ctrl = $componentController('playListComponent');
