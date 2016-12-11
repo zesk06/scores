@@ -1,4 +1,4 @@
-<h1>{{ $ctrl.fields.game }} - {{ $ctrl.fields.players.length }} players</h1>
+<h1>{{ $ctrl.fields.game }} - {{ $ctrl.fields.players.length }} players - {{ $ctrl.fields._id }}</h1>
 
 <div ng-if="$ctrl.warnings.length !== 0" class="alert alert-danger">
     <div ng-repeat="msg in $ctrl.warnings">{{ msg }}</div>
@@ -10,6 +10,9 @@
 <div ng-if="$ctrl.added_plays.length !== 0" class="alert alert-success">
     <ul>
         <li ng-repeat="play in $ctrl.added_plays">Partie <a ui-sref="play-detail({playId: $ctrl.getPlayId(play) })">{{ $ctrl.getPlayId(play) }}</a> ajoutée!
+        <a ng-if="$ctrl.isLogged()" ui-sref="play-edit({playId:     $ctrl.getPlayId(play) })" class="fa fa-pencil"></a>
+        <a ng-if="$ctrl.isLogged()" ui-sref="play-rematch({playId:  $ctrl.getPlayId(play) })" class="fa fa-clone"></a>
+        </li>
     </ul>
 </div>
 

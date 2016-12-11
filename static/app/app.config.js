@@ -23,7 +23,40 @@ angular.
     $stateProvider.state({
       name: 'play-new',
       url: '/plays/new',
-      component: 'playNewComponent'
+      component: 'playNewComponent',
+      resolve: {
+        action: function($transition$) {
+          return 'new';
+        }
+      }
+    });
+    //play new '/plays/edit/{playId}'
+    $stateProvider.state({
+      name: 'play-edit',
+      url: '/plays/{playId}/edit',
+      component: 'playNewComponent',
+      resolve: {
+        action: function($transition$) {
+          return 'edit';
+        },
+        playId: function ($transition$) {
+          return $transition$.params().playId;
+        }
+      }
+    });
+    //play new '/plays/rematch/{playId}'
+    $stateProvider.state({
+      name: 'play-rematch',
+      url: '/plays/rematch/{playId}',
+      component: 'playNewComponent',
+      resolve: {
+        action: function($transition$) {
+          return 'rematch';
+        },
+        playId: function ($transition$) {
+          return $transition$.params().playId;
+        }
+      }
     });
     //play detail '/plays/{playId}'
     $stateProvider.state({

@@ -56,6 +56,8 @@
                         <a ui-sref="play-detail({playId: $ctrl.getPlayId(play) })"><span class="glyphicon glyphicon-sunglasses" /></a>
                         <!--<button ng-if="$ctrl.isLogged()" ng-click="$ctrl.delete(play)" class="fa fa-trash-o" data-toggle="modal" data-target="#myModal"></button>-->
                         <button ng-if="$ctrl.isLogged()" ng-click="$ctrl.deleteModal(play)" class="fa fa-trash-o"></button>
+                        <a ng-if="$ctrl.isLogged()" ui-sref="play-edit({playId:     $ctrl.getPlayId(play) })" class="fa fa-pencil"></a>
+                        <a ng-if="$ctrl.isLogged()" ui-sref="play-rematch({playId:  $ctrl.getPlayId(play) })" class="fa fa-clone"></a>
                     </td>
                     <td>{{ $ctrl.getDate(play) }}</td>
                     <td>

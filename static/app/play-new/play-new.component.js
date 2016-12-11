@@ -3,7 +3,7 @@
 angular.
     module('playNew').
     component('playNewComponent', {
-        bindings: { playId: '<' },
+        bindings: { playId: '<' , action: '<'},
         templateUrl: 'static/app/play-new/play-new.template.html',
         controller: ['PlayResource', 'GameResource', 'PlayerResource', '$http',
             function PlayNewController(PlayResource, GameResource, PlayerResource, $http) {
@@ -37,7 +37,7 @@ angular.
 
                 // an index to autoname players
                 self.player_index = 0;
-                self.initFields = function(){
+                self.initFields = function(play){
                     self.fields = {
                         game: "",
                         date: 0,
@@ -46,6 +46,27 @@ angular.
                         players: [],
                         winners: [],
                         winners_reason: []
+                    }
+                    if(play){
+                        self.fields._id = play._id;
+                        self.fields.game= play.game;
+                        self.fields.wintype= play.wintype;
+                        self.fields.comment= play.comment;
+                        self.fields.players= play.players;
+                        self.fields.winners= play.winners;
+                        self.fields.winners_reason= play.winners_reason;
+                        // We must create new date here, to have
+                        // HTML angular model be notified of the date change
+                        self.date_s = new Date();
+                        self.time_s = new Date();
+                        var gameDate = new Date(play.date);
+                        self.date_s.setDate(gameDate.getDate());
+                        self.date_s.setMonth(gameDate.getMonth());
+                        self.date_s.setYear(gameDate.getFullYear());
+                        self.time_s.setHours(gameDate.getHours());
+                        self.time_s.setMinutes(gameDate.getMinutes());
+                        self.time_s.setSeconds(0);
+                        self.time_s.setMilliseconds(0);
                     }
                 }
                 self.addPlayer = function (login) {
@@ -85,6 +106,10 @@ angular.
                  */
                 self.getPlayId = function getPlayId(play) {
                     return play._id['$oid'];
+                };
+
+                self.isLogged = function(){
+                    return document.user_is_logged;
                 };
 
                 self.submitMyForm = function () {
@@ -132,9 +157,30 @@ angular.
                         });
                     };
                 }//submitMyForm
-                self.initFields();
+
                 self.getGames();
                 self.getPlayers();
+                // depending on the action - init some fields@
+                if(self.playId){
+                    PlayResource.get({playId: self.playId}).$promise.then(function(play){
+                        if(self.action === 'edit'){
+                            // nothing to do
+                        }else if(self.action === 'rematch'){
+                            // remove id before initializing the fields
+                            delete play._id;
+                            delete self.playId;
+                        }
+                        self.initFields(play);
+                    },
+                    function(error){
+                        var msg = 'failed to find play with id '+ self.playId;
+                        console.log(msg);
+                        self.warnings.push(msg);
+                    });
+                }else{
+                    self.initFields(null);
+                }
+
             }//PlayNewController
         ]
     });// component
