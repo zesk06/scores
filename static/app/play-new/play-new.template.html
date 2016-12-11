@@ -90,7 +90,7 @@
     </h2>
     <div ng-repeat="player in $ctrl.fields.players" class="form-inline">
         <div class="form-group">
-            <button class="fa fa-minus btn btn-danger btn-sm" aria-hidden="true" ng-click="$ctrl.removePlayer(player)"></button>
+            <button class="fa fa-minus btn btn-danger btn-sm" aria-hidden="true" ng-click="$ctrl.removePlayer(player)" type="button"></button>
         <!--[{{ player.index }}] {{ player.login }} {{ player.score }} ({{ player.team }})-->
             <label>login</label>
             <input ng-model="player.login" placeholder="login"></input>
