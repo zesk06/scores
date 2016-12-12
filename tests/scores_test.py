@@ -62,6 +62,7 @@ class TestScores(object):
         "test"
         # yaml format?
         yaml_str = """
+    created_by: py.test
     date: 15/01/16
     game: parade
     players:
@@ -80,6 +81,7 @@ class TestScores(object):
         assert loaded_play['type'] == 'min'
         # yaml format?
         yaml_str = """
+    created_by: py.test
     date: 15/01/16
     game: splendor
     winners:

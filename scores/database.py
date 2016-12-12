@@ -9,12 +9,12 @@ from __future__ import print_function
 import datetime
 import json
 import logging
-from mongokit import Connection
-import os
-import re
 import subprocess
 import tempfile
+import re
+import os
 import yaml
+from mongokit import Connection
 
 from .common import hash_password
 from .users import User
@@ -81,7 +81,7 @@ class Database(object):
         """Retrieve the user with given login or None"""
         return self.db.User.one({'login': login})
 
-    def add_play(self, date, game):
+    def add_play(self, date, game, creator):
         """Add a play
         :type date: datetime.datetime
         :type game: basestring
@@ -89,6 +89,7 @@ class Database(object):
         play = self.db.Play()
         play.set_date(date)
         play.set_game(game)
+        play.set_created_by(creator)
         play.save()
         return play
 
@@ -120,6 +121,8 @@ class Database(object):
                 new_play.date = datetime.datetime.strptime(json_play['date'], '%d/%m/%y')
                 new_play.date = new_play.date.replace(hour=21, minute=00)
                 new_play.game = json_play['game']
+                if 'created_by' in json_play:
+                    new_play.created_by = json_play['created_by']
                 if 'winners' in json_play:
                     new_play.winners = json_play['winners']
                 if 'winners_reason' in json_play:

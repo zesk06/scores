@@ -180,6 +180,7 @@ def add_play():
         if play_json:
             print('adding play with json: %s' % play_json)
             try:
+                play_json['created_by'] = flask_login.current_user.id
                 new_play = get_db().add_play_from_json(play_json)
                 return jsonify(msg='added play %s' % new_play.id,
                                id=new_play.id,

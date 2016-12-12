@@ -52,6 +52,7 @@ class TestApp(object):
         """Return a json to add a new play for the tests"""
         tstamp = common.datetime_to_timestamp(datetime.datetime.now())
         return {
+            'created_by': 'py.test',
             'game': 'test_game',
             'date': tstamp,
             'comment': 'This is a comment',
