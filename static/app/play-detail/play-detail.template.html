@@ -1,11 +1,46 @@
-<h1>
-    Partie #{{$ctrl.play.id}}: {{$ctrl.play.game}}</h1>
-<p><span class="glyphicon glyphicon-calendar"></span>{{ $ctrl.date }}</p>
+
+
+
+<h1>{{$ctrl.play.game}}</h1>
+<div class="row">
+    <div class="col-md-4">
+        <span class="glyphicon glyphicon-calendar"></span>{{ $ctrl.date }} créé par <a ui-sref="player-detail({ playerId:  $ctrl.play.created_by })">{{ $ctrl.play.created_by }}</a>
+    </div>
+    <div class="col-md-2 pull-right">
+        <a ng-show="$ctrl.auth.getLoggedUser()"      ui-sref="play-edit({playId:     $ctrl.playId })" class="fa fa-pencil" title="edit"></a>
+        <a ng-show="$ctrl.auth.getLoggedUser()"      ui-sref="play-rematch({playId:  $ctrl.playId })" class="fa fa-clone"  title="rematch"></a>
+        <a ng-show="$ctrl.auth.getLoggedUser() === $ctrl.play.created_by" class="fa fa-trash-o"  title="delete" ng-click="$ctrl.deleteModal()"></a>
+    </div>
+</div>
+
 <table class="table">
-    <tr><th>Points</th><th>login</th><th>ELOS</th></tr>
+    <tr><th>Points</th><th>login</th><th>ELOS</th><th>role</th><th>team</th></tr>
 <tr ng-repeat="player in $ctrl.play.players | orderBy:'-score'">
     <td><span class="label label-default">{{ player.score }}</span></td>
-    <td><a ui-sref="player-detail({playerId: player.login })">{{ player.login }}</a></td>
-    <td><span ng-show="$ctrl.getElo(player.login)" > {{ $ctrl.getElo(player.login).elo_after - $ctrl.getElo(player.login).elo_before }} </span></td>
+    <td><span ng-if="player.color" class="glyphicon glyphicon-pawn" style="color:{{player.color}}"></span><a ui-sref="player-detail({playerId: player.login })">{{ player.login }}</a></td>
+    <td><span ng-show="$ctrl.getElo(player.login)" > {{ $ctrl.getElo(player.login).elo_before }} + {{ $ctrl.getElo(player.login).elo_after - $ctrl.getElo(player.login).elo_before }} = {{ $ctrl.getElo(player.login).elo_after }}</span></td>
+    <td><span class="rol" ng-if="player.role"><span ng-if="player.color" class="fa fa-registered" style="color:{{ player.color }}"></span>{{ player.role }}</span></td>
+    <td><span class="team" ng-if="player.team"><span ng-if="player.team_color" class="fa fa-users" style="color:{{ player.team_color }}"></span>{{player.team }}</span></td>
 </tr>
+
 </table>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Delete {{ $ctrl.play.game }} </h4>
+      </div>
+      <div class="modal-body" ng-if="$ctrl.playId && $ctrl.play">
+        Do you really want to delete {{ $ctrl.playId }}?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger"  ng-click="$ctrl.delete()">DELETE</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -4,9 +4,10 @@ angular.
     module('playList').
     component('playListComponent', {
         templateUrl: 'static/app/play-list/play-list.template.html',
-        controller: ['PlayResource', '$http',
-            function PlayListController(PlayResource, $http) {
+        controller: ['PlayResource', 'AuthCommon', '$http',
+            function PlayListController(PlayResource, AuthCommon, $http) {
                 var self = this;
+                self.auth = AuthCommon;
                 self.plays = [];
                 self.orderProp = '-date';
                 PlayResource.query({ playId: '' }, function (plays) {
@@ -31,49 +32,6 @@ angular.
                         return play._id['$oid'];
                     }
                     return undefined;
-                };
-
-                self.isLogged = function(){
-                    return document.user_is_logged;
-                };
-
-                self.deleteModal = function(play){
-                    // ask to confirm such an operation
-                    if(play){
-                        self.delete_modal_play = play;
-                    }
-                    $('#myModal').modal();
-                    return;
-                };
-
-                self.delete = function(play){
-                    //send DELETE request you fool
-                    console.log('DELETE ', play);
-                    self.delete_modal_play = undefined;
-                    var req = {
-                        method: 'DELETE',
-                        url: '/api/v1/plays/'+self.getPlayId(play),
-                    };
-                    $http(req).then(
-                        function(response){
-                            console.log('delete successfull', response);
-                            $('#myModal').modal('hide');
-                            self.removePlay(self.getPlayId(play));
-                        },
-                        function(response){
-                            console.log('delete failed', response);
-                            $('#myModal').modal('hide');
-                        }
-                    );
-                };
-
-                self.removePlay = function(playId){
-                    for(var playIndex in self.plays){
-                        var play = self.plays[playIndex];
-                        if(self.getPlayId(play) === playId){
-                            self.plays.splice(playIndex, 1);
-                        }
-                    }
                 };
             }]
     });

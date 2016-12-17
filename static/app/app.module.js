@@ -5,6 +5,7 @@ angular.module('scoresApp', [
   'ngAnimate',
   'ui.router',
   'core',
+  'core.auth',
   'core.game',
   'core.play',
   'core.player',

@@ -35,8 +35,8 @@ class TestDatabase(object):
         :type play: scores.dadatabase.Database"""
         for play in database.get_plays():
             play.delete()
-
-        new_play = database.add_play(datetime.datetime.now(), 'test_game')
+        created_by = 'test'
+        new_play = database.add_play(datetime.datetime.now(), 'test_game', created_by)
         new_player = Play.create_player('login1', 1)
         new_play.add_player(new_player)
         new_player = Play.create_player('login2', 2)
@@ -51,8 +51,9 @@ class TestDatabase(object):
         database.drop()
         assert len(database.get_plays()) == 0
         # insert something
-        database.add_play(datetime.datetime.now(), 'test_game1')
-        database.add_play(datetime.datetime.now(), 'test_game2')
+        created_by = 'test'
+        database.add_play(datetime.datetime.now(), 'test_game1', created_by)
+        database.add_play(datetime.datetime.now(), 'test_game2', created_by)
         assert len(database.get_plays()) == 2
         dump_folder = tempfile.mkdtemp()
 
@@ -60,7 +61,7 @@ class TestDatabase(object):
         database.dump(dump_folder=dump_folder)
         assert os.path.exists(dump_folder)
         # insert a third item, that will be erased by the restore
-        database.add_play(datetime.datetime.now(), 'test_game3')
+        database.add_play(datetime.datetime.now(), 'test_game3', created_by)
         assert len(database.get_plays()) == 3
 
         database.restore(dump_folder=dump_folder, delete=True)
@@ -95,6 +96,7 @@ class TestDatabase(object):
 
     def test_add_play_from_json(self, database):
         """A test"""
-        new_play = database.add_play(datetime.datetime.now(), 'test_game')
+        created_by = 'test'
+        new_play = database.add_play(datetime.datetime.now(), 'test_game', created_by)
         print('New play is %s' % new_play.to_json())
         database.add_play_from_json(new_play.to_json())

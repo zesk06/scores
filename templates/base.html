@@ -34,7 +34,8 @@
     <script src="static/app/bower_components/lodash/dist/lodash.min.js"></script>
 
     <script src="static/app/core/core.module.js"></script>
-
+    <script src="static/app/core/auth/auth.module.js"></script>
+    <script src="static/app/core/auth/auth.service.js"></script>
     <script src="static/app/core/play/play.module.js"></script>
     <script src="static/app/core/play/play.service.js"></script>
     <script src="static/app/core/checkmark/checkmark.filter.js"></script>
@@ -98,7 +99,7 @@
                         <li><a href="/#/players/{{ current_user.login() }}">{{ current_user.login() }}</a></li>
                         <li><a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>logout</a></li>
                         <script type="text/javascript">
-                            document.user_is_logged = true;
+                            document.user_is_logged = "{{ current_user.login() }}";
                         </script>
                     {% else %}
                         <li><a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i>login</a></li>

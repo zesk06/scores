@@ -4,5 +4,6 @@ angular.module('core',
     [
     'core.play',
     'core.player',
-    'core.game'
+    'core.game',
+    'core.auth'
     ]);

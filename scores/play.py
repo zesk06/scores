@@ -25,9 +25,10 @@ class PlayMigration(DocumentMigration):
         self.target = {'winners_reason': {'$exists': False}}  # pylint: disable=W0201
         self.update = {'$set': {'winners_reason': []}}       # pylint: disable=W0201
 
-    def dummy(self):
-        """A dummy"""
-        pass
+    def allmigration03_add_created_by(self):
+        """Add the created_by play field"""
+        self.target = {'created_by': {'$exists': False}}  # pylint: disable=W0201
+        self.update = {'$set': {'created_by': 'migration'}}       # pylint: disable=W0201
 
 
 class Play(Document):
@@ -48,6 +49,7 @@ class Play(Document):
     structure = {
         'date': datetime.datetime,
         'game': basestring,
+        'created_by': basestring,        # who created the play
         'winners': [basestring],         # a forced list of winners
         'winners_reason': [basestring],  # The forced list of winner reason
         'wintype': basestring,   # max or min
@@ -79,6 +81,11 @@ class Play(Document):
         """Set the game
         :type game: basestring"""
         self['game'] = game
+
+    def set_created_by(self, creator):
+        """Set the created_by field
+        :type creator: basestring"""
+        self['created_by'] = creator
 
     def add_player(self, player_dict):
         """Adds a new player to the play
