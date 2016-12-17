@@ -4,6 +4,7 @@
 describe('playList', function () {
 
     //load the module
+    beforeEach(module('core.auth'));
     beforeEach(module('playList'));
 
     // Test the controller
