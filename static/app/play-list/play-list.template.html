@@ -21,14 +21,7 @@
                     <th>#</th>
                     <th>date</th>
                     <th>jeu</th>
-                    <th>1er</th>
-                    <th>2nd</th>
-                    <th>3eme</th>
-                    <th>4eme</th>
-                    <th>5eme</th>
-                    <th>6eme</th>
-                    <th>7eme</th>
-                    <th>8eme</th>
+                    <th>joueurs</th>
                 </tr>
 
                 <!--Body content-->
@@ -41,9 +34,12 @@
                         <a ui-sref="game-detail({ gameId: play.game })">{{ play.game }}</a>
                     </td>
                     <!-- orderBy:'-scores'  reverse the sort -->
-                    <td ng-repeat="player in play.players | orderBy:'-score'">
-                        <span class="label label-default" style="background-color:{{ player.team_color }}">{{ player.score }}</span>
-                        <a ui-sref="player-detail({playerId:  player.login })">{{ player.login }}</a>
+                    <td>
+                        <span ng-repeat="player in play.players | orderBy:'-score'" class="player" ng-class="{'find': filterplay.length > 0 && player.login.indexOf(filterplay) !== -1}">
+                            <a class="player-login" ui-sref="player-detail({playerId:  player.login })">{{ player.login }}</a>
+                            <span class="player-score">{{ player.score }}</span>
+                            <span ng-show="player.team_color"  style="border:2px solid {{ player.team_color }}"></span>
+                        </span>
                     </td>
                 </tr>
             </table>
