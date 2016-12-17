@@ -1,24 +1,5 @@
 <link rel="stylesheet" href="static/app/play-list/play-list.css" />
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Delete {{ $ctrl.delete_modal_play.game }} </h4>
-      </div>
-      <div class="modal-body" ng-if="$ctrl.delete_modal_play">
-        Do you really want to delete {{ $ctrl.getPlayId($ctrl.delete_modal_play) }}?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger"  ng-click="$ctrl.delete($ctrl.delete_modal_play)">DELETE</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2">
@@ -54,27 +35,15 @@
                 <tr ng-repeat="play in $ctrl.plays | filter:filterplay | orderBy:$ctrl.orderProp">
                     <td>
                         <a ui-sref="play-detail({playId: $ctrl.getPlayId(play) })"><span class="glyphicon glyphicon-sunglasses" /></a>
-                        <!--<button ng-if="$ctrl.isLogged()" ng-click="$ctrl.delete(play)" class="fa fa-trash-o" data-toggle="modal" data-target="#myModal"></button>-->
-                        <button ng-if="$ctrl.isLogged()" ng-click="$ctrl.deleteModal(play)" class="fa fa-trash-o"></button>
-                        <a ng-if="$ctrl.isLogged()" ui-sref="play-edit({playId:     $ctrl.getPlayId(play) })" class="fa fa-pencil"></a>
-                        <a ng-if="$ctrl.isLogged()" ui-sref="play-rematch({playId:  $ctrl.getPlayId(play) })" class="fa fa-clone"></a>
                     </td>
                     <td>{{ $ctrl.getDate(play) }}</td>
                     <td>
                         <a ui-sref="game-detail({ gameId: play.game })">{{ play.game }}</a>
-
                     </td>
                     <!-- orderBy:'-scores'  reverse the sort -->
                     <td ng-repeat="player in play.players | orderBy:'-score'">
-                        <span class="label label-default">{{ player.score }}</span>
-                        <div><span ng-if="player.color" class="glyphicon glyphicon-pawn" style="color:{{player.color}}"></span>
-                            <a ui-sref="player-detail({playerId:  player.login })">{{ player.login }}</a></div>
-                        <div class="team" ng-if="player.team"><span ng-if="player.team_color" class="fa fa-users" style="color:{{ player.team_color }}"></span>{{
-                            player.team }}</div>
-                        <div class="rol" ng-if="player.role">
-                            <span ng-if="player.color" class="fa fa-registered" style="color:{{ player.color }}"></span>{{
-                            player.role }}
-                        </div>
+                        <span class="label label-default" style="background-color:{{ player.team_color }}">{{ player.score }}</span>
+                        <a ui-sref="player-detail({playerId:  player.login })">{{ player.login }}</a>
                     </td>
                 </tr>
             </table>

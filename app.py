@@ -178,9 +178,12 @@ def add_play():
         if request.json is None and request.data:
             play_json = request.data
         if play_json:
-            print('adding play with json: %s' % play_json)
             try:
-                play_json['created_by'] = flask_login.current_user.get_id()
+                # insert the created by information in play
+                play_obj = json.loads(play_json)
+                play_obj['created_by'] = '%s' % flask_login.current_user.get_id()
+                play_json = json.dumps(play_obj)
+                #
                 new_play = get_db().add_play_from_json(play_json)
                 return jsonify(msg='added play %s' % new_play.id,
                                id=new_play.id,

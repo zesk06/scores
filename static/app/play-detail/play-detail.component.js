@@ -6,12 +6,11 @@ angular.
     component('playDetailComponent', {
         bindings: { playId: '<' },
         templateUrl: 'static/app/play-detail/play-detail.template.html',
-        controller: ['PlayResource',
-            function PhoneDetailController(PlayResource) {
+        controller: ['PlayResource', 'AuthCommon', '$http', '$state',
+            function PhoneDetailController(PlayResource, AuthCommon, $http, $state) {
                 var self = this;
-
                 self.elos = [];
-
+                self.auth = AuthCommon;
                 PlayResource.get({ playId: self.playId }, function (play) {
                     self.setPlay(play);
                 });
@@ -37,6 +36,41 @@ angular.
                     }
                     return null;
                 }
+
+                self.deleteModal = function(){
+                    if(self.play){
+                        // ask to confirm such an operation
+                        $('#myModal').modal();
+                    }
+                    return;
+                };
+
+                self.delete = function(){
+                    if(!self.play){
+                        return;
+                    }
+                    //send DELETE request you fool
+                    console.log('DELETE ', self.play);
+                    self.delete_modal_play = undefined;
+                    var req = {
+                        method: 'DELETE',
+                        url: '/api/v1/plays/'+self.playId,
+                    };
+                    $http(req).then(
+                        function(response){
+                            console.log('delete successfull', response);
+                            $('#myModal').on('hidden.bs.modal', function (e) {
+                                // redirect to index
+                                $state.go('index');
+                            });
+                            $('#myModal').modal('hide');
+                        },
+                        function(response){
+                            console.log('delete failed', response);
+                            $('#myModal').modal('hide');
+                        }
+                    );
+                };
             }
         ]
     });
