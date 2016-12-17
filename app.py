@@ -180,7 +180,10 @@ def add_play():
         if play_json:
             try:
                 # insert the created by information in play
-                play_obj = json.loads(play_json)
+                print('play_json is %s' % type(play_json))
+                play_obj = play_json
+                if isinstance(play_json, basestring):
+                    play_obj = json.loads(play_json)
                 play_obj['created_by'] = '%s' % flask_login.current_user.get_id()
                 play_json = json.dumps(play_obj)
                 #
@@ -247,8 +250,12 @@ def delete_play(play_id):
     mscores = get_mscores()
     play = mscores.get_play(play_id)
     if play:
-        play.delete()
-        return jsonify(msg='play deleted id %s' % play_id, data=play.to_json()), 200
+        if play.created_by == flask_login.current_user.get_id():
+            play.delete()
+            return jsonify(msg='play deleted id %s' % play_id, data=play.to_json()), 200
+        else:
+            msg = 'You can\'t delete play you did not create'
+            return jsonify(msg=msg, data=play.to_json()), 403
     return jsonify('Failed to find play with id %s' % play_id), 404
 
 
