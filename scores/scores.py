@@ -13,9 +13,6 @@ import os
 import yaml
 
 
-from helper import required_fields
-
-
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 TEMPLATE_DIR = os.path.join(THIS_DIR, '..', 'templates')
 
