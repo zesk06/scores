@@ -254,6 +254,7 @@ class PlayerStat(object):
         self.streak_win_longest = 0
         self.streak_loose = 0
         self.streak_loose_longest = 0
+        self.win_play_per_game = {}
 
     def set_elo(self, new_elo):
         """Elo is set by EloStat
@@ -265,7 +266,9 @@ class PlayerStat(object):
         handle a new play in stats
         :param play:    The new play to add to the stats
         """
+        has_won = False
         if self.name in play.get_winners():
+            has_won = True
             self.__new_win()
         else:
             self.__new_loss(play.get_winners())
@@ -273,6 +276,13 @@ class PlayerStat(object):
         self.games.append(play.game)
         if self.name in play.get_player_order()[-1][1]:
             self.last += 1
+        # store win per game stats
+        if play.game not in self.win_play_per_game:
+            self.win_play_per_game[play.game] = [0, 0]
+        per_game_stat = self.win_play_per_game[play.game]
+        if has_won:
+            per_game_stat[0] = per_game_stat[0] + 1
+        per_game_stat[1] = per_game_stat[1] + 1
 
     def __new_win(self):
         """
@@ -324,6 +334,17 @@ class PlayerStat(object):
     def to_json(self):
         """Return the json version of this
         :rtype: dict[str, obj]"""
+
+        # transform win per games to a json - like array
+        win_per_games = []
+        for game in self.win_play_per_game:
+            win, play_nb = self.win_play_per_game[game]
+            win_per_games.append({
+                'game': game,
+                'win': win,
+                'play_nb': play_nb,
+                'win_percentage': round(float(win) / play_nb * 100, 2)
+            })
         return {
             'name': self.name,
             'win': self.win,
@@ -336,6 +357,7 @@ class PlayerStat(object):
             'streak_win_longest': self.streak_win_longest,
             'streak_loose': self.streak_loose,
             'streak_loose_longest': self.streak_loose_longest,
+            'win_play_per_game': win_per_games
         }
 
 

@@ -1,10 +1,5 @@
 # TODO list
 
-- modify play
-- rematch play
-- new stats: best game for player
-
-
 # Bugs
 
 - ordre inversé pour 'parade' sur la liste des jeux

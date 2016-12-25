@@ -1,25 +1,43 @@
-<h1>{{ $ctrl.player.name }}: {{ $ctrl.player.win }} victoire(s) / {{ $ctrl.player.plays_number }} partie(s)</h1>
-<ul>
-    <li>
-        <span class="glyphicon glyphicon-thumbs-up"></span> Plus longue série de victoires: <span class="badge">{{$ctrl.player.streak_win_longest}}</span>
-    </li>
-    <li>
-        <span class="glyphicon glyphicon-thumbs-down"></span> Plus longue série de défaites: <span class="badge">{{$ctrl.player.streak_loose_longest}}</span>
-    </li>
-</ul>
+<h1>{{ $ctrl.player.name }}: {{ $ctrl.player.win }} victoires / {{ $ctrl.player.plays_number }} parties</h1>
 
-<h2>Jeux</h2>
-<div>
-
-    <canvas id="games" class="chart-bar" chart-data="$ctrl.chartGamesData" chart-labels="$ctrl.chartGamesLabels" chart-options="$ctrl.chartGamesOptions"
-        chart-colors="$ctrl.chartGamesColors">
-    </canvas>
-
+<div class="row">
+    <div class="col-md-3">
+        <h2>Meilleures séries</h2>
+        <ul>
+            <li>
+                <span class="glyphicon glyphicon-thumbs-up"></span> de victoires: <span class="badge">{{$ctrl.player.streak_win_longest}}</span>
+            </li>
+            <li>
+                <span class="glyphicon glyphicon-thumbs-down"></span> de défaites: <span class="badge">{{$ctrl.player.streak_loose_longest}}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-3">
+        <h2>Meilleures %</h2>
+        <ul>
+            <li ng-repeat="game_state in $ctrl.player.win_play_per_game | orderBy: ['-win_percentage', '-play_nb'] | limitTo: 5">
+                {{ game_state.game }}: {{ game_state.win_percentage }}% {{ game_state.win }}/{{ game_state.play_nb }}
+            </li>
+        </ul>
+    </div>
 </div>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Jeux</h2>
 
-<h2>Battu par</h2>
-<div>
-    <canvas id="beatenBy" class="chart-bar" chart-data="$ctrl.chartBeatenByData" chart-labels="$ctrl.chartBeatenByLabels" chart-options="$ctrl.chartBeatenByOptions"
-        chart-colors="$ctrl.chartBeatenByColors">
-    </canvas>
+        <div>
+
+            <canvas id="games" class="chart-bar" chart-data="$ctrl.chartGamesData" chart-labels="$ctrl.chartGamesLabels" chart-options="$ctrl.chartGamesOptions"
+                chart-colors="$ctrl.chartGamesColors">
+            </canvas>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h2>Battu par</h2>
+        <div>
+            <canvas id="beatenBy" class="chart-bar" chart-data="$ctrl.chartBeatenByData" chart-labels="$ctrl.chartBeatenByLabels" chart-options="$ctrl.chartBeatenByOptions"
+                chart-colors="$ctrl.chartBeatenByColors">
+            </canvas>
+        </div>
+    </div>
 </div>

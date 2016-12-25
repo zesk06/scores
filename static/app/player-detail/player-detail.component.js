@@ -91,6 +91,10 @@ angular.
           self.updateGameChart(player);
           self.updateBeatenByChart(player);
         };
+
+        self.doIt = function (){
+            console.log(player);
+        };
       }
     ]
   });
