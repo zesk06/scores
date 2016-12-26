@@ -418,24 +418,3 @@ class OverallWinnerStat(object):
         return sorted(self.player_stats.values(),
                       key=lambda x: x.win,
                       reverse=True)
-
-    def to_html(self, filename='target/site/index.html'):
-        """
-        generate scores stats as html page
-        :param filename: The name of the html file to be generated
-        :return:
-        """
-        menv = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
-        template = menv.get_template('index.html')
-        if not os.path.exists(os.path.dirname(filename)):
-            os.makedirs(os.path.dirname(filename))
-        with open(filename, 'w') as output:
-            output.write(self.get_html().encode('UTF-8'))
-
-    def get_html(self):
-        " return the html"
-        menv = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
-        template = menv.get_template('index.html')
-        return template.render(title=u'GAME STATS',
-                               stats=self,
-                               current_user='none')

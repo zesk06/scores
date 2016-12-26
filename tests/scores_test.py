@@ -167,8 +167,3 @@ class TestScores(object):
 
         assert overall_stat
         assert overall_stat.__str__() != ''
-        overall_stat.to_html()
-        if os.path.exists(os.path.join(test_dir, 'unexpected')):
-            shutil.rmtree(os.path.join(test_dir, 'unexpected'))
-        overall_stat.to_html(filename=os.path.join(test_dir,
-                                                   'unexpected/index.html'))
