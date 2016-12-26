@@ -128,6 +128,17 @@ class Play(Document):
         return sorted(player_per_score.items(),
                       key=lambda x: x[0], reverse=True)
 
+    def get_player_position(self, login):
+        """Return the position of the player with the given login
+        :type login: basestring
+        :rtype: int
+        """
+        for index, score_players in enumerate(self.get_player_order()):
+            players = score_players[1]
+            if login in players:
+                return index + 1
+        raise ValueError('Player with login %s not found in play %s' % (login, self))
+
     def get_winners(self):
         "return the list of player names that wins the play"
         if self['winners'] is not None and \

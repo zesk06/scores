@@ -58,60 +58,6 @@ class TestScores(object):
         """
         assert len(mscores.get_games()) > 0
 
-    def test_play_load(self):
-        "test"
-        # yaml format?
-        yaml_str = """
-    created_by: py.test
-    date: 15/01/16
-    game: parade
-    players:
-    - {name: allugan, score: 9}
-    - {name: clemence, score: 8}
-    - {name: jc, score: 11}
-    - {name: lolo, score: 9}
-    - {name: vincent, score: 19}
-    - {name: zesk, score: 12}
-    type: min
-    """
-        loaded_play = Play(yaml.load(yaml_str))
-        assert len(loaded_play.players) == 6
-        assert loaded_play.players[0]['name'] == 'allugan'
-        assert loaded_play.players[0]['score'] == 9
-        assert loaded_play['type'] == 'min'
-        # yaml format?
-        yaml_str = """
-    created_by: py.test
-    date: 15/01/16
-    game: splendor
-    winners:
-    - lolo
-    players:
-    - {name: lolo, score: 16}
-    - {name: maxime, score: 13}
-    - {name: zesk, score: 16}
-    """
-        loaded_play = Play(yaml.load(yaml_str))
-        assert loaded_play.get_winners() == ['lolo']
-
-    def test_play(self):
-        "test the play class"
-        myplay = self.__get_play(players='cent=100,dix=10,un=1')
-        order = myplay.get_player_order()
-        assert len(order) == 3
-        assert order == [(100, ['cent']), (10, ['dix']), (1, ['un'])]
-        myplay = self.__get_play(players='cent=100,cent2=100,un=1')
-        order = myplay.get_player_order()
-        assert len(order) == 2
-        assert order == [(100, ['cent', 'cent2']), (1, ['un'])]
-        print 'play is %s' % myplay
-        myplay = self.__get_play(players='', winners=['cent,un'])
-        myplay.winners = ['cent', 'un']
-        assert myplay.get_winners() == ['cent', 'un'], "expected winners list"
-        myplay.winners = 'not a list FFS'
-        with pytest.raises(TypeError):
-            myplay.get_winners()
-
     def test_game_stat(self):
         "Test the game stat class"
         game_stats = GameStat('parade')
