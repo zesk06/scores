@@ -1,3 +1,3 @@
-'use strict';
+"use strict";
 
-angular.module('core.game', ['ngResource']);
+angular.module("core.game", ["ngResource"]);

@@ -1,9 +1,3 @@
-'use strict';
+"use strict";
 
-angular.module('core',
-    [
-    'core.play',
-    'core.player',
-    'core.game',
-    'core.auth'
-    ]);
+angular.module("core", ["core.play", "core.player", "core.game", "core.auth"]);

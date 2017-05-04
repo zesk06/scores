@@ -1,5 +1,3 @@
-'use strict';
+"use strict";
 
-angular.module('playerDetail', [
-  'core.player'
-]);
+angular.module("playerDetail", ["core.player"]);

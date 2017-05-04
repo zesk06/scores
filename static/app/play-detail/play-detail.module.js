@@ -1,6 +1,4 @@
-'use strict';
+"use strict";
 
 // Define the `playDetail` module
-angular.module('playDetail', [
-  'core.play'
-]);
+angular.module("playDetail", ["core.play"]);

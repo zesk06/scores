@@ -1,5 +1,3 @@
-'use strict';
+"use strict";
 
-angular.module('playNew', [
-  'core.play'
-]);
+angular.module("playNew", ["core.play"]);

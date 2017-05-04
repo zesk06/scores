@@ -1,3 +1,3 @@
-'use strict';
+"use strict";
 
-angular.module('core.auth', []);
+angular.module("core.auth", []);

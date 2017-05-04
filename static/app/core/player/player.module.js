@@ -1,3 +1,3 @@
-'use strict';
+"use strict";
 
-angular.module('core.player', ['ngResource']);
+angular.module("core.player", ["ngResource"]);
