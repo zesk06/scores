@@ -107,7 +107,7 @@ class TestPlay(object):
         if players is None:
             new_play.players.append(Play.create_player(login='p1', score=12))
             new_play.players.append(Play.create_player(login='p1', score=12))
-        elif players is not None:
+        elif len(players) > 0:  # pylint: disable=C1801
             for name, score in [player.split('=')
                                 for player in players.split(',')]:
                 new_play.players.append(Play.create_player(login=name, score=int(score)))

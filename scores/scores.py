@@ -3,18 +3,20 @@
 
 "Handles scores"
 
-import elo
-
-from jinja2 import Environment
-from jinja2.loaders import FileSystemLoader
-from collections import Counter
+import logging
 import operator
 import os
+from collections import Counter
+
 import yaml
 
+import elo
 
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 TEMPLATE_DIR = os.path.join(THIS_DIR, '..', 'templates')
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 class Scores(object):
@@ -203,6 +205,36 @@ class EloStat(object):
         handle a new play in stats
         :param play:    The new play to add to the stats
         """
+        teams = play.teams
+        if teams:
+            self.__compute_elo_player(play)
+            # self.__compute_elo_team(play, teams)
+        else:
+            self.__compute_elo_player(play)
+
+    def __compute_elo_team(self, play, teams):
+        """Compute ELOS for a play with teams"""
+        # Compute team score
+        scores = {}
+        for team in teams:
+            players = teams[team]
+            team_score = 0
+            team_elo = 0
+            for login in players:
+                if login not in self.elo_per_player:
+                    LOGGER.debug('adding login %s', login)
+                    self.elo_per_player[login] = EloStat.initial_elo
+                player_score = play.get_player(login)['score']
+                player_elo = self.elo_per_player[login]
+                team_score += player_score
+                team_elo += team_elo
+            # make it average
+            team_score = team_score / len(players)
+            team_elo = team_score / len(players)
+            scores[team] = team_score
+
+    def __compute_elo_player(self, play):
+        """Compute elo for a play without teams"""
         oplayers = []
         elos = []
         rank = []
