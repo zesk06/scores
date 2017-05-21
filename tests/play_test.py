@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 # encoding: utf-8
+# pylint: disable=C0111
 
 "test scores.py"
 
 
-from scores.scores import GameStat, PlayerStat, OverallWinnerStat, Scores
-from scores.play import Play
-from scores.database import Database
-import pytest
-import os
-import yaml
-import shutil
 import uuid
+
+import pprint
+import pytest
+import yaml
+import six
+
+from scores.play import Play
 
 
 class TestPlay(object):
@@ -106,10 +107,34 @@ class TestPlay(object):
         if players is None:
             new_play.players.append(Play.create_player(login='p1', score=12))
             new_play.players.append(Play.create_player(login='p1', score=12))
-        elif len(players) > 0:
+        elif players is not None:
             for name, score in [player.split('=')
                                 for player in players.split(',')]:
                 new_play.players.append(Play.create_player(login=name, score=int(score)))
         if winners:
             new_play.winners = winners
         return new_play
+
+    def test_play_teams(self):
+        new_play = Play()
+        new_play.add_player(Play.create_player('good_1', 0, team='good'))
+        new_play.add_player(Play.create_player('evil_1', 1, team='evil'))
+        assert new_play.teams.keys() == ['good', 'evil']
+        assert new_play.teams['good'] == ['good_1']
+        assert new_play.teams['evil'] == ['evil_1']
+        # add a new good
+        new_play.add_player(Play.create_player('good_2', 0, team='good'))
+        assert new_play.teams.keys() == ['good', 'evil']
+        assert new_play.teams['good'] == ['good_1', 'good_2']
+        assert new_play.teams['evil'] == ['evil_1']
+        # a new evil
+        new_play.add_player(Play.create_player('evil_2', 0, team='evil'))
+        assert new_play.teams.keys() == ['good', 'evil']
+        assert new_play.teams['good'] == ['good_1', 'good_2']
+        assert new_play.teams['evil'] == ['evil_1', 'evil_2']
+        # new team
+        new_play.add_player(Play.create_player('pple_1', 0, team='pple'))
+        assert sorted(new_play.teams.keys()) == ['evil', 'good', 'pple']
+        assert new_play.teams['good'] == ['good_1', 'good_2']
+        assert new_play.teams['evil'] == ['evil_1', 'evil_2']
+        assert new_play.teams['pple'] == ['pple_1']

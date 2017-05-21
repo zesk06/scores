@@ -5,8 +5,10 @@
     The Play management
 """
 
-from mongokit import Document, DocumentMigration
 import datetime
+import itertools
+
+from mongokit import Document, DocumentMigration
 
 
 class PlayMigration(DocumentMigration):
@@ -102,16 +104,16 @@ class Play(Document):
         self['players'].append(player_dict)
 
     @staticmethod
-    def create_player(login, score):
+    def create_player(login, score, role=None, team=None):
         """Return a player instance
         suitable to be added using the add_player method
         :rtype: dict"""
         return {
             'login': login,
             'score': score,
-            'role': None,
+            'role': role,
             'color': None,
-            'team': None,
+            'team': team,
             'team_color': None
         }
 
@@ -171,6 +173,19 @@ class Play(Document):
     def id(self):
         """return the id"""
         return '%s' % self['_id']
+
+    @property
+    def teams(self):
+        """Return the map of teams
+        { name: team_name, players: [...]}
+        """
+        teams = dict()
+        for player in self.players:
+            team = player['team']
+            if team not in teams:
+                teams[team] = []
+            teams[team].append(player['login'])
+        return teams
 
     def set_elos(self, elos_per_player):
         """Set the elos per player
