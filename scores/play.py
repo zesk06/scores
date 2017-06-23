@@ -117,6 +117,13 @@ class Play(Document):
             'team_color': None
         }
 
+    def get_player(self, login):
+        """Return the player with the given login"""
+        for player in self['players']:
+            if player['login'] == login:
+                return player
+        raise ValueError('player with login %s not found' % login)
+
     def get_player_order(self):
         "return a list of tuple [(score, [players])] ordered per score"
         player_per_score = {}
@@ -173,6 +180,11 @@ class Play(Document):
     def id(self):
         """return the id"""
         return '%s' % self['_id']
+
+    @property
+    def is_max(self):
+        """Return True if play has a maxtype score"""
+        return 'wintype' in self and self['wintype'] == 'max'
 
     @property
     def teams(self):

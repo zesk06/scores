@@ -107,7 +107,7 @@ class TestPlay(object):
         if players is None:
             new_play.players.append(Play.create_player(login='p1', score=12))
             new_play.players.append(Play.create_player(login='p1', score=12))
-        elif players is not None:
+        elif len(players) > 0:  # pylint: disable=C1801
             for name, score in [player.split('=')
                                 for player in players.split(',')]:
                 new_play.players.append(Play.create_player(login=name, score=int(score)))
@@ -138,3 +138,9 @@ class TestPlay(object):
         assert new_play.teams['good'] == ['good_1', 'good_2']
         assert new_play.teams['evil'] == ['evil_1', 'evil_2']
         assert new_play.teams['pple'] == ['pple_1']
+
+    def test_play_is_max(self):
+        new_play = Play()
+        assert new_play.is_max is True
+        new_play.wintype = 'min'
+        assert new_play.is_max is False

@@ -3,18 +3,22 @@
 
 "Handles scores"
 
-import elo
-
-from jinja2 import Environment
-from jinja2.loaders import FileSystemLoader
-from collections import Counter
+import logging
 import operator
 import os
+from collections import Counter
+
 import yaml
+
+import elo
+import stats.stats_elo as stats_elo
 
 
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 TEMPLATE_DIR = os.path.join(THIS_DIR, '..', 'templates')
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 class Scores(object):
@@ -188,56 +192,6 @@ class GameStat(object):
         }
 
 
-class EloStat(object):
-    """To follow ELO score of players"""
-
-    initial_elo = 1000
-
-    def __init__(self):
-        super(EloStat, self).__init__()
-        self.elo_per_player = dict()
-        self.elos_per_play = dict()
-
-    def new_play(self, play):
-        """
-        handle a new play in stats
-        :param play:    The new play to add to the stats
-        """
-        oplayers = []
-        elos = []
-        rank = []
-        current_rank = 0
-        for _, player_list in play.get_player_order():
-            for login in player_list:
-                if login not in self.elo_per_player:
-                    self.elo_per_player[login] = EloStat.initial_elo
-                oplayers.append(login)
-                elos.append(self.elo_per_player[login])
-                rank.append(current_rank)
-            current_rank += 1
-        # Compute ELO variations
-        elo_diff = elo.compute_elos(elos, rank, 40)
-        # apply new Elos and save them to play
-        elos_per_player = {}
-        for index, login in enumerate(oplayers):
-            base_elo = self.elo_per_player[login]
-            final_elo = base_elo + elo_diff[index]
-            elos_per_player[login] = (base_elo, final_elo)
-            self.elo_per_player[login] = final_elo
-        self.elos_per_play[play.id] = elos_per_player
-
-    def get_elo(self, login):
-        """Returnt the ELO of a login
-        :rtype: int
-        """
-        return self.elo_per_player[login]
-
-    def get_elos_per_player(self, play_id):
-        """Return the elos per player of the given play
-        :rtype: dict(basestring, tuple(int, int))"""
-        return self.elos_per_play[play_id]
-
-
 class PlayerStat(object):
     """A player stat"""
 
@@ -368,7 +322,7 @@ class OverallWinnerStat(object):
         super(OverallWinnerStat, self).__init__()
         self.player_stats = {}
         self.game_stats = {}
-        self.elo_stats = EloStat()
+        self.elo_stats = stats_elo.StatsElo()
         self.plays = []
 
     def parse(self, scores):
