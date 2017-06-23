@@ -182,6 +182,11 @@ class Play(Document):
         return '%s' % self['_id']
 
     @property
+    def is_max(self):
+        """Return True if play has a maxtype score"""
+        return 'wintype' in self and self['wintype'] == 'max'
+
+    @property
     def teams(self):
         """Return the map of teams
         { name: team_name, players: [...]}
