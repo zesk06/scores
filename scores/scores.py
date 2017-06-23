@@ -11,6 +11,8 @@ from collections import Counter
 import yaml
 
 import elo
+import stats.stats_elo as stats_elo
+
 
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 TEMPLATE_DIR = os.path.join(THIS_DIR, '..', 'templates')
@@ -190,86 +192,6 @@ class GameStat(object):
         }
 
 
-class EloStat(object):
-    """To follow ELO score of players"""
-
-    initial_elo = 1000
-
-    def __init__(self):
-        super(EloStat, self).__init__()
-        self.elo_per_player = dict()
-        self.elos_per_play = dict()
-
-    def new_play(self, play):
-        """
-        handle a new play in stats
-        :param play:    The new play to add to the stats
-        """
-        teams = play.teams
-        if teams:
-            self.__compute_elo_player(play)
-            # self.__compute_elo_team(play, teams)
-        else:
-            self.__compute_elo_player(play)
-
-    def __compute_elo_team(self, play, teams):
-        """Compute ELOS for a play with teams"""
-        # Compute team score
-        scores = {}
-        for team in teams:
-            players = teams[team]
-            team_score = 0
-            team_elo = 0
-            for login in players:
-                if login not in self.elo_per_player:
-                    LOGGER.debug('adding login %s', login)
-                    self.elo_per_player[login] = EloStat.initial_elo
-                player_score = play.get_player(login)['score']
-                player_elo = self.elo_per_player[login]
-                team_score += player_score
-                team_elo += team_elo
-            # make it average
-            team_score = team_score / len(players)
-            team_elo = team_score / len(players)
-            scores[team] = team_score
-
-    def __compute_elo_player(self, play):
-        """Compute elo for a play without teams"""
-        oplayers = []
-        elos = []
-        rank = []
-        current_rank = 0
-        for _, player_list in play.get_player_order():
-            for login in player_list:
-                if login not in self.elo_per_player:
-                    self.elo_per_player[login] = EloStat.initial_elo
-                oplayers.append(login)
-                elos.append(self.elo_per_player[login])
-                rank.append(current_rank)
-            current_rank += 1
-        # Compute ELO variations
-        elo_diff = elo.compute_elos(elos, rank, 40)
-        # apply new Elos and save them to play
-        elos_per_player = {}
-        for index, login in enumerate(oplayers):
-            base_elo = self.elo_per_player[login]
-            final_elo = base_elo + elo_diff[index]
-            elos_per_player[login] = (base_elo, final_elo)
-            self.elo_per_player[login] = final_elo
-        self.elos_per_play[play.id] = elos_per_player
-
-    def get_elo(self, login):
-        """Returnt the ELO of a login
-        :rtype: int
-        """
-        return self.elo_per_player[login]
-
-    def get_elos_per_player(self, play_id):
-        """Return the elos per player of the given play
-        :rtype: dict(basestring, tuple(int, int))"""
-        return self.elos_per_play[play_id]
-
-
 class PlayerStat(object):
     """A player stat"""
 
@@ -400,7 +322,7 @@ class OverallWinnerStat(object):
         super(OverallWinnerStat, self).__init__()
         self.player_stats = {}
         self.game_stats = {}
-        self.elo_stats = EloStat()
+        self.elo_stats = stats_elo.StatsElo()
         self.plays = []
 
     def parse(self, scores):
