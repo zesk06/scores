@@ -6,8 +6,6 @@
 
 import logging
 
-from operator import itemgetter
-
 import scores.elo as elo
 
 LOGGER = logging.getLogger(__name__)

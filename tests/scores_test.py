@@ -4,14 +4,19 @@
 "test scores.py"
 
 
-from scores.scores import GameStat, PlayerStat, OverallWinnerStat, Scores
-from scores.play import Play
-from scores.database import Database
-import pytest
 import os
-import yaml
 import shutil
 import uuid
+
+import pytest
+import yaml
+
+from scores.database import Database
+from scores.play import Play
+from scores.scores import Scores
+from scores.stats.stats_overall import OverallWinnerStat
+from scores.stats.stats_game import StatsGame
+from scores.stats.stats_player import StatsPlayer
 
 
 class TestScores(object):
@@ -60,7 +65,7 @@ class TestScores(object):
 
     def test_game_stat(self):
         "Test the game stat class"
-        game_stats = GameStat('parade')
+        game_stats = StatsGame('parade')
         new_play = self.__get_play(wintype='min', players='P1=10,p2=1', date='10/01/16')
         game_stats.new_play(new_play)
         assert game_stats.get_highest_score() == new_play
@@ -83,7 +88,7 @@ class TestScores(object):
 
     def test_player_stat(self):
         """Test."""
-        player_stat = PlayerStat('test_player')
+        player_stat = StatsPlayer('test_player')
         assert player_stat
         assert player_stat.__str__() != ''
         assert player_stat.get_worst_ennemy() == ('none', 0)
@@ -114,7 +119,7 @@ class TestScores(object):
         if players is None:
             new_play.players.append(Play.create_player(login='p1', score=12))
             new_play.players.append(Play.create_player(login='p1', score=12))
-        elif len(players) > 0:
+        elif players != []:
             for name, score in [player.split('=')
                                 for player in players.split(',')]:
                 new_play.players.append(Play.create_player(login=name, score=int(score)))
@@ -127,34 +132,34 @@ class TestScores(object):
         test the streaks of win or loose
         :return:
         """
-        pstat = PlayerStat('test_player')
+        pstat = StatsPlayer('test_player')
         assert pstat.streak_win == 0
         assert pstat.streak_loose == 0
-        pstat._PlayerStat__new_win()
+        pstat.new_win()
         assert pstat.streak_win == 1
         assert pstat.streak_win_longest == 1
         assert pstat.streak_loose == 0
-        pstat._PlayerStat__new_win()
+        pstat.new_win()
         assert pstat.streak_win == 2
         assert pstat.streak_win_longest == 2
         assert pstat.streak_loose == 0
-        pstat._PlayerStat__new_loss(['other'])
+        pstat.new_loss(['other'])
         assert pstat.streak_win == 0
         assert pstat.streak_loose == 1
         assert pstat.streak_loose_longest == 1
-        pstat._PlayerStat__new_loss(['other'])
+        pstat.new_loss(['other'])
         assert pstat.streak_win == 0
         assert pstat.streak_win_longest == 2
         assert pstat.streak_loose == 2
         assert pstat.streak_loose_longest == 2
-        pstat._PlayerStat__new_win()
+        pstat.new_win()
         assert pstat.streak_win == 1
         assert pstat.streak_win_longest == 2
         assert pstat.streak_loose == 0
         assert pstat.streak_loose_longest == 2
-        pstat._PlayerStat__new_win()
-        pstat._PlayerStat__new_win()
-        pstat._PlayerStat__new_win()
+        pstat.new_win()
+        pstat.new_win()
+        pstat.new_win()
         assert pstat.streak_win == 4
         assert pstat.streak_win_longest == 4
 

@@ -6,7 +6,6 @@
 """
 
 import datetime
-import itertools
 
 from mongokit import Document, DocumentMigration
 
@@ -152,30 +151,31 @@ class Play(Document):
         "return the list of player names that wins the play"
         if self['winners'] is not None and \
            isinstance(self['winners'], list) and \
-           len(self['winners']) > 0:
+           self['winners'] != []:
             return self['winners']
         elif self['winners'] is not None and not isinstance(self['winners'], list):
             raise TypeError('Expected type for winners is list but found %s' %
                             type(self['winners']))
         order = self.get_player_order()
-        if len(order) > 0:
+        if order != []:
             return self.get_player_order()[0][1]
         return []
 
     def get_highest_score(self):
         "return the high score of the play"
         order = self.get_player_order()
-        if len(order) > 0:
+        if order != []:
             return order[0][0]
         return 0
 
     def get_lowest_score(self):
         "return the lowest score of the play"
         order = self.get_player_order()
-        if len(order) > 0:
+        if order != []:
             return order[-1][0]
         return 0
 
+    # pylint: disable=C0103
     @property
     def id(self):
         """return the id"""

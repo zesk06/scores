@@ -9,16 +9,16 @@ from __future__ import print_function
 import datetime
 import json
 import logging
+import os
+import re
 import subprocess
 import tempfile
-import re
-import os
-import yaml
+
 from mongokit import Connection
 
 from .common import hash_password
-from .users import User
 from .play import Play, PlayMigration
+from .users import User
 
 
 class Database(object):
@@ -26,36 +26,50 @@ class Database(object):
 
     @staticmethod
     def get_db():
+        """Return the database based on DATABASE_URI env var
+        :rtype: Database
+        """
         if 'DATABASE_URI' in os.environ:
             uri = os.environ['DATABASE_URI']
             return Database(uri=uri)
         raise EnvironmentError('DATABASE_URI environment variable is missing')
 
     def __init__(self, uri):
-        """Init"""
+        """Init the Database using given uri
+        :param uri: The URI to connect to, such as
+                    mongodb://LOGIN:PASSWORD@SERVER:PORT/DB_NAME
+        """
         self.uri = uri
         self.connect(uri)
         self.dbname = uri.split('/')[-1]
-        print('dbname is %s' % self.dbname)
+        logging.info('dbname is %s', self.dbname)
 
     def connect(self, uri):
-        """Connect"""
+        """Connect to given uri
+        :param uri: The URI to connect to, such as
+                    mongodb://LOGIN:PASSWORD@SERVER:PORT/DB_NAME
+        """
         logging.info('Connecting to uri %s', uri)
         self.connection = Connection(host=uri)
         self.connection.register([User, Play])
         return self.connection
 
+    # pylint: disable=C0103
     @property
     def db(self):
         """Return the pymongo's db object using the database name"""
         return self.connection[self.dbname]
 
     def add_user(self, login, name, passwd, email):
-        """Add a user"""
+        """Add a user
+        :param login: The user login
+        :param name: The user complete name
+        :param passwd: The user password, will be hashed
+        :param email: The user email"""
         # must not already exist
         if self.get_user(login=login):
-            raise ValueError(
-                'A user with login "%s" has already been declared' % login)
+            msg = 'A user with login "%s" has already been declared' % login
+            raise ValueError(msg)
         user = self.db.User()
         user['login'] = login
         user['name'] = name
@@ -73,7 +87,10 @@ class Database(object):
         """Drop the database"""
         self.connection.drop_database(self.dbname)
 
+    # pylint: disable=R0201
     def authenticate_user(self, user, passwd):
+        """Authenticate the user
+        """
         hashed_passwd = hash_password(passwd)
         user.authauthenticate(hashed_passwd)
 
@@ -97,6 +114,7 @@ class Database(object):
         """Adds a play from a json definition
         :type json_play: dict|basestring
         :rtype: Play"""
+        # TODO: improve typecheck
         if type(json_play) == dict:
             json_play = json.dumps(json_play)
         play = self.db.Play.from_json(json_play)
@@ -106,49 +124,6 @@ class Database(object):
     def get_plays(self):
         """Return all plays"""
         return [play for play in self.db.Play.find()]
-
-    def from_yaml(self, yaml_file, save=False):
-        """Imports plays from a yaml object
-        :param yaml_file: The yaml file to import
-        :param save: if True, will save the oject on the database, False will only validate"""
-        with open(yaml_file) as yml_file:
-            # loading yaml.safe_load ensure byte str instead of unicode string
-            yml_data = yaml.safe_load(yml_file)
-            for json_play in yml_data:
-                new_play = self.db.Play()
-                # date DD/MM/YYY to datetime ?
-                # let's put the time 21:00
-                new_play.date = datetime.datetime.strptime(json_play['date'], '%d/%m/%y')
-                new_play.date = new_play.date.replace(hour=21, minute=00)
-                new_play.game = json_play['game']
-                if 'created_by' in json_play:
-                    new_play.created_by = json_play['created_by']
-                if 'winners' in json_play:
-                    new_play.winners = json_play['winners']
-                if 'winners_reason' in json_play:
-                    new_play.winners_reason = json_play['winners_reason']
-                if 'type' in json_play:
-                    new_play.wintype = json_play['type']
-                if 'comment' in json_play:
-                    new_play.comment = json_play['comment']
-                for player_json in json_play['players']:
-                    new_player = Play.create_player(
-                        player_json['name'], player_json['score'])
-                    if 'team' in player_json:
-                        new_player['team'] = player_json['team']
-                    if 'team_color' in player_json:
-                        new_player['team_color'] = player_json['team_color']
-                    if 'color' in player_json:
-                        new_player['color'] = player_json['color']
-                    if 'role' in player_json:
-                        new_player['role'] = player_json['role']
-                    new_play.add_player(new_player)
-                if save:
-                    new_play.save()
-                    print('SAVED %s - %s' % (new_play.game, new_play.date))
-                else:
-                    new_play.validate()
-                    print('VALID %s - %s' % (new_play.game, new_play.date))
 
     def migrate_all(self):
         """Runs the migration rules in bulk"""
@@ -179,7 +154,8 @@ class Database(object):
         rcode = subprocess.call(cmd.split(' '))
         if rcode == 0:
             logging.info('dumped to %s', dump_folder)
-            os.rename(os.path.join(info['temp_folder'], info['db_name']), dump_folder)
+            os.rename(os.path.join(info['temp_folder'], info['db_name']),
+                      dump_folder)
         else:
             logging.fatal('Failed to dump! - return code is %s', rcode)
 
@@ -207,8 +183,13 @@ class Database(object):
 
     @staticmethod
     def get_uri_info(uri):
+        """Return configured UriInfo (host, port, username, password, dbname)
+        based on the configured DATABASE_URI env var
+        :rtype: tuple
+        """
         if uri is None and 'DATABASE_URI' not in os.environ:
-            raise RuntimeError('Must give uri or have os.environ[\'DATABASE_URI\']')
+            msg = 'Must give uri or have os.environ[\'DATABASE_URI\']'
+            raise RuntimeError(msg)
         elif uri is None:
             uri = os.environ['DATABASE_URI']
 
@@ -219,13 +200,15 @@ class Database(object):
         """Return the elements of the uri:
         (host, port, username, password, dbname)
         """
-        match = re.match(r'mongodb://([^:]+):([^@]+)@([^:]+):(\d+)/(\w+)', uri)
+        match = re.match(
+            (r'mongodb://(?P<user>[^:]+):(?P<password>[^@]+)'
+             r'@(?P<host>[^:]+):(?P<port>\d+)/(?P<db_name>\w+)'), uri)
         if match:
             return {
-                'host': match.group(3),
-                'port': match.group(4),
-                'user': match.group(1),
-                'password': match.group(2),
-                'db_name': match.group(5)
+                'host': match.group('host'),
+                'port': match.group('port'),
+                'user': match.group('user'),
+                'password': match.group('password'),
+                'db_name': match.group('db_name')
             }
         raise RuntimeError('Failed to parse uri: {}'.format(uri))

@@ -16,6 +16,7 @@ from flask import Flask, jsonify, render_template, request
 
 import scores.scores as scores
 import scores.database as database
+import scores.stats.stats_overall as s_overall
 from mongokit.document import StructureError
 
 THIS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
@@ -149,7 +150,7 @@ def protected():
 def index():
     print('index')
     mscores = get_mscores()
-    stats = scores.OverallWinnerStat()
+    stats = s_overall.OverallWinnerStat()
     stats.parse(mscores)
     print('rendering')
     return render_template('base.html', title=u'GAME STATS', stats=stats)
@@ -224,7 +225,7 @@ def get_play_elos(play_id):
     """
     : return: the elos of the play with given ID
     """
-    stats = scores.OverallWinnerStat()
+    stats = s_overall.OverallWinnerStat()
     stats.parse(get_mscores())
     elos_per_player = stats.elo_stats.get_elos_per_player(play_id)
     if elos_per_player:
@@ -262,7 +263,7 @@ def delete_play(play_id):
 @app.route('/api/v1/games', methods=["GET"])
 def get_games():
     """Return the list of games"""
-    stats = scores.OverallWinnerStat()
+    stats = s_overall.OverallWinnerStat()
     stats.parse(get_mscores())
     return jsonify(sorted(list(stats.game_stats)))
 
@@ -272,7 +273,7 @@ def get_game(game_id):
     """
     : return: the game with given ID
     """
-    stats = scores.OverallWinnerStat()
+    stats = s_overall.OverallWinnerStat()
     stats.parse(get_mscores())
     if game_id in stats.game_stats:
         return jsonify(stats.game_stats[game_id].to_json())
@@ -284,7 +285,7 @@ def get_players():
     """
     : return: Get all player stats
     """
-    stats = scores.OverallWinnerStat()
+    stats = s_overall.OverallWinnerStat()
     stats.parse(get_mscores())
     return jsonify([player_stat.to_json()
                     for player_stat in stats.player_stats.values()])
@@ -295,7 +296,7 @@ def get_player(player_id):
     """
     : return: the player with given ID
     """
-    stats = scores.OverallWinnerStat()
+    stats = s_overall.OverallWinnerStat()
     stats.parse(get_mscores())
     if player_id in stats.player_stats:
         return jsonify(stats.player_stats[player_id].to_json())

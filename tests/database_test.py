@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+# pylint tests exceptions:
+# - R0201: method could be a function
+# pylint: disable=R0201
+
 """ A test module docstring"""
 
 from __future__ import print_function
@@ -49,7 +53,7 @@ class TestDatabase(object):
         """Test.
         :type database: scores.database.database"""
         database.drop()
-        assert len(database.get_plays()) == 0
+        assert database.get_plays() == []
         # insert something
         created_by = 'test'
         database.add_play(datetime.datetime.now(), 'test_game1', created_by)
