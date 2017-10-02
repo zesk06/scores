@@ -4,7 +4,7 @@ dist: trusty
 #  - "3.5"
 # command to install dependencies
 before_install:
-  - pip install codecov
+  - sudo pip install codecov
   - npm install
   # use virtual GUI
   - export DISPLAY=:99.0
@@ -16,7 +16,7 @@ cache:
     - node_modules
     - static/app/bower_components
 
-install: "pip install -r requirements.txt"
+install: "sudo pip install -r requirements.txt"
 # command to run tests
 script:
   - py.test --pep8 --cov=scores
