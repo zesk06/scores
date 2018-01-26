@@ -5,15 +5,15 @@ https://packaging.python.org/en/latest/distributing.html
 """
 
 import os
+# To use a consistent encoding
+from codecs import open as openc
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
-# To use a consistent encoding
-from codecs import open
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 # Get the long description from the README file
-with open(os.path.join(HERE, 'README.md'), encoding='utf-8') as f:
+with openc(os.path.join(HERE, 'README.md'), encoding='utf-8') as f:
     LONG_DESCRIPTION = f.read()
 
 setup(
@@ -119,11 +119,11 @@ setup(
             'stevedore==1.17.1',
             'virtualenv==15.0.3',
             'virtualenv-clone==0.2.6',
-            'virtualenvwrapper==4.7.2'
+            'virtualenvwrapper==4.7.2',
+            'rope'
         ],
         'test': ['coverage',
-                 'coverage==4.2'
-            ],
+                 'coverage==4.2'],
     },
 
     # If there are data files included in your packages that need to be
