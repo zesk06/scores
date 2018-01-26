@@ -2,8 +2,6 @@
 
 ## Improvments
 
-- permettre de cacher/afficher les valeurs de team sur l'ajout d'une partie 
-  (team color / team par ex)
 
 ## Bugs
 

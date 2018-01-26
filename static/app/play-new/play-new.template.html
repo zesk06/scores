@@ -9,49 +9,56 @@
 
 <div ng-if="$ctrl.added_plays.length !== 0" class="alert alert-success">
     <ul>
-        <li ng-repeat="play in $ctrl.added_plays">Partie <a ui-sref="play-detail({playId: $ctrl.getPlayId(play) })">{{ $ctrl.getPlayId(play) }}</a> ajoutée!
-        <a ng-if="$ctrl.isLogged()" ui-sref="play-edit({playId:     $ctrl.getPlayId(play) })" class="fa fa-pencil"></a>
-        <a ng-if="$ctrl.isLogged()" ui-sref="play-rematch({playId:  $ctrl.getPlayId(play) })" class="fa fa-clone"></a>
+        <li ng-repeat="play in $ctrl.added_plays">Partie
+            <a ui-sref="play-detail({playId: $ctrl.getPlayId(play) })">{{ $ctrl.getPlayId(play) }}</a> ajoutée!
+            <a ng-if="$ctrl.isLogged()" ui-sref="play-edit({playId:     $ctrl.getPlayId(play) })" class="fa fa-pencil"></a>
+            <a ng-if="$ctrl.isLogged()" ui-sref="play-rematch({playId:  $ctrl.getPlayId(play) })" class="fa fa-clone"></a>
         </li>
     </ul>
 </div>
 
 <!-- Game Selection Modal -->
 <div class="modal fade" id="gameModal" tabindex="-1" role="dialog" aria-labelledby="gameModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="gameModalLabel">Choose your game</h4>
-      </div>
-      <div class="modal-body">
-        <input ng-repeat="game in $ctrl.games | orderBy : 'name'" ng-click="$ctrl.setGame(game)" type="button" ng-value="game" data-dismiss="modal"></input>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="gameModalLabel">Choose your game</h4>
+            </div>
+            <div class="modal-body">
+                <input ng-repeat="game in $ctrl.games | orderBy : 'name'" ng-click="$ctrl.setGame(game)" type="button" ng-value="game" data-dismiss="modal"></input>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- Player Selection Modal -->
 <div class="modal fade" id="playerModal" tabindex="-1" role="dialog" aria-labelledby="playerModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="playerModalLabel">Choose your players</h4>
-      </div>
-      <div class="modal-body">
-        <!-- Having type="button" avoid submit the form when clicking on it
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="playerModalLabel">Choose your players</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Having type="button" avoid submit the form when clicking on it
                 because a button has type="submit" by default -->
-        <button ng-repeat="player in $ctrl.players | orderBy : '-plays_number'" ng-click="$ctrl.addPlayer(player.name)"><font size="{{ player.plays_number }}">{{ player.name }}</font></button>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
+                <button ng-repeat="player in $ctrl.players | orderBy : '-plays_number'" ng-click="$ctrl.addPlayer(player.name)">
+                    <font size="{{ player.plays_number }}">{{ player.name }}</font>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <h2>Game Details</h2>
@@ -59,13 +66,16 @@
     <div class="form-group">
         <label for="inputDate" class="col-sm-2 control-label">Date</label>
         <div class="col-sm-10">
-            Le <input ng-model="$ctrl.date_s" placeholder="21/11/2016" type="date" id="inputDate"></input> à <input ng-model="$ctrl.time_s" placeholder="21:00" type="time"></input>
+            Le
+            <input ng-model="$ctrl.date_s" placeholder="21/11/2016" type="date" id="inputDate"></input> à
+            <input ng-model="$ctrl.time_s" placeholder="21:00" type="time"></input>
         </div>
     </div>
     <div class="form-group">
         <label for="inputGame" class="col-sm-2 control-label">Game</label>
         <div class="col-sm-10">
-            <input type="text" ng-model="$ctrl.fields.game" placeholder="game" id="inputGame"></input><i class="fa fa-gamepad" aria-hidden="true" data-toggle="modal" data-target="#gameModal"></i>
+            <input type="text" ng-model="$ctrl.fields.game" placeholder="game" id="inputGame"></input>
+            <i class="fa fa-gamepad" aria-hidden="true" data-toggle="modal" data-target="#gameModal"></i>
         </div>
     </div>
     <div class="form-group">
@@ -85,13 +95,20 @@
     </div>
 
     <h2>Players Details
-    <button class="btn btn-sm btn-primary" ng-click="$ctrl.addPlayer('player')" type="button">+ player</button>
-    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#playerModal" title="quick add players" type="button"><i class="fa fa-user-circle" aria-hidden="true"></i></button>
+        <button class="btn btn-sm btn-primary" ng-click="$ctrl.addPlayer('player')" type="button">+ player</button>
+        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#playerModal" title="quick add players" type="button">
+            <i class="fa fa-user-circle" aria-hidden="true"></i>
+        </button>
+
+        <button class="btn btn-sm" ng-click="$ctrl.toggleExtendedInfos()" title="toggle extended infos" type="button">
+            <i ng-class="{'fa': true, 'fa-id-card': $ctrl.hideExtendedInfos, 'fa-id-card-o': !$ctrl.hideExtendedInfos}" aria-hidden="true"></i>
+        </button>
+
     </h2>
     <div ng-repeat="player in $ctrl.fields.players" class="form-inline">
         <div class="form-group">
             <button class="fa fa-minus btn btn-danger btn-sm" aria-hidden="true" ng-click="$ctrl.removePlayer(player)" type="button"></button>
-        <!--[{{ player.index }}] {{ player.login }} {{ player.score }} ({{ player.team }})-->
+            <!--[{{ player.index }}] {{ player.login }} {{ player.score }} ({{ player.team }})-->
             <label>login</label>
             <input ng-model="player.login" placeholder="login"></input>
             <label>score</label>
@@ -99,12 +116,14 @@
 
             <label>color</label>
             <input ng-model="player.color" placeholder="color" type="color"></input>
-            <label>role </label>
-            <input ng-model="player.role" placeholder="role" type="text"></input>
-            <label>team      </label>
-            <input ng-model="player.team" placeholder="team" type="text"></input>
-            <label>team-color</label>
-            <input ng-model="player.team_color" placeholder="team_color" type="color"></input>
+            <span ng-class="{'hide_me': $ctrl.hideExtendedInfos}">
+                <label>role</label>
+                <input ng-model="player.role" placeholder="role" type="text"></input>
+                <label>team </label>
+                <input ng-model="player.team" placeholder="team" type="text"></input>
+                <label>team-color</label>
+                <input ng-model="player.team_color" placeholder="team_color" type="color"></input>
+            </span>
         </div>
     </div>
 

@@ -27,6 +27,7 @@ class Config(object):
     DEBUG = False
     TESTING = False
     FILE_URI = os.path.join(THIS_DIR, 'scores.yml')
+    # ex: mongodb://<dbuser>:<dbpassword>@ds019664.mlab.com:19664/zesk06
     DATABASE_URI = 'mongodb://<dbuser>:<dbpassword>@<instance>.mlab.com:<port>/<dbname>'
     if 'DATABASE_URI' in os.environ:
         DATABASE_URI = os.environ['DATABASE_URI']
@@ -305,7 +306,8 @@ def get_player(player_id):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('app.py')
-    parser.add_argument('-d', help='goes in flask debug mode', action="store_true")
+    parser.add_argument(
+        '-d', '-r', help='goes in flask debug mode', action="store_true")
     parser.add_argument('port', help='The port, 5000 by default', nargs='?',
                         type=int, default=5000)
     args = parser.parse_args()

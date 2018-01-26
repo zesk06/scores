@@ -93,3 +93,7 @@ h1 {
   font-size: 1.2em;
   font-weight: bold;
 }
+
+.hide_me{
+  display: none;
+}
