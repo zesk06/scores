@@ -8,3 +8,4 @@ htmlcov
 node_modules
 *.dump
 dump
+scores.egg-info
