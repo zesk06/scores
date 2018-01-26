@@ -76,15 +76,54 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['flask==0.11.1'],
+    install_requires=[
+        'flask==0.11.1',
+        'apipkg==1.4',
+        'autopep8==1.2.4',
+        'click==6.6',
+        'execnet==1.4.1',
+        'Flask==0.11.1',
+        'Flask-Login==0.3.2',
+        'gunicorn==19.6.0',
+        'itsdangerous==0.24',
+        'Jinja2==2.8',
+        'jsonpickle==0.9.3',
+        'MarkupSafe==0.23',
+        'mongokit==0.9.1.1',
+        'pbr==1.10.0',
+        'py==1.4.31',
+        'PyYAML==3.11',
+        'python-dateutil==1.5',
+        'requests==2.8.1',
+        'six==1.10.0',
+        'Werkzeug==0.11.11',
+        # pymongo 2.8.0 is the most we can have to have mongokit to work',
+        'pymongo==2.8.0',
+        ],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
     # for example:
     # $ pip install -e .[dev,test]
     extras_require={
-        'dev': ['check-manifest'],
-        'test': ['coverage'],
+        'dev': [
+            'check-manifest',
+            'pep8==1.7.0',
+            'ipython<6',
+            'pylint==1.8.2',
+            'pytest==3.0.2',
+            'pytest-cache==1.0',
+            'pytest-cov==2.3.1',
+            'pytest-pep8==1.0.6',
+            'selenium==2.52.0',
+            'stevedore==1.17.1',
+            'virtualenv==15.0.3',
+            'virtualenv-clone==0.2.6',
+            'virtualenvwrapper==4.7.2'
+        ],
+        'test': ['coverage',
+                 'coverage==4.2'
+            ],
     },
 
     # If there are data files included in your packages that need to be
